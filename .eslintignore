@@ -1,0 +1,25 @@
+.DS_Store
+.idea
+.editorconfig
+pnpm-lock.yaml
+.npmrc
+
+.tmp
+.cache/
+coverage/
+.nyc_output/
+**/.yarn/**
+**/.pnp.*
+/dist*/
+node_modules/
+**/node_modules/
+
+## Local
+.husky
+.local
+
+!.prettierrc.js
+components.d.ts
+auto-imports.d.ts
+.eslintrc.js
+.prettierrc.js

@@ -1,0 +1,29 @@
+{
+    "server": {
+        "//": "Can override with the HOST and PORT environment variables as well as with more specific config files",
+        "host": "localhost",
+        "port": 3000
+    },
+    "appOptions": {
+        "//": "See https://koajs.com/#settings",
+        "proxy": true
+    },
+    "compressOptions": {
+        "//": "See https://github.com/koajs/compress",
+        "defaultEncoding": "*",
+        "threshold": "1kb"
+    },
+    "bodyParserOptions": {
+        "//": "See https://github.com/koajs/koa-body",
+        "jsonLimit": "56kb",
+        "formLimit": "8kb",
+        "textLimit": "8kb",
+        "multipart": false,
+        "json": true,
+        "jsonStrict": true,
+        "urlencoded": true,
+        "text": false,
+        "includeUnparsed": false,
+        "parsedMethods": ["POST", "PUT", "PATCH"]
+    }
+}

@@ -1,0 +1,5 @@
+{
+    "plugins": ["json"],
+    "extends": ["plugin:json/recommended-with-comments"],
+    "ignorePatterns": [".nyc_output", ".prettierignore", "dist", "node_modules"]
+}

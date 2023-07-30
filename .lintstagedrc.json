@@ -1,0 +1,4 @@
+{
+    "*.{?(c|m)js?(x),ts?(x)}": ["npm run lint-ts", "prettier --write --ignore-unknown"],
+    "*.json": ["npm run lint-json", "prettier --write --ignore-unknown"]
+}
