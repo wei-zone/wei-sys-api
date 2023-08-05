@@ -29,6 +29,9 @@ module.exports = {
             }
         ],
         '@typescript-eslint/no-misused-promises': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
         'no-prototype-builtins': 'off',
         'promise/prefer-await-to-then': 'warn',
         'promise/prefer-await-to-callbacks': 'warn',

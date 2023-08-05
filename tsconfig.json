@@ -14,6 +14,7 @@
         /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
         "lib": [
             "WebWorker",
+            "es6",
             "dom",
             "DOM",
             "DOM.Iterable"

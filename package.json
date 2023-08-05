@@ -3,6 +3,8 @@
     "version": "0.1.0",
     "description": "koa2-template, koa2-quick-start, koa2-ts-quick-start",
     "keywords": [
+        "koa2",
+        "koa2-ts",
         "koa2-template",
         "koa2-quick-start",
         "koa2-ts-quick-start"
@@ -10,24 +12,46 @@
     "author": "wforguo@gmail.com",
     "main": "./dist/index.js",
     "engines": {
-        "node": ">=12.9.0"
+        "node": ">=16.14.0"
     },
     "scripts": {
         "dev": "nodemon src/index.ts",
         "prod": "NODE_ENV=production npm run start",
         "build": "tsc --build",
         "coverage": "nyc npm run test",
-        "format": "prettier --write '**/*' --ignore-unknown",
         "lint": "npm run lint-json && npm run lint-ts",
         "lint-json": "eslint --cache --fix --no-eslintrc -c .eslintrc-json.json --ext .json .",
         "lint-ts": "tsc --noEmit && eslint --cache --fix --ext .cjs,.js,.jsx,.mjs,.ts,.tsx .",
+        "format": "prettier --write '**/*' --ignore-unknown",
         "prepare": "husky install",
-        "start": "npm run build && node ./dist/index.js",
+        "start": "npm run build && node ./dist/src/index.js",
         "test": "NODE_ENV=testing mocha -r ts-node/register --check-leaks --parallel src/**/*.test.ts"
+    },
+    "dependencies": {
+        "@koa/router": "^12.0.0",
+        "chalk": "^4.1.2",
+        "config": "^3.3.7",
+        "dayjs": "^1.11.9",
+        "koa": "^2.13.4",
+        "koa-body": "^6.0.1",
+        "koa-compress": "^5.1.0",
+        "koa-helmet": "^7.0.2",
+        "koa-json": "^2.0.2",
+        "koa-logger": "^3.2.1",
+        "koa-response-time": "^2.1.0",
+        "typescript": "^5.1.6"
     },
     "devDependencies": {
         "@types/chai": "^4.3.0",
+        "@types/config": "^3.3.0",
+        "@types/koa": "^2.13.4",
+        "@types/koa-compress": "^4.0.3",
+        "@types/koa-response-time": "^2.1.2",
+        "@types/koa__router": "^12.0.0",
+        "@types/koa-compose": "^3.2.5",
+        "@types/koa-logger": "^3.1.2",
         "@types/mocha": "^10.0.1",
+        "@types/node": "^20.4.7",
         "@types/sinon": "^10.0.11",
         "@types/supertest": "^2.0.11",
         "@typescript-eslint/eslint-plugin": "^6.2.0",
@@ -40,7 +64,9 @@
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "^6.0.0",
         "eslint-plugin-unicorn": "^48.0.1",
+        "figlet": "^1.6.0",
         "husky": "^8.0.3",
+        "koa-compose": "^4.1.0",
         "lint-staged": "^13.2.3",
         "mocha": "^10.2.0",
         "nodemon": "^3.0.1",
@@ -50,21 +76,6 @@
         "sinon": "^15.2.0",
         "supertest": "^6.2.2",
         "ts-node": "^10.5.0"
-    },
-    "dependencies": {
-        "@koa/router": "^12.0.0",
-        "@types/config": "^3.3.0",
-        "@types/koa": "^2.13.4",
-        "@types/koa-compress": "^4.0.3",
-        "@types/koa-response-time": "^2.1.2",
-        "@types/koa__router": "^12.0.0",
-        "config": "^3.3.7",
-        "koa": "^2.13.4",
-        "koa-body": "^6.0.1",
-        "koa-compress": "^5.1.0",
-        "koa-helmet": "^7.0.2",
-        "koa-response-time": "^2.1.0",
-        "typescript": "^5.1.6"
     },
     "config": {
         "commitizen": {
