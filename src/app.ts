@@ -1,5 +1,5 @@
 import Koa from 'koa'
-import api from './api/route'
+import api from './api/index'
 import koaCompress from 'koa-compress'
 import middleWares from './middleWares'
 

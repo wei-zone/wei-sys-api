@@ -4,7 +4,7 @@ const route = new Router({
     prefix: '/hello'
 })
 
-route.all('/', context => {
+route.get('/', context => {
     context.body = 'Hello World!'
 })
 

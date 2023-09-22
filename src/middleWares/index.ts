@@ -14,10 +14,9 @@ import rest from './rest'
  * 使用koa-compose 集成中间件
  */
 const middleware = compose([
-    // Add Koa-Helmet headers (https://github.com/venables/koa-helmet)
     logger(),
     cors,
-    // security headers
+    // Add Koa-Helmet headers (https://github.com/venables/koa-helmet)
     koaHelmet(),
     rest()
 ])

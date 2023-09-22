@@ -4,7 +4,9 @@
 
 ## Start
 
-[http://127.0.0.1:3000/api/v1/hello](http://127.0.0.1:3000/api/v1/hello)
+[http://127.0.0.1:3000/api/](http://127.0.0.1:3000/api/)
+
+[https://api.forguo.cn/api/](https://api.forguo.cn/api/)
 
 ```bash
 # install dependencies

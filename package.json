@@ -10,7 +10,6 @@
         "koa2-ts-quick-start"
     ],
     "author": "wforguo@gmail.com",
-    "main": "./dist/index.js",
     "engines": {
         "node": ">=16.14.0"
     },
@@ -23,8 +22,7 @@
         "lint-json": "eslint --cache --fix --no-eslintrc -c .eslintrc-json.json --ext .json .",
         "lint-ts": "tsc --noEmit && eslint --cache --fix --ext .cjs,.js,.jsx,.mjs,.ts,.tsx .",
         "format": "prettier --write '**/*' --ignore-unknown",
-        "prepare": "husky install",
-        "start": "npm run build && node ./dist/src/index.js",
+        "start": "node ./dist/src/index.js",
         "test": "NODE_ENV=testing mocha -r ts-node/register --check-leaks --parallel src/**/*.test.ts"
     },
     "dependencies": {
@@ -39,23 +37,26 @@
         "koa-json": "^2.0.2",
         "koa-logger": "^3.2.1",
         "koa-response-time": "^2.1.0",
+        "koa-static": "^5.0.0",
         "typescript": "^5.1.6"
     },
     "devDependencies": {
         "@types/chai": "^4.3.0",
         "@types/config": "^3.3.0",
         "@types/koa": "^2.13.4",
-        "@types/koa-compress": "^4.0.3",
-        "@types/koa-response-time": "^2.1.2",
-        "@types/koa__router": "^12.0.0",
         "@types/koa-compose": "^3.2.5",
+        "@types/koa-compress": "^4.0.3",
         "@types/koa-logger": "^3.1.2",
+        "@types/koa-response-time": "^2.1.2",
+        "@types/koa-static": "^4.0.2",
+        "@types/koa__router": "^12.0.0",
         "@types/mocha": "^10.0.1",
         "@types/node": "^20.4.7",
         "@types/sinon": "^10.0.11",
         "@types/supertest": "^2.0.11",
         "@typescript-eslint/eslint-plugin": "^6.2.0",
         "@typescript-eslint/parser": "^6.2.0",
+        "@vercel/node": "^3.0.5",
         "chai": "^4.3.6",
         "eslint": "^8.9.0",
         "eslint-plugin-eslint-comments": "^3.2.0",

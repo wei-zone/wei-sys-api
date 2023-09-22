@@ -4,18 +4,26 @@
  */
 import { Context, Next } from 'koa'
 
+export interface IResponse {
+    code?: number
+    message?: string
+    success?: boolean
+    serverTime?: number
+    data?: any
+}
+
 // 处理请求成功方法
 const render = (context: Context) => {
-    return ({ data, message = 'success', code = 200 }) => {
+    return ({ code = 200, message = 'success', data }: IResponse) => {
         context.response.type = 'application/json'
-        const response = {
+        const response: IResponse = {
             code,
             message,
-            success: code === 200,
+            success: code.toString().startsWith('2'),
             serverTime: Date.now()
         }
         if (data) {
-            response['data'] = data
+            response.data = data
         }
         context.body = response
     }
