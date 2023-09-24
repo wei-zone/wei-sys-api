@@ -1,13 +1,13 @@
 import Router from '@koa/router'
-import hello from './hello/index'
+import weapp from './weapp/index'
 
-const index = new Router({
+const route = new Router({
     // Current folder
     prefix: '/v1'
 })
 
 // Mount sub-routes here
-index.use(hello.routes())
-index.use(hello.allowedMethods())
+route.use(weapp.routes())
+route.use(weapp.allowedMethods())
 
-export default index
+export default route

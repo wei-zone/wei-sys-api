@@ -1,4 +1,6 @@
 import { Context, Next } from 'koa'
+import chalk from 'chalk'
+import dayjs from 'dayjs'
 const cors = async (context: Context, next: Next) => {
     /**
      * 设置跨域
@@ -14,6 +16,8 @@ const cors = async (context: Context, next: Next) => {
     context.set('Access-Control-Allow-Credentials', 'true')
     if (context.method === 'OPTIONS') {
         context.body = 200
+    } else {
+        console.log(chalk.gray(`${dayjs().format('YYYY-MM-DD HH:mm:ss')}`))
     }
     await next()
 }
