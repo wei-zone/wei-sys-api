@@ -3,14 +3,7 @@
  * @description: rest
  */
 import { Context, Next } from 'koa'
-
-export interface IResponse {
-    code?: number
-    message?: string
-    success?: boolean
-    serverTime?: number
-    data?: any
-}
+import { IResponse } from '../@types'
 
 // 处理请求成功方法
 const render = (context: Context) => {
