@@ -1,5 +1,4 @@
 import Router from '@koa/router'
-import fs from 'fs'
 import jssdk from './jssdk'
 
 const route = new Router({

@@ -23,6 +23,7 @@ function main(): void {
     // Event listener for HTTP server "error" event.
     server.on('error', (error: ErrnoException) => {
         console.dir(error)
+
         if (error.syscall !== 'listen') {
             throw error
         }
@@ -30,25 +31,16 @@ function main(): void {
 
         // handle specific listen errors with friendly messages
         switch (error.code) {
-            case 'EACCES': {
-                console.error(chalk.red(bind + ' requires elevated privileges'))
-                process.on('uncaughtException', error_ => {
-                    console.error('Uncaught Exception:', error_)
-                    // Don't call process.exit() to keep the server running
-                })
+            case 'EACCES':
+                console.error(bind + ' requires elevated privileges')
+                process.exit(1)
                 break
-            }
-            case 'EADDRINUSE': {
-                console.error(chalk.red(bind + ' is already in use'))
-                process.on('uncaughtException', error_ => {
-                    console.error('Uncaught Exception:', error_)
-                    // Don't call process.exit() to keep the server running
-                })
+            case 'EADDRINUSE':
+                console.error(bind + ' is already in use')
+                process.exit(1)
                 break
-            }
-            default: {
+            default:
                 throw error
-            }
         }
     })
 
