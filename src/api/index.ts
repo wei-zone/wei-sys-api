@@ -4,7 +4,7 @@ import { Context } from 'koa'
 
 const route = new Router({
     // Current folder
-    prefix: '/api'
+    prefix: '/'
 })
 
 route.all('/', (context: Context) => {

@@ -54,8 +54,8 @@ function main(): void {
             console.log('\t')
             console.log(chalk.blueBright(_package.name), chalk.grey('v' + _package.version))
             console.log('\t')
-            console.log(chalk.cyan('➜  Local:   http://%s:%s/api/'), 'localhost', port)
-            console.log(chalk.cyan('➜  Network: http://%s:%s/api/'), '127.0.0.1', port)
+            console.log(chalk.cyan('➜  Local:   http://%s:%s/'), 'localhost', port)
+            console.log(chalk.cyan('➜  Network: http://%s:%s/'), '127.0.0.1', port)
             console.log('\t')
         }
     })
