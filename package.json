@@ -13,16 +13,16 @@
     "engines": {
         "node": ">=16.14.0"
     },
+    "packageManager": "pnpm@7.6.0",
     "scripts": {
         "dev": "nodemon src/index.ts",
-        "prod": "NODE_ENV=production npm run start",
         "build": "tsc --build",
+        "prod": "NODE_ENV=production node ./dist/src/index.js",
         "coverage": "nyc npm run test",
         "lint": "npm run lint-json && npm run lint-ts",
         "lint-json": "eslint --cache --fix --no-eslintrc -c .eslintrc-json.json --ext .json .",
         "lint-ts": "tsc --noEmit && eslint --cache --fix --ext .cjs,.js,.jsx,.mjs,.ts,.tsx .",
         "format": "prettier --write '**/*' --ignore-unknown",
-        "start": "node ./dist/src/index.js",
         "prepare": "husky install",
         "test": "NODE_ENV=testing mocha -r ts-node/register --check-leaks --parallel src/**/*.test.ts"
     },

@@ -1,0 +1,50 @@
+name: Deploy - Docker Ali
+
+# 触发构建动作
+#    push:
+#        # 触发构建分支[默认分支]
+#        branches: [ $default-branch ]
+#    pull_request:
+
+on:
+    push:
+        branches: [ "master" ]
+    pull_request:
+        branches: [ "master" ]
+
+env: # 设置环境变量
+    TZ: Asia/Shanghai # 时区
+
+# 作业是在同一运行服务器上执行的一组步骤
+jobs:
+
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v3
+            -   name: build docker image
+                # 打包并publish docker镜像
+                run: |
+                    echo -e "---------登录阿里云镜像容器服务--------"
+                    # 登录阿里云镜像容器服务
+                    docker login --username=${{ secrets.AL_DOCKER_USERNAME }} registry.cn-hangzhou.aliyuncs.com --password=${{ secrets.AL_DOCKER_PASSWORD }}
+                    # 使用当前目录的 Dockerfile 创建镜像，标签为 koa2:latest
+                    echo -e "---------创建镜像 koa2:latest--------"
+                    docker build -t koa2:latest .
+                    # 打标签
+                    docker tag koa2 registry.cn-hangzhou.aliyuncs.com/cloud-apps/koa2:latest
+                    # 推送到阿里云镜像容器服务
+                    echo -e "---------推送到阿里云镜像容器服务--------"
+                    docker push registry.cn-hangzhou.aliyuncs.com/cloud-apps/koa2:latest
+
+            # 登录远程服务器并部署
+            ##
+#        - name: executing remote ssh commands using password
+#          uses: appleboy/ssh-action@master
+#          with:
+#              host: ${{ secrets.HOST }}
+#              username: ${{ secrets.USERNAME }}
+#              password: ${{ secrets.PASSWORD }}
+#              port: 22
+#              script: cd ~/deploy/ && sh koa2.docker.hub.sh ${{ secrets.AL_DOCKER_USERNAME }} ${{ secrets.AL_DOCKER_PASSWORD }}

@@ -4,9 +4,9 @@
 
 ## Start
 
-[http://127.0.0.1:3000/api/](http://127.0.0.1:3000/api/)
+[http://127.0.0.1:3000/](http://127.0.0.1:3000/)
 
-[https://api.forguo.cn/api/](https://api.forguo.cn/api/)
+[https://forguo.cn/api/](https://forguo.cn/api/)
 
 ```bash
 # install dependencies
@@ -30,3 +30,9 @@ pnpm run build
 -   [x] release-it
 -   [x] commitizen
 -   [] commitlint
+
+## 接口
+
+默认接口：微信jssdk
+
+[http://127.0.0.1:3000/v1/weapp/jssdk?url=1](http://127.0.0.1:3000/v1/weapp/jssdk?url=1)
