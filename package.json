@@ -1,7 +1,7 @@
 {
     "name": "koa2-quick-start",
-    "version": "0.1.0",
-    "description": "koa2-template, koa2-quick-start, koa2-ts-quick-start",
+    "version": "1.0.0",
+    "description": "koa2-quick-start",
     "keywords": [
         "koa2",
         "koa2-ts",
@@ -9,15 +9,16 @@
         "koa2-quick-start",
         "koa2-ts-quick-start"
     ],
-    "author": "wforguo@gmail.com",
+    "author": "wforguo",
+    "homepage": "https://forguo.cn",
     "engines": {
         "node": ">=16.14.0"
     },
     "packageManager": "pnpm@7.6.0",
     "scripts": {
         "dev": "nodemon src/index.ts",
-        "build": "tsc --build",
-        "prod": "NODE_ENV=production node ./dist/src/index.js",
+        "start": "cross-env NODE_ENV=production node src/index.js",
+        "build": "cross-env NODE_ENV=production tsc --build",
         "coverage": "nyc npm run test",
         "lint": "npm run lint-json && npm run lint-ts",
         "lint-json": "eslint --cache --fix --no-eslintrc -c .eslintrc-json.json --ext .json .",
@@ -40,7 +41,9 @@
         "koa-logger": "^3.2.1",
         "koa-response-time": "^2.1.0",
         "koa-static": "^5.0.0",
+        "koa2-swagger-ui": "^5.9.1",
         "memory-cache": "^0.2.0",
+        "swagger-jsdoc": "^6.2.8",
         "typescript": "^5.1.6"
     },
     "devDependencies": {
@@ -58,10 +61,12 @@
         "@types/node": "^20.4.7",
         "@types/sinon": "^10.0.11",
         "@types/supertest": "^2.0.11",
+        "@types/swagger-jsdoc": "^6.0.2",
         "@typescript-eslint/eslint-plugin": "^6.2.0",
         "@typescript-eslint/parser": "^6.2.0",
         "@vercel/node": "^3.0.5",
         "chai": "^4.3.6",
+        "cross-env": "^7.0.3",
         "eslint": "^8.50.0",
         "eslint-config-prettier": "^9.0.0",
         "eslint-plugin-json": "^3.1.0",

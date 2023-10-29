@@ -6,7 +6,7 @@ const cors = async (context: Context, next: Next) => {
      * 设置跨域
      */
     context.compress = false
-    context.set('Access-Control-Allow-Origin', context.origin as string)
+    context.set('Access-Control-Allow-Origin', '*')
     context.set(
         'Access-Control-Allow-Headers',
         'X-Auth-Token, Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild'

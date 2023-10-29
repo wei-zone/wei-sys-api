@@ -11,6 +11,14 @@ import { Context } from 'koa' // 配置
 const { officeApp } = config
 const { APP_ID, SECRET } = officeApp
 
+export interface IRet {
+    jsapi_ticket: string
+    nonceStr: string
+    timestamp: string
+    url: string
+    signature?: string
+    appId?: string
+}
 class Controller {
     /**
      * @description 获取access_token访问令牌
@@ -80,14 +88,6 @@ class Controller {
      */
     async generateConfig(url) {
         try {
-            interface IRet {
-                jsapi_ticket: string
-                nonceStr: string
-                timestamp: string
-                url: string
-                signature?: string
-                appId?: string
-            }
             const res = await this.jsapiTicket()
             const ret: IRet = {
                 jsapi_ticket: res,

@@ -50,6 +50,7 @@ function main(): void {
         if (address === null) {
             return
         }
+        console.log('env', chalk.cyan(process.env.NODE_ENV))
         if (isAddressInfo(address)) {
             console.log('\t')
             console.log(chalk.blueBright(_package.name), chalk.grey('v' + _package.version))
