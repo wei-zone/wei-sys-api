@@ -17,7 +17,7 @@ node_modules/
 ## Local
 .husky
 .local
-
+src/public/uploads/**/*
 !.prettierrc.js
 components.d.ts
 auto-imports.d.ts

@@ -44,3 +44,19 @@ export const raw = args => {
     string = string.substr(1)
     return string
 }
+
+/**
+ * 生成唯一字符
+ * @param {string} prefix 前缀
+ * @param {number} length 字符串长度
+ * @returns {string} 唯一字符
+ */
+export function generateUniqueChar(prefix: string, length: number) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let char = ''
+    for (let i = 0; i < length; i++) {
+        const index = Math.floor(Math.random() * chars.length)
+        char += chars[index]
+    }
+    return `${prefix}${char}`
+}

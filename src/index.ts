@@ -57,6 +57,8 @@ function main(): void {
             console.log('\t')
             console.log(chalk.cyan('➜  Local:   http://%s:%s/'), 'localhost', port)
             console.log(chalk.cyan('➜  Network: http://%s:%s/'), '127.0.0.1', port)
+            console.log(chalk.cyan('➜  ApiDocs: http://%s:%s%s'), '127.0.0.1', port, '/api-docs')
+            // [api-docs](http://127.0.0.1:3003/api-docs)
             console.log('\t')
         }
     })

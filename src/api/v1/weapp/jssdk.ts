@@ -42,14 +42,12 @@ const route = new Router({
  *   get:
  *     description: 微信jssdk配置
  *     tags: [Weapp]
- *     produces:
- *       - route.ication/json
  *     parameters:
  *       - name: url
  *         description: encodeURIComponent(location.href.split('#')[0])
  *         in: query
  *         type: string
- *         required: false
+ *         required: true
  *     responses:
  *       200:
  *         description: 微信jssdk配置

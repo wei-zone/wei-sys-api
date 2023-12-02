@@ -16,7 +16,7 @@ const swaggerDefinition = {
     basePath: '/v1/', // Base path (optional)
     // 定义全局model
     definitions: {
-        Response: {
+        ApiResponse: {
             type: 'object',
             description: '全局数据格式',
             properties: {
