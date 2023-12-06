@@ -6,6 +6,8 @@ node_modules
 # local env files
 .env.local
 .env.*.local
+src/public/uploads/**/*
+src/public/chunks/**/*
 
 # Log files
 npm-debug.log*

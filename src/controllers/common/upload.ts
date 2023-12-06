@@ -9,10 +9,11 @@ import path from 'path'
 import fs from 'fs'
 import dayjs from 'dayjs'
 import { generateUniqueChar } from '../../libs'
+import config from '../../config'
+import { getFileExtension, getFileName } from '../../libs/file'
 // 云开发api
 const apis: any = {}
 
-import config from '../../config'
 const cosConfig = config.cosConfig
 
 // COS实例
@@ -35,7 +36,7 @@ const cos: any = new COS({
  * @param file
  * @return {Promise<unknown>}
  */
-function cosUpload(file: any) {
+const cosUpload = async (file: any) => {
     const fileName = file.name
     const fileSize = file.size
     const body = fs.createReadStream(file.path) // 创建可读流
@@ -74,15 +75,58 @@ function cosUpload(file: any) {
     })
 }
 
+/**
+ * 针对 path 创建 readStream 并写入 writeStream,写入完成之后删除文件
+ * @param {String} path
+ * @param {String} writeStream
+ */
+const pipeStream = (path, writeStream) => {
+    return new Promise<void>(async (resolve, reject) => {
+        const stream = fs.createReadStream(path)
+        stream.pipe(writeStream)
+        stream.on('end', () => {
+            fs.unlinkSync(path)
+            resolve()
+        })
+        stream.on('error', reject)
+    })
+}
+
+/**
+ * 读取所有的 chunk 合并到 filePath 中
+ * @param {String} filePath 文件存储路径
+ * @param {String} chunkDir chunk存储文件夹名称
+ * @param {String} size 每一个chunk的大小
+ */
+const mergeFileChunk = async (filePath, chunkDir, size) => {
+    // 获取chunk列表
+    const chunkPaths = fs.readdirSync(chunkDir)
+    // 根据切片下标进行排序  否则直接读取目录的获得的顺序可能会错乱
+    chunkPaths.sort((a: any, b: any) => a.split('-')[1] - b.split('-')[1])
+    // 创建可写流
+    await Promise.all(
+        chunkPaths.map((chunkPath, index) =>
+            pipeStream(
+                path.resolve(chunkDir, chunkPath),
+                // 指定位置创建可写流
+                fs.createWriteStream(filePath, {
+                    start: index * size
+                    // end: ((index + 1) * size) as number
+                })
+            )
+        )
+    )
+    // 合并后删除保存切片的目录
+    fs.rmdirSync(chunkDir)
+}
+
 class Controller {
     /**
-     * 文件上传
+     * 文件上传 - 本地
      * @param ctx
-     * @returns {Promise<void>}
      */
     async upload(ctx: Context & any) {
         try {
-            const uploadDir = '/uploads/'
             const file = ctx.request?.files?.file // 获取上传文件
             if (!file) {
                 ctx.throw({
@@ -91,39 +135,45 @@ class Controller {
                 })
                 return
             }
-
-            // 获取文件名
-            console.log(file.name, file.size, file.type)
+            const uploadDir = '/uploads/'
 
             // 获取文件扩展名
-            const [name, extname] = file.name.split('.')
+            const extname = getFileExtension(file.name)
+            const name = getFileName(file.name, extname)
+
+            // 重新生成文件名
             const fileName = `${name}.${generateUniqueChar('', 8)}.${extname}`
-            const filePath = `${uploadDir}${dayjs().format('YYYY/MM/DD')}`
+
+            // 文件夹相对路径
+            const dirPath = `${uploadDir}${dayjs().format('YYYY/MM/DD')}`
 
             // 本地存储路径
-            const fileSavePath = path.join(__dirname, '../../public', filePath, fileName)
+            const fileSavePath = path.join(__dirname, '../../public', dirPath, fileName)
 
-            // 生成上传后的图片链接
-            const url = `${ctx.origin}${filePath}/${fileName}`
+            // Create the directory if it does not exist
+            const dirPathLocal = path.join(__dirname, '../../public', dirPath)
+
+            if (!fs.existsSync(dirPathLocal)) {
+                fs.mkdirSync(dirPathLocal, { recursive: true })
+            }
 
             const stream = fs.createReadStream(file.path)
             const writeStream = fs.createWriteStream(fileSavePath)
-
-            // Create the directory if it does not exist
-            const dirPath = path.join(__dirname, '../../public', filePath)
-
-            if (!fs.existsSync(dirPath)) {
-                fs.mkdirSync(dirPath, { recursive: true })
-            }
 
             await new Promise((resolve, reject) => {
                 stream.pipe(writeStream)
                 stream.on('end', resolve)
                 stream.on('error', reject)
             })
+
+            // 生成上传后的文件链接
+            const src = `${ctx.origin}${dirPath}/${fileName}`
+
             // 处理上传的文件
             ctx.send({
-                data: url
+                data: {
+                    src
+                }
             })
         } catch (e) {
             console.log('upload error--->', e)
@@ -132,20 +182,24 @@ class Controller {
     }
 
     /**
-     * 文件上传 Cos 方式
+     * 文件上传 - Cos 云存储
      * @param ctx
      */
     async uploadCos(ctx: Context & any) {
+        const file = ctx.request?.files?.file // 获取上传文件
+        if (!file) {
+            ctx.throw({
+                code: -1,
+                message: '请选择上传文件'
+            })
+            return
+        }
         // COS需要去除该设置 --> koa-body/uploadDir
-        const file = ctx.request.files.file // 获取上传文件
         try {
             const res = await cosUpload(file)
-            ctx.body = {
-                code: 200,
-                success: true,
-                message: 'ok',
+            ctx.send({
                 data: res
-            }
+            })
         } catch (e) {
             ctx.throw(e)
         }
@@ -153,10 +207,18 @@ class Controller {
 
     /**
      * 文件上传 - 云开发
+     * @param ctx
      */
     async uploadCloud(ctx: Context & any) {
         try {
-            const file = ctx.request.files.file // 获取上传文件
+            const file = ctx.request?.files?.file // 获取上传文件
+            if (!file) {
+                ctx.throw({
+                    code: -1,
+                    message: '请选择上传文件'
+                })
+                return
+            }
             const name = file.name
             const res = await apis.upload(fs.createReadStream(file.path), name)
             const files = await apis.getTempFileURL([res.fileID])
@@ -176,6 +238,102 @@ class Controller {
         } catch (e) {
             ctx.throw(e)
         }
+    }
+
+    /**
+     * 文件上传 - 切片上传
+     * @param ctx
+     */
+    async uploadChunk(ctx: Context & any) {
+        try {
+            const { chunkHash, fileHash } = ctx.request.body
+            const { chunk } = ctx.request.files
+
+            if (!chunk) {
+                ctx.throw({
+                    code: -1,
+                    message: '请选择上传文件'
+                })
+                return
+            }
+            // 上传切片的文件夹
+            const uploadDir = '/chunks/'
+
+            // 切片文件夹，根据文件hash来命名
+            const dirPath = `${uploadDir}${fileHash}`
+
+            // 本地切片存储路径
+            const chunkSavePath = path.join(__dirname, '../../public', dirPath, chunkHash)
+
+            // Create the directory if it does not exist
+            const dirPathLocal = path.join(__dirname, '../../public', dirPath)
+
+            if (!fs.existsSync(dirPathLocal)) {
+                fs.mkdirSync(dirPathLocal, { recursive: true })
+            }
+
+            /**
+             * 读取切片文件流，写入到本地
+             */
+            const stream = fs.createReadStream(chunk.path)
+            const writeStream = fs.createWriteStream(chunkSavePath)
+
+            await new Promise((resolve, reject) => {
+                stream.pipe(writeStream)
+                stream.on('end', resolve)
+                stream.on('error', reject)
+            })
+
+            // 生成上传后的文件链接
+            const src = `${ctx.origin}${dirPath}/${chunkHash}`
+            // 处理上传的文件
+            ctx.send({
+                data: {
+                    src
+                }
+            })
+        } catch (e) {
+            console.log('upload error--->', e)
+            ctx.throw(e)
+        }
+    }
+
+    /**
+     * 文件上传 - 合并切片
+     * @param ctx
+     */
+    async mergeChunks(ctx: Context & any) {
+        const { fileName, fileSize, size, hash } = ctx.request.body
+        if (!fileName || !fileSize || !size || !hash) {
+            ctx.throw({
+                code: -1,
+                message: '请选择上传文件'
+            })
+            return
+        }
+        // 上传文件的目录
+        const uploadDir = '/chunks/'
+        // 文件名及扩展名
+        const extname = getFileExtension(fileName)
+        const name = getFileName(fileName, extname)
+
+        // 重新生成文件名
+        const fileFullName = `${name}.${generateUniqueChar('', 8)}.${extname}`
+
+        // 生成文件保存路径，本地存储路径
+        const fileSavePath = path.join(__dirname, '../../public', uploadDir, fileFullName)
+
+        // 切片存储目录，通过hash值来匹配
+        const dirPathLocal = path.join(__dirname, '../../public', uploadDir, hash)
+
+        // 合并切片
+        await mergeFileChunk(fileSavePath, dirPathLocal, size)
+
+        ctx.send({
+            data: {
+                src: `${ctx.origin}${uploadDir}${fileFullName}`
+            }
+        })
     }
 }
 

@@ -13,7 +13,7 @@ const swaggerDefinition = {
         }
     },
     host: env === 'development' ? `127.0.0.1:${config.port}` : `forguo.cn/api`,
-    basePath: '/v1/', // Base path (optional)
+    basePath: '/', // Base path (optional)
     // 定义全局model
     definitions: {
         ApiResponse: {

@@ -38,9 +38,10 @@ const route = new Router({
 
 /**
  * @swagger
- * /weapp/jssdk:
+ * /v1/weapp/jssdk:
  *   get:
  *     description: 微信jssdk配置
+ *     summary: 微信jssdk配置
  *     tags: [Weapp]
  *     parameters:
  *       - name: url
