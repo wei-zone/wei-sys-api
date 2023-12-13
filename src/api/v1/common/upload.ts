@@ -104,6 +104,35 @@ route.post('/cloud', async (context: Context) => {
 
 /**
  * @swagger
+ * /v1/common/verify:
+ *   post:
+ *     description: 文件是否存在
+ *     summary: 文件是否存在
+ *     tags: [Common]
+ *     parameters:
+ *       - name: fileName
+ *         description: fileName
+ *         in: formData
+ *         type: string
+ *         required: true
+ *       - name: fileHash
+ *         description: fileHash
+ *         in: formData
+ *         type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: 文件是否存在
+ *         schema:
+ *           type: object
+ *           $ref: '#/definitions/ApiResponse'
+ */
+route.post('/verify', async (context: Context) => {
+    await controller.verify(context)
+})
+
+/**
+ * @swagger
  * /v1/common/upload/chunk:
  *   post:
  *     description: 文件切片上传
@@ -136,8 +165,6 @@ route.post('/chunk', async (context: Context) => {
  *     parameters:
  *       - name: file
  *         description: The file to upload.
- *         in: formData
- *         type: file
  *         required: true
  *     responses:
  *       200:

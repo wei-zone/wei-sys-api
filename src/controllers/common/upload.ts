@@ -120,6 +120,14 @@ const mergeFileChunk = async (filePath, chunkDir, size) => {
     fs.rmdirSync(chunkDir)
 }
 
+/**
+ * 返回已经上传的切片名列表
+ * @param UPLOAD_DIR
+ */
+const createUploadedList = UPLOAD_DIR => {
+    return fs.existsSync(UPLOAD_DIR) ? fs.readdirSync(UPLOAD_DIR) : []
+}
+
 class Controller {
     /**
      * 文件上传 - 本地
@@ -241,6 +249,50 @@ class Controller {
     }
 
     /**
+     * 文件上传 - 文件是否已存在
+     */
+    async verify(ctx: Context & any) {
+        const { fileName, fileHash } = ctx.request.body
+        if (!fileName || !fileHash) {
+            ctx.throw({
+                code: -1,
+                message: '文件名或文件hash值不能为空'
+            })
+            return
+        }
+
+        // 上传文件的目录
+        const uploadDir = '/chunks/'
+        // 文件名及扩展名
+        const extname = getFileExtension(fileName)
+        const name = getFileName(fileName, extname)
+
+        // 重新生成文件名
+        const fileFullName = `${name}.${fileHash}.${extname}`
+
+        // 生成文件保存路径，本地存储路径
+        const fileSavePath = path.join(__dirname, '../../public', uploadDir, fileFullName)
+
+        let shouldUpload = true
+        let message = '文件不存在'
+        if (fs.existsSync(fileSavePath)) {
+            shouldUpload = false
+            message = '文件已经存在'
+        }
+        const data: any = {
+            shouldUpload
+        }
+
+        if (!shouldUpload) {
+            data.src = `${ctx.origin}${uploadDir}${fileFullName}`
+        }
+        ctx.send({
+            data,
+            message
+        })
+    }
+
+    /**
      * 文件上传 - 切片上传
      * @param ctx
      */
@@ -248,7 +300,6 @@ class Controller {
         try {
             const { chunkHash, fileHash } = ctx.request.body
             const { chunk } = ctx.request.files
-
             if (!chunk) {
                 ctx.throw({
                     code: -1,
@@ -303,11 +354,11 @@ class Controller {
      * @param ctx
      */
     async mergeChunks(ctx: Context & any) {
-        const { fileName, fileSize, size, hash } = ctx.request.body
-        if (!fileName || !fileSize || !size || !hash) {
+        const { fileName, fileSize, size, fileHash } = ctx.request.body
+        if (!fileName || !fileSize || !size || !fileHash) {
             ctx.throw({
                 code: -1,
-                message: '请选择上传文件'
+                message: '文件名、文件大小、切片大小、文件hash值不能为空'
             })
             return
         }
@@ -318,13 +369,13 @@ class Controller {
         const name = getFileName(fileName, extname)
 
         // 重新生成文件名
-        const fileFullName = `${name}.${generateUniqueChar('', 8)}.${extname}`
+        const fileFullName = `${name}.${fileHash}.${extname}`
 
         // 生成文件保存路径，本地存储路径
         const fileSavePath = path.join(__dirname, '../../public', uploadDir, fileFullName)
 
         // 切片存储目录，通过hash值来匹配
-        const dirPathLocal = path.join(__dirname, '../../public', uploadDir, hash)
+        const dirPathLocal = path.join(__dirname, '../../public', uploadDir, fileHash)
 
         // 合并切片
         await mergeFileChunk(fileSavePath, dirPathLocal, size)
