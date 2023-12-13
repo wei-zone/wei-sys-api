@@ -283,7 +283,9 @@ class Controller {
             shouldUpload
         }
 
-        if (!shouldUpload) {
+        if (shouldUpload) {
+            data.uploadList = createUploadedList(path.join(__dirname, '../../public', uploadDir, fileHash))
+        } else {
             data.src = `${ctx.origin}${uploadDir}${fileFullName}`
         }
         ctx.send({
