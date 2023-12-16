@@ -58,8 +58,8 @@ route.post('/', async (context: Context) => {
  * @swagger
  * /v1/common/upload/cos:
  *   post:
- *     description: cos文件上传
- *     summary: cos文件上传
+ *     description: cos文件上传 toDo
+ *     summary: cos文件上传 toDo
  *     tags: [Common]
  *     parameters:
  *       - name: file
@@ -82,8 +82,8 @@ route.post('/cos', async (context: Context) => {
  * @swagger
  * /v1/common/upload/cos:
  *   post:
- *     description: 云开发文件上传
- *     summary: 云开发文件上传
+ *     description: 云开发文件上传 toDo
+ *     summary: 云开发文件上传 toDo
  *     tags: [Common]
  *     parameters:
  *       - name: file
@@ -104,7 +104,7 @@ route.post('/cloud', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/common/verify:
+ * /v1/common/upload/verify:
  *   post:
  *     description: 文件是否存在
  *     summary: 文件是否存在

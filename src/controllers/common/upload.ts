@@ -15,7 +15,7 @@ import { getFileExtension, getFileName } from '../../libs/file'
 const apis: any = {}
 
 const cosConfig = config.cosConfig
-
+const { CHUNK_DIR } = config.chunkConfig
 // COS实例
 // import COS from 'cos-nodejs-sdk-v5'
 function COS(options: any) {}
@@ -261,8 +261,6 @@ class Controller {
             return
         }
 
-        // 上传文件的目录
-        const uploadDir = '/chunks/'
         // 文件名及扩展名
         const extname = getFileExtension(fileName)
         const name = getFileName(fileName, extname)
@@ -271,7 +269,7 @@ class Controller {
         const fileFullName = `${name}.${fileHash}.${extname}`
 
         // 生成文件保存路径，本地存储路径
-        const fileSavePath = path.join(__dirname, '../../public', uploadDir, fileFullName)
+        const fileSavePath = path.join(__dirname, '../../public', CHUNK_DIR, fileFullName)
 
         let shouldUpload = true
         let message = '文件不存在'
@@ -284,9 +282,9 @@ class Controller {
         }
 
         if (shouldUpload) {
-            data.uploadList = createUploadedList(path.join(__dirname, '../../public', uploadDir, fileHash))
+            data.uploadList = createUploadedList(path.join(__dirname, '../../public', CHUNK_DIR, fileHash))
         } else {
-            data.src = `${ctx.origin}${uploadDir}${fileFullName}`
+            data.src = `${ctx.origin}${CHUNK_DIR}${fileFullName}`
         }
         ctx.send({
             data,
@@ -309,11 +307,8 @@ class Controller {
                 })
                 return
             }
-            // 上传切片的文件夹
-            const uploadDir = '/chunks/'
-
             // 切片文件夹，根据文件hash来命名
-            const dirPath = `${uploadDir}${fileHash}`
+            const dirPath = `${CHUNK_DIR}${fileHash}`
 
             // 本地切片存储路径
             const chunkSavePath = path.join(__dirname, '../../public', dirPath, chunkHash)
@@ -364,8 +359,7 @@ class Controller {
             })
             return
         }
-        // 上传文件的目录
-        const uploadDir = '/chunks/'
+
         // 文件名及扩展名
         const extname = getFileExtension(fileName)
         const name = getFileName(fileName, extname)
@@ -374,17 +368,17 @@ class Controller {
         const fileFullName = `${name}.${fileHash}.${extname}`
 
         // 生成文件保存路径，本地存储路径
-        const fileSavePath = path.join(__dirname, '../../public', uploadDir, fileFullName)
+        const fileSavePath = path.join(__dirname, '../../public', CHUNK_DIR, fileFullName)
 
         // 切片存储目录，通过hash值来匹配
-        const dirPathLocal = path.join(__dirname, '../../public', uploadDir, fileHash)
+        const dirPathLocal = path.join(__dirname, '../../public', CHUNK_DIR, fileHash)
 
         // 合并切片
         await mergeFileChunk(fileSavePath, dirPathLocal, size)
 
         ctx.send({
             data: {
-                src: `${ctx.origin}${uploadDir}${fileFullName}`
+                src: `${ctx.origin}${CHUNK_DIR}${fileFullName}`
             }
         })
     }

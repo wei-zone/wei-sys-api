@@ -1,3 +1,6 @@
+/**
+ * server entry
+ */
 import App from './app'
 import config from './config'
 import http from 'node:http'
