@@ -14,16 +14,16 @@ import { getFileExtension, getFileName } from '../../libs/file'
 // 云开发api
 const apis: any = {}
 
-const cosConfig = config.cosConfig
-const { CHUNK_DIR } = config.chunkConfig
+const COS_CONFIG = config.COS_CONFIG
+const { CHUNK_DIR } = config.CHUNK_CONFIG
 // COS实例
 // import COS from 'cos-nodejs-sdk-v5'
 function COS(options: any) {}
 
 const cos: any = new COS({
     // 必选参数
-    SecretId: cosConfig.COS_SECRET_ID,
-    SecretKey: cosConfig.COS_SECRET_KEY,
+    SecretId: COS_CONFIG.COS_SECRET_ID,
+    SecretKey: COS_CONFIG.COS_SECRET_KEY,
     // 可选参数
     FileParallelLimit: 3, // 控制文件上传并发数
     ChunkParallelLimit: 5, // 控制单个文件下分片上传并发数，在同园区上传可以设置较大的并发数
@@ -43,8 +43,8 @@ const cosUpload = async (file: any) => {
     return new Promise((resolve, reject) => {
         cos.putObject(
             {
-                Bucket: cosConfig.COS_BUCKET /* 必须 */,
-                Region: cosConfig.COS_REGION /* 必须 */,
+                Bucket: COS_CONFIG.COS_BUCKET /* 必须 */,
+                Region: COS_CONFIG.COS_REGION /* 必须 */,
                 /**
                  * 必须
                  * 请求的对象键，最前面不带 /，例如 images/1.jpg

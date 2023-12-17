@@ -5,12 +5,12 @@ import Koa from 'koa'
 import koaCompress from 'koa-compress'
 import middleWares from './middleWares'
 import api from './api/index'
-import { startChunkClear } from './schedule'
+// import { startChunkClear } from './schedule'
 
 class App extends Koa {
     constructor() {
         super()
-        startChunkClear()
+        // startChunkClear()
         this.on('error', error => {
             console.log('server error', error)
         })

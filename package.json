@@ -28,6 +28,7 @@
         "test": "NODE_ENV=testing mocha -r ts-node/register --check-leaks --parallel src/**/*.test.ts"
     },
     "dependencies": {
+        "@cloudbase/node-sdk": "^2.11.0",
         "@koa/router": "^12.0.0",
         "axios": "^1.5.0",
         "chalk": "^4.1.2",
@@ -45,7 +46,8 @@
         "memory-cache": "^0.2.0",
         "node-schedule": "^2.1.1",
         "swagger-jsdoc": "^6.2.8",
-        "typescript": "^4.7.4"
+        "typescript": "^4.7.4",
+        "uuid": "^9.0.1"
     },
     "devDependencies": {
         "@types/chai": "^4.3.0",
@@ -65,6 +67,7 @@
         "@types/sinon": "^10.0.11",
         "@types/supertest": "^2.0.11",
         "@types/swagger-jsdoc": "^6.0.2",
+        "@types/uuid": "^9.0.7",
         "@typescript-eslint/eslint-plugin": "^6.2.0",
         "@typescript-eslint/parser": "^6.2.0",
         "@vercel/node": "^3.0.5",

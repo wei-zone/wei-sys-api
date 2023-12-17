@@ -8,6 +8,7 @@ node_modules
 .env.*.local
 src/public/uploads/**/*
 src/public/chunks/**/*
+src/config/config.dev.ts
 
 # Log files
 npm-debug.log*

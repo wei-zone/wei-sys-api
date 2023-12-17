@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import schedule from 'node-schedule'
 import config from '../config'
-const { CHUNK_DIR } = config.chunkConfig
+const { CHUNK_DIR } = config.CHUNK_CONFIG
 
 // 大文件存储目录
 const UPLOAD_DIR = path.join(__dirname, '../public', CHUNK_DIR)

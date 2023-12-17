@@ -2,14 +2,16 @@ import Router from '@koa/router'
 import v1 from './v1/index'
 import { Context } from 'koa'
 import { swaggerSpec } from '../config'
+import { cloud } from '../libs'
 
 const route = new Router({
     // Current folder
 })
 
-route.all('/', (context: Context) => {
+route.all('/', async (context: Context) => {
+    const res = await cloud.get('users', 1, 10, [{}])
     context.send({
-        data: 'Hello Koa!',
+        data: res,
         code: 201
     })
 })

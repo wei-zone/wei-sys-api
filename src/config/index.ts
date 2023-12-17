@@ -15,8 +15,8 @@ const configs: any = {
 
 // 通用配置
 const common = {
-    dateFormat: 'YYYY-MM-DD HH:mm:ss',
-    dayFormat: 'YYYY-MM-DD'
+    TIME_FORMAT: 'YYYY-MM-DD HH:mm:ss',
+    DAY_FORMAT: 'YYYY-MM-DD'
 }
 
 const config = {
@@ -25,4 +25,8 @@ const config = {
 }
 
 export default config
+
+/**
+ * swagger 接口文档配置
+ */
 export * from './swagger'

@@ -20,7 +20,7 @@ function main(): void {
     const app = new App()
     // createServer
     const server = http.createServer(app.callback())
-    const port = config.port
+    const port = config.PORT
     server.listen(port)
 
     // Event listener for HTTP server "error" event.
