@@ -7,7 +7,6 @@
 export const env = process.env.NODE_ENV || 'development'
 import development from './config.dev'
 import production from './config.pro'
-
 const configs: any = {
     development,
     production

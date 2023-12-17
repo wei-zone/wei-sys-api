@@ -1,12 +1,15 @@
 /**
  * server entry
  */
-import App from './app'
-import config from './config'
+
 import http from 'node:http'
 import { AddressInfo } from 'node:net'
 import chalk from 'chalk'
-import _package from '../package.json'
+// 别名
+import './alias.config'
+import config from '@/config'
+import _package from '@/package'
+import App from '@/app'
 import ErrnoException = NodeJS.ErrnoException
 
 // Check if the address is an AddressInfo

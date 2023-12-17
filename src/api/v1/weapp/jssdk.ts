@@ -1,6 +1,6 @@
 import Router from '@koa/router'
 import { Context } from 'koa'
-import controller from '../../../controllers/weapp/jssdk'
+import controller from '@/controllers/weapp/jssdk'
 
 const route = new Router({
     prefix: '/jssdk' // 路由前缀

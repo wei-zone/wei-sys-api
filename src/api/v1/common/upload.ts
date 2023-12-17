@@ -5,7 +5,7 @@
  */
 import Router from '@koa/router'
 import { Context } from 'koa'
-import controller from '../../../controllers/common/upload'
+import controller from '@/controllers/common/upload'
 
 const route = new Router({
     prefix: '/upload' // 路由前缀

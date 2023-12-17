@@ -1,7 +1,7 @@
 import swaggerJSDoc from 'swagger-jsdoc'
 import path from 'path'
 import config, { env } from './index'
-import pkg from '../../package.json'
+import pkg from '@/package'
 
 const swaggerDefinition = {
     info: {

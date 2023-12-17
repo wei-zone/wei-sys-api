@@ -4,7 +4,7 @@
  * @Description: errHandle.ts
  */
 import { Context } from 'koa'
-import { IResponse } from '../@types'
+import { IResponse } from '@/types'
 import chalk from 'chalk'
 
 export default () => {

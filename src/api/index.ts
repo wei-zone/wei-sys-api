@@ -1,8 +1,8 @@
 import Router from '@koa/router'
-import v1 from './v1/index'
 import { Context } from 'koa'
-import { swaggerSpec } from '../config'
-import { cloud } from '../libs'
+import { swaggerSpec } from '@/config'
+import { cloud } from '@/libs'
+import v1 from './v1/index'
 
 const route = new Router({
     // Current folder

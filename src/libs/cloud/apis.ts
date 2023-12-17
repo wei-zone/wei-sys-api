@@ -7,15 +7,15 @@ import { v4 as uuid } from 'uuid'
 import { Database } from '@cloudbase/node-sdk'
 import OrderByDirection = Database.OrderByDirection
 
-import app from './index'
-import config from '../../config'
-import { getFileExtension, getFileName } from '../file'
+import cloudApp from './index'
+import config from '@/config'
+import { getFileExtension, getFileName } from '@/libs'
 
 const { CLOUD_APP, TIME_FORMAT } = config
 const { PAGE_SIZE, DB_PREFIX } = CLOUD_APP // 默认分页
 
 // 数据库初始化
-const db = app.database()
+const db = cloudApp.database()
 const _ = db.command
 
 /**
@@ -147,7 +147,7 @@ const upload = function (file: File, name: string) {
     const fileType = getFileExtension(name)
     const fileName = getFileName(name, fileType)
     const cloudPath = `${basePath}${fileName}.${fileId}.${fileType}`
-    return app.uploadFile({
+    return cloudApp.uploadFile({
         cloudPath: cloudPath,
         fileContent: file
     })
@@ -160,7 +160,7 @@ const upload = function (file: File, name: string) {
 const getTempFileURL = function (fileList: string[]) {
     console.log('getTempFileURL --->')
     console.log(fileList)
-    return app.getTempFileURL({
+    return cloudApp.getTempFileURL({
         fileList
     })
 }

@@ -8,9 +8,9 @@ import { Context } from 'koa'
 import path from 'path'
 import fs from 'fs'
 import dayjs from 'dayjs'
-import { generateUniqueChar } from '../../libs'
-import config from '../../config'
-import { getFileExtension, getFileName } from '../../libs/file'
+import { generateUniqueChar } from '@/libs'
+import config from '@/config'
+import { getFileExtension, getFileName } from '@/libs/file'
 // 云开发api
 const apis: any = {}
 
