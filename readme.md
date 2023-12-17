@@ -10,7 +10,7 @@
 
 [https://forguo.cn/api/](https://forguo.cn/api/)
 
-[https://forguo.cn/api/api-docs/](https://forguo.cn/api/api-docs/)
+[https://forguo.cn/api/api-docs](https://forguo.cn/api/api-docs)
 
 ```bash
 # install dependencies
