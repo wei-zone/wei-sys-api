@@ -12,7 +12,7 @@ const swaggerDefinition = {
             name: pkg.author
         }
     },
-    host: env === 'development' ? `127.0.0.1:${config.port}` : `forguo.cn/api`,
+    host: env === 'development' ? `127.0.0.1:${config.PORT}` : `forguo.cn/api`,
     basePath: '/', // Base path (optional)
     // 定义全局model
     definitions: {
@@ -48,9 +48,9 @@ const swaggerDefinition = {
 const swaggerSpec = swaggerJSDoc({
     swaggerDefinition,
     apis: [
-        path.join(__dirname, '../api/*/*/*.yaml'),
-        path.join(__dirname, '../api/*/*/*.ts'),
-        path.join(__dirname, '../api/*/*/*.js')
+        path.join(__dirname, '../apis/*/*/*.yaml'),
+        path.join(__dirname, '../apis/*/*/*.ts'),
+        path.join(__dirname, '../apis/*/*/*.js')
     ] // 写有注解的router的存放地址, 最好path.join()
 })
 

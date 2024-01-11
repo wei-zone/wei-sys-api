@@ -4,7 +4,7 @@
 import Koa from 'koa'
 import koaCompress from 'koa-compress'
 import middleWares from './middleWares'
-import api from './api/index'
+import apis from '@/apis/index'
 // import { startChunkClear } from './schedule'
 
 class App extends Koa {
@@ -19,8 +19,8 @@ class App extends Koa {
         }
         // Finally, mount the top-level API router
         this.use(middleWares)
-        this.use(api.routes())
-        this.use(api.allowedMethods())
+        this.use(apis.routes())
+        this.use(apis.allowedMethods())
     }
 }
 

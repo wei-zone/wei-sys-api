@@ -7,7 +7,7 @@ import { AddressInfo } from 'node:net'
 import chalk from 'chalk'
 // 别名
 import './alias.config'
-import config from '@/config'
+import config, { env } from '@/config'
 import _package from '@/package'
 import App from '@/app'
 import ErrnoException = NodeJS.ErrnoException
@@ -61,9 +61,10 @@ function main(): void {
             console.log('\t')
             console.log(chalk.blueBright(_package.name), chalk.grey('v' + _package.version))
             console.log('\t')
+            const host = config.env === 'production' ? config.host : '127.0.0.1'
             console.log(chalk.cyan('➜  Local:   http://%s:%s/'), 'localhost', port)
-            console.log(chalk.cyan('➜  Network: http://%s:%s/'), '127.0.0.1', port)
-            console.log(chalk.cyan('➜  ApiDocs: http://%s:%s%s'), '127.0.0.1', port, '/api-docs')
+            console.log(chalk.cyan('➜  Network: http://%s:%s/'), host, port)
+            console.log(chalk.cyan('➜  ApiDocs: http://%s:%s%s'), host, port, '/api-docs')
             // [api-docs](http://127.0.0.1:3003/api-docs)
             console.log('\t')
         }
