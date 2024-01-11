@@ -7,7 +7,7 @@ import { AddressInfo } from 'node:net'
 import chalk from 'chalk'
 // 别名
 import './alias.config'
-import config, { env } from '@/config'
+import config from '@/config'
 import _package from '@/package'
 import App from '@/app'
 import ErrnoException = NodeJS.ErrnoException
@@ -56,7 +56,7 @@ function main(): void {
         if (address === null) {
             return
         }
-        console.log('env', chalk.cyan(process.env.NODE_ENV))
+        console.log('env', chalk.cyan(config.env))
         if (isAddressInfo(address)) {
             console.log('\t')
             console.log(chalk.blueBright(_package.name), chalk.grey('v' + _package.version))
