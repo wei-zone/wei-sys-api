@@ -2,14 +2,15 @@
  * server entry
  */
 
-import http from 'node:http'
-import { AddressInfo } from 'node:net'
-import chalk from 'chalk'
 // 别名
 import './alias.config'
+import http from 'http'
+import { AddressInfo } from 'node:net'
+import chalk from 'chalk'
 import config from '@/config'
 import _package from '@/package'
 import App from '@/app'
+import SocketServer from '@/scoket/server'
 import ErrnoException = NodeJS.ErrnoException
 
 // Check if the address is an AddressInfo
@@ -23,6 +24,7 @@ function main(): void {
     const app = new App()
     // createServer
     const server = http.createServer(app.callback())
+    SocketServer(server)
     const port = config.PORT
     server.listen(port)
 
@@ -65,7 +67,6 @@ function main(): void {
             console.log(chalk.cyan('➜  Local:   http://%s:%s/'), 'localhost', port)
             console.log(chalk.cyan('➜  Network: http://%s:%s/'), host, port)
             console.log(chalk.cyan('➜  ApiDocs: http://%s:%s%s'), host, port, '/api-docs')
-            // [api-docs](http://127.0.0.1:3003/api-docs)
             console.log('\t')
         }
     })

@@ -8,8 +8,8 @@ import cache from 'memory-cache' // 缓存
 import { createNonceStr, createTimestamp, raw, request, sha1 } from '@/libs'
 import config from '@/config'
 import { Context } from 'koa' // 配置
-const { OFFICE_APP } = config
-const { APP_ID, SECRET } = OFFICE_APP
+const { WE_APP } = config
+const { APP_ID, SECRET } = WE_APP
 
 export interface IRet {
     jsapi_ticket: string

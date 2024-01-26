@@ -17,7 +17,7 @@ const common = {
     TIME_FORMAT: 'YYYY-MM-DD HH:mm:ss',
     DAY_FORMAT: 'YYYY-MM-DD',
     env,
-    host: 'forguo.cn/api'
+    host: 'cloud-app.com.cn'
 }
 
 const config = {

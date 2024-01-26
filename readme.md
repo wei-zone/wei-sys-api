@@ -25,14 +25,15 @@ pnpm run build
 
 ## Features
 
--   [x] koa2
--   [x] typescript
--   [x] eslint
--   [x] prettier
--   [x] husky
--   [x] lint-staged
--   [x] release-it
--   [x] commitizen
+- [x] koa2
+- [x] typescript
+- [x] eslint
+- [x] prettier
+- [x] husky
+- [x] lint-staged
+- [x] release-it
+- [x] commitizen
+- [x] socket.io
 
 ## 接口
 

@@ -10,8 +10,9 @@ import OrderByDirection = Database.OrderByDirection
 import cloudApp from './index'
 import config from '@/config'
 import { getFileExtension, getFileName } from '@/libs'
+import { ReadStream } from 'fs'
 
-const { CLOUD_APP, TIME_FORMAT } = config
+const { CLOUD_APP } = config
 const { PAGE_SIZE, DB_PREFIX } = CLOUD_APP // 默认分页
 
 // 数据库初始化
@@ -29,15 +30,15 @@ const add = function (tableName, data) {
     console.log(data)
     return db.collection(`${DB_PREFIX}${tableName}`).add({
         ...data,
-        _createTime: dayjs().format(TIME_FORMAT),
-        _updateTime: dayjs().format(TIME_FORMAT)
+        _createTime: Date.now(),
+        _updateTime: Date.now()
     })
 }
 
 /**
  * @desc 查询数据
  * @param tableName
- * @param current
+ * @param current 从1开始
  * @param size
  * @param filters 可多条件查询 [{ enabled: true }]
  * @param orderBy
@@ -61,6 +62,31 @@ const get = function (
         .skip((current - 1) * size)
         .limit(Number(size))
         .where(_.or(query))
+        .get()
+}
+
+/**
+ * @desc 查询数据
+ * @param tableName
+ * @param filters 可多条件查询 [{ enabled: true }]
+ * @param orderBy
+ * @param order 默认降序desc，asc升序
+ */
+const all = function (
+    tableName: string,
+    filters: object[] = [],
+    orderBy = '_createTime',
+    order: OrderByDirection = 'desc' // 'desc' | 'asc'
+) {
+    console.log('database all --->')
+    console.log(chalk.blue('tableName:'), chalk.green(tableName))
+    console.log(filters)
+    const query = filters.length ? filters : [{}]
+    return db
+        .collection(`${DB_PREFIX}${tableName}`)
+        .orderBy(orderBy, order) // 默认时间降序，从大到小
+        .where(_.or(query))
+        .limit(1000)
         .get()
 }
 
@@ -95,7 +121,7 @@ const getBy = function (tableName: string, filters: object[] = []) {
  * @param tableName
  * @param id
  */
-const getOne = function (tableName: string, id: string) {
+const getOne = function (tableName: string, id: string | number) {
     console.log('database getOne --->')
     console.log(chalk.blue('tableName:'), chalk.green(tableName))
     console.log(chalk.blue('id:'), chalk.green(id))
@@ -118,7 +144,7 @@ const update = function (tableName: string, data: object, id: string) {
         .doc(id)
         .update({
             ...data,
-            _updateTime: dayjs().format(TIME_FORMAT)
+            _updateTime: Date.now()
         })
 }
 
@@ -139,10 +165,10 @@ const remove = function (tableName: string, id: string) {
  * @param file
  * @param name
  */
-const upload = function (file: File, name: string) {
+const upload = function (file: ReadStream, name: string) {
     console.log('file upload --->')
     console.log(name)
-    const basePath = `cloud-app/${dayjs().format('YYYY')}/${dayjs().format('MM')}/${dayjs().format('DD')}/`
+    const basePath = `cloud-app/${dayjs().format('YYYY')}/${dayjs().format('MM')}/`
     const fileId = uuid()
     const fileType = getFileExtension(name)
     const fileName = getFileName(name, fileType)
@@ -169,6 +195,7 @@ export default {
     db,
     add,
     get,
+    all,
     getTotal,
     getOne,
     getBy,

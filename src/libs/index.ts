@@ -1,5 +1,5 @@
 export * from './utils'
 export * from './request'
-export * from './weapp'
+export * from './minapp'
 export * from './cloud'
 export * from './file'

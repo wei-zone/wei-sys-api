@@ -1,12 +1,21 @@
 /**
  * @Author: forguo
- * @Date: 2023/9/24 16:52
- * @Description: 微信用户信息解密
+ * @Date: 2021/8/9 12:12
+ * @Description: util.js
  */
-import crypto from 'crypto'
 import chalk from 'chalk'
+import { request } from '@/libs'
+import config from '@/config'
+import crypto from 'crypto'
+const { MIN_APP } = config
+const { APP_ID, APP_SECRET } = MIN_APP
 
-export class Weapp {
+export interface IMinUser {
+    openid: string
+    session_key: string
+}
+
+export class WXBizDataCrypt {
     appId: string
     sessionKey: string
 
@@ -44,6 +53,28 @@ export class Weapp {
 }
 
 /**
+ * @desc 登录凭证校验。通过 wx.login 接口获得临时登录凭证 code 后传到开发者服务器调用此接口完成登录流程。更多使用方法详见 小程序登录。
+ */
+export const code2Session = function (code) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const res: any = await request({
+                // 云托管需要http
+                url: `http://api.weixin.qq.com/sns/jscode2session?appid=${APP_ID}&secret=${APP_SECRET}&js_code=${code}&grant_type=authorization_code`,
+                method: 'get'
+            })
+            if (!res.errcode) {
+                resolve(res)
+            } else {
+                reject(res)
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+/**
  * @description 微信用户信息解密
  * @param appId
  * @param session_key
@@ -52,7 +83,7 @@ export class Weapp {
  */
 export const decryptData = (appId: string, session_key: string, encryptedData: string, iv: string) => {
     try {
-        const pc = new Weapp(appId, session_key)
+        const pc = new WXBizDataCrypt(appId, session_key)
         const data = pc.decryptData(encryptedData, iv)
         console.log(chalk.green('decryptData --->'), data)
         return Promise.resolve(data)

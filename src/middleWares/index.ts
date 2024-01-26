@@ -32,6 +32,7 @@ const middleware = compose([
     koaBody(),
     rest(),
     errHandle(),
+    //     jwt,
     koaSwagger({
         routePrefix: '/api-docs', // 接口文档访问地址
         swaggerOptions: {
