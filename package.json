@@ -17,7 +17,7 @@
     "packageManager": "pnpm@7.6.0",
     "scripts": {
         "dev": "nodemon src/index.ts",
-        "start": "cross-env NODE_ENV=production node src/index.js",
+        "start": "cross-env NODE_ENV=production ts-node src/index.ts",
         "build": "cross-env NODE_ENV=production tsc --build",
         "coverage": "nyc npm run test",
         "lint": "npm run lint-json && npm run lint-ts",
