@@ -58,12 +58,13 @@ function main(): void {
         if (address === null) {
             return
         }
-        console.log('env', chalk.cyan(config.env))
+        console.log('➜ env', chalk.cyan(config.env))
+        console.log('➜ time', chalk.green(new Date().toLocaleString()))
         if (isAddressInfo(address)) {
             console.log('\t')
             console.log(chalk.blueBright(_package.name), chalk.grey('v' + _package.version))
             console.log('\t')
-            const host = config.env === 'production' ? config.host : '127.0.0.1'
+            const host = '127.0.0.1'
             console.log(chalk.cyan('➜  Local:   http://%s:%s/'), 'localhost', port)
             console.log(chalk.cyan('➜  Network: http://%s:%s/'), host, port)
             console.log(chalk.cyan('➜  ApiDocs: http://%s:%s%s'), host, port, '/api-docs')

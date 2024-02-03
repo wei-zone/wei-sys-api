@@ -11,6 +11,7 @@ on:
         branches:
             - master
             - main
+            - player
 
 env: # 设置环境变量
     TZ: Asia/Shanghai # 时区
@@ -54,9 +55,10 @@ jobs:
             -   name: Docker Image Build - 打包Docker镜像
                 uses: elgohr/Publish-Docker-Github-Action@v5
                 with:
-                    name: forguo/koa2
+                    name: forguo/koa2:latest # tag需要固定
                     username: ${{ secrets.DOCKER_USERNAME }}
                     password: ${{ secrets.DOCKER_PASSWORD }}
+                    tag_names: false # when you want to push tags/release by their git name
 
             # 登录远程服务器并部署容器
             -   name: Docker Image Deploy - 部署
