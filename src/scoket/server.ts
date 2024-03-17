@@ -4,10 +4,11 @@ import dayjs from 'dayjs'
 import { consoleEmit, playerOn } from '@/types/scoket'
 // import { instrument } from '@socket.io/admin-ui'
 
-const logger = (type, data) => {
-    console.log(chalk.gray('<--'), chalk.white(type), chalk.gray(JSON.stringify(data)))
+const logger = (type: any, data: any) => {
+    console.log(chalk.gray('<-'), chalk.white(type))
+    console.log(chalk.gray(JSON.stringify(data)))
     console.log(chalk.gray(dayjs().format('YYYY-MM-DD HH:mm:ss')))
-    console.log('\n')
+    console.log('-> \n')
 }
 
 // 定义函数来处理数据
@@ -29,7 +30,7 @@ export default function socketServer(httpServer) {
         })
 
         // 给客户端发送消息
-        socket.emit('welcome', ' welcome socket')
+        socket.emit('welcome', socket.id)
 
         /**
          * 控制台发送 s

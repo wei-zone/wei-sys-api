@@ -8,6 +8,8 @@ import jsonWebToken from 'jsonwebtoken'
 import { code2Session, decryptData } from '@/libs/minapp'
 import { cloud } from '@/libs'
 import config from '@/config'
+import { Context } from 'koa'
+
 const { MIN_APP } = config
 const { APP_ID, JWT_SECRET, JWT_EXPIRES_IN } = MIN_APP
 
@@ -62,7 +64,7 @@ class Controller {
      * @param ctx
      * @return {Promise<void>}
      */
-    async login(ctx) {
+    async login(ctx: Context): Promise<void> {
         try {
             const { code = '' } = ctx.request.query
             if (!code) {
@@ -91,7 +93,7 @@ class Controller {
                     userId
                 }
             })
-        } catch (e) {
+        } catch (e: any) {
             ctx.throw(e)
         }
     }

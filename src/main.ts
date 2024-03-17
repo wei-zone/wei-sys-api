@@ -12,6 +12,7 @@ import _package from '@/package'
 import App from '@/app'
 import SocketServer from '@/scoket/server'
 import ErrnoException = NodeJS.ErrnoException
+import dayjs from 'dayjs'
 
 // Check if the address is an AddressInfo
 function isAddressInfo(address: string | AddressInfo | null): address is AddressInfo {
@@ -58,11 +59,11 @@ function main(): void {
         if (address === null) {
             return
         }
-        console.log('➜ env', chalk.cyan(config.env))
-        console.log('➜ time', chalk.green(new Date().toLocaleString()))
+        console.log(chalk.blueBright(_package.name))
+        console.log('➜ v', chalk.grey(_package.version))
+        console.log('➜ env', chalk.grey(config.env))
+        console.log('➜ time', chalk.grey(dayjs().format('YYYY-MM-DD HH:mm:ss')))
         if (isAddressInfo(address)) {
-            console.log('\t')
-            console.log(chalk.blueBright(_package.name), chalk.grey('v' + _package.version))
             console.log('\t')
             const host = '127.0.0.1'
             console.log(chalk.cyan('➜  Local:   http://%s:%s/'), 'localhost', port)

@@ -3,6 +3,7 @@
  * @author: forguo
  */
 
+import koaRange from 'koa-range'
 import helmet from 'koa-helmet'
 import logger from 'koa-logger'
 import compose from 'koa-compose'
@@ -19,6 +20,8 @@ import errHandle from './errHandle'
  * 使用koa-compose 集成中间件
  */
 const middleware = compose([
+    // 解决视频流问题，content-range问题，视频不能拖拽播放
+    koaRange,
     require('koa-static')(path.join(__dirname, '../public/')), // 静态资源
     // security headers (https://github.com/venables/koa-helmet)
     // helmet({
