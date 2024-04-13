@@ -86,7 +86,7 @@ class Controller {
                 }
             )
             await this.updateUserInfo(ctx, userId)
-            ctx.send({
+            ctx.success({
                 data: {
                     token,
                     expiresIn: Date.now() + JWT_EXPIRES_IN * 1000, // 返回token过期时间，多少毫秒过后，存储于客户端
@@ -117,7 +117,7 @@ class Controller {
             await this.updateUserInfo(ctx, userId, data)
             const userList = await cloud.getOne('map_users', userId)
             const user = userList.data[0]
-            ctx.send({
+            ctx.success({
                 data: user
             })
         } catch (e) {
@@ -143,7 +143,7 @@ class Controller {
             const { encryptedData, iv } = ctx.request.body
             const data = await decryptData(APP_ID, session_key, encryptedData, iv)
             await this.updateUserInfo(ctx, userId, data)
-            ctx.send({
+            ctx.success({
                 data: {
                     ...data,
                     userId

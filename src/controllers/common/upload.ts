@@ -178,7 +178,7 @@ class Controller {
             const src = `${ctx.origin}${dirPath}/${fileName}`
 
             // 处理上传的文件
-            ctx.send({
+            ctx.success({
                 data: {
                     src
                 }
@@ -205,7 +205,7 @@ class Controller {
         // COS需要去除该设置 --> koa-body/uploadDir
         try {
             const res = await cosUpload(file)
-            ctx.send({
+            ctx.success({
                 data: res
             })
         } catch (e) {
@@ -234,7 +234,7 @@ class Controller {
             if (files.fileList.length > 0) {
                 const data = files.fileList[0]
                 data.src = data.download_url
-                ctx.send({
+                ctx.success({
                     data
                 })
             } else {
@@ -286,7 +286,7 @@ class Controller {
         } else {
             data.src = `${ctx.origin}${CHUNK_DIR}${fileFullName}`
         }
-        ctx.send({
+        ctx.success({
             data,
             message
         })
@@ -335,7 +335,7 @@ class Controller {
             // 生成上传后的文件链接
             const src = `${ctx.origin}${dirPath}/${chunkHash}`
             // 处理上传的文件
-            ctx.send({
+            ctx.success({
                 data: {
                     src
                 }
@@ -376,7 +376,7 @@ class Controller {
         // 合并切片
         await mergeFileChunk(fileSavePath, dirPathLocal, size)
 
-        ctx.send({
+        ctx.success({
             data: {
                 src: `${ctx.origin}${CHUNK_DIR}${fileFullName}`
             }

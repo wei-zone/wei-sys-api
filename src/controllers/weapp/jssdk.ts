@@ -127,7 +127,7 @@ class Controller {
         }
         try {
             const res = await this.generateConfig(url)
-            ctx.send({
+            ctx.success({
                 data: res
             })
         } catch (e) {

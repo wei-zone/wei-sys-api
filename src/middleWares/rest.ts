@@ -24,10 +24,10 @@ const render = (context: Context) => {
 }
 
 // 处理请求失败方法
-const renderFail = (context: Context) => {
+const renderFail = (ctx: Context) => {
     // 返回一个 function
     return ({ code = -1, message = 'error', data }: IResponse) => {
-        context.send({
+        ctx.success({
             code,
             message,
             data
@@ -38,7 +38,7 @@ const renderFail = (context: Context) => {
 export default () => {
     return async (context: Context, next: Next) => {
         // 返回一个 function，在 controller 中执行
-        context.send = render(context)
+        context.success = render(context)
         context.fail = renderFail(context)
         await next()
     }

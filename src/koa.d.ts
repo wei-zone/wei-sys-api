@@ -6,14 +6,14 @@ import { IResponse } from '@/types/response'
 export * from 'koa'
 declare module 'koa' {
     /**
-     * 添加 send 和 fail 方法
+     * 添加 success 和 fail 方法
      */
     interface Context {
         /**
          * 响应成功
          * @param data 响应数据
          */
-        send: (data: IResponse) => void
+        success: (data: IResponse) => void
         /**
          * 响应失败
          * @param data

@@ -8,9 +8,9 @@ const route = new Router({
     // Current folder
 })
 
-route.all('/', async (context: Context) => {
+route.all('/', async (ctx: Context) => {
     const res = await cloud.get('users', 1, 10, [{}])
-    context.send({
+    ctx.success({
         data: res,
         code: 201
     })
