@@ -6,7 +6,7 @@
 
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, CreateAxiosDefaults } from 'axios'
-import { IResponse } from '@/types/type'
+import { IResponse } from '@/types/response'
 
 class Request {
     // axios实例

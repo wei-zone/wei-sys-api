@@ -1,5 +1,5 @@
 /**
- * @description: 全局类型定义
+ * 接口响应体
  */
 export interface IResponse {
     code?: number

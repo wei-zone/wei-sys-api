@@ -3,7 +3,7 @@
  * @description: rest
  */
 import { Context, Next } from 'koa'
-import { IResponse } from '@/types/type'
+import { IResponse } from '@/types/response'
 
 // 处理请求成功方法
 const render = (context: Context) => {
