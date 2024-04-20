@@ -85,6 +85,20 @@ export default function socketServer(httpServer) {
             }
         })
 
+        socket.on('message', message => {
+            logger('received:', message)
+            for (let i = 0; i <= 10; i++) {
+                const data: any = {
+                    progress: i,
+                    type: 'message',
+                    message
+                }
+                setTimeout(() => {
+                    socket.send(data)
+                }, 500 * i)
+            }
+        })
+
         /**
          * 播放端接收 s
          */
