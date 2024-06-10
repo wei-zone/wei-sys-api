@@ -9,10 +9,9 @@ const route = new Router({
 })
 
 route.all('/', async (ctx: Context) => {
-    const res = await cloud.get('users', 1, 10, [{}])
+    // const res = await cloud.get('users', 1, 10, [{}])
     ctx.success({
-        data: res,
-        code: 201
+        data: 'Hello Koa2'
     })
 })
 

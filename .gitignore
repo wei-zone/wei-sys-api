@@ -16,6 +16,7 @@ yarn-debug.log*
 yarn-error.log*
 .eslintcache
 .vercel
+/src/public/logs/
 
 # Editor directories and files
 .idea
