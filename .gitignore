@@ -17,6 +17,8 @@ yarn-error.log*
 .eslintcache
 .vercel
 /src/public/logs/
+/.nyc_output/
+/coverage/
 
 # Editor directories and files
 .idea

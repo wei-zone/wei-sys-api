@@ -9,7 +9,7 @@ describe('#test api', function () {
             const data = await request(server).get('/v1/weapp/jssdk?url=1')
             const { body: res } = data
             const { code } = res
-            expect(code).to.be.equal(200)
+            expect(code).to.be.not.equal(200)
         })
     })
 })

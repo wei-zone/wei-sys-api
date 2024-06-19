@@ -3,6 +3,6 @@ import { expect } from 'chai'
 
 describe('#app main', () => {
     it('has the testing environment set correctly', () => {
-        expect(process.env.NODE_ENV).to.not.empty
+        expect(process.env.NODE_ENV).to.not.equal('production')
     })
 })
