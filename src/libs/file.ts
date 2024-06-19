@@ -10,7 +10,7 @@
  */
 export const getFileExtension = (fileName: string): string => {
     const ext = fileName.split('.').pop()
-    if (!ext) return ''
+    if (!ext || ext === fileName) return ''
     return ext.toLowerCase()
 }
 
