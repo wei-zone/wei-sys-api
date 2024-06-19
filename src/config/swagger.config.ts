@@ -1,9 +1,12 @@
+/**
+ * swagger config
+ */
 import swaggerJSDoc from 'swagger-jsdoc'
 import path from 'path'
 import config, { env } from './index'
 import pkg from '@/package'
 
-const swaggerDefinition = {
+export const swaggerDefinition = {
     info: {
         title: pkg.name,
         version: pkg.version,
@@ -45,7 +48,7 @@ const swaggerDefinition = {
     }
 }
 
-const swaggerSpec = swaggerJSDoc({
+export const swaggerSpec = swaggerJSDoc({
     swaggerDefinition,
     apis: [
         path.join(__dirname, '../apis/*/*/*.yaml'),
@@ -53,5 +56,3 @@ const swaggerSpec = swaggerJSDoc({
         path.join(__dirname, '../apis/*/*/*.js')
     ] // 写有注解的router的存放地址, 最好path.join()
 })
-
-export { swaggerDefinition, swaggerSpec }

@@ -4,7 +4,6 @@
 
 // 别名
 import './alias.config'
-import http from 'http'
 import { AddressInfo } from 'node:net'
 import chalk from 'chalk'
 import config from '@/config'
@@ -24,10 +23,9 @@ function isAddressInfo(address: string | AddressInfo | null): address is Address
 function main(): void {
     const app = new App()
     // createServer
-    const server = http.createServer(app.callback())
-    SocketServer(server)
     const port = config.PORT
-    server.listen(port)
+    const server = app.listen(port)
+    SocketServer(server)
 
     // Event listener for HTTP server "error" event.
     server.on('error', (error: ErrnoException) => {

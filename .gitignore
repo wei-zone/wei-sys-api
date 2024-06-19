@@ -8,6 +8,7 @@ node_modules
 .env.*.local
 src/public/uploads/**/*
 src/public/chunks/**/*
+static/**/*
 
 # Log files
 npm-debug.log*
@@ -15,6 +16,7 @@ yarn-debug.log*
 yarn-error.log*
 .eslintcache
 .vercel
+/src/public/logs/
 
 # Editor directories and files
 .idea
