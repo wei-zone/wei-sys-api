@@ -19,5 +19,5 @@ echo -e "---------创建容器并运行容器--------"
 # -p: 端口映射，本机端口:容器端口
 # --name: 指定容器名称
 # 最后一个为镜像名称
-docker run --rm -d -p 10010:3003 --name koa2-ali registry.cn-hangzhou.aliyuncs.com/cloud-apps/koa2:latest
+docker run --rm -d -p 10086:3003 --name koa2-ali registry.cn-hangzhou.aliyuncs.com/cloud-apps/koa2:latest
 echo -e "--------- ✅  Successfully Deployed --------"
