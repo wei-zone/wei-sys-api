@@ -4,8 +4,7 @@
  */
 import { Context, Next } from 'koa'
 import { IResponse } from '@/types/response'
-import logUtil from '@/libs/log4'
-import dayjs from 'dayjs'
+import { successLogger, errorLogger } from '@/libs'
 
 // 处理请求成功方法
 const render = (context: Context) => {
@@ -21,9 +20,7 @@ const render = (context: Context) => {
         if (data) {
             response.data = data
         }
-        code === 200
-            ? logUtil.logSuccess(context, response, dayjs().format('YYYY-MM-DD HH:mm:ss'))
-            : logUtil.logError(context, response, dayjs().format('YYYY-MM-DD HH:mm:ss'))
+        code === 200 ? successLogger(context, response) : errorLogger(context, response)
         context.body = response
     }
 }
@@ -45,6 +42,7 @@ export default () => {
         // 返回一个 function，在 controller 中执行
         context.success = render(context)
         context.fail = renderFail(context)
+        context.requestTime = Date.now()
         await next()
     }
 }

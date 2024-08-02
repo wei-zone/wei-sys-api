@@ -1,7 +1,5 @@
+import { debugLogger } from '@/libs'
 import { Context, Next } from 'koa'
-import chalk from 'chalk'
-import dayjs from 'dayjs'
-import config from '@/config'
 export default () => {
     return async (context: Context, next: Next) => {
         /**
@@ -19,7 +17,7 @@ export default () => {
         if (context.method === 'OPTIONS') {
             context.body = 200
         } else {
-            console.log(chalk.gray(`${dayjs().format(config.TIME_FORMAT)}`))
+            debugLogger.info(`${context.request.originalUrl}`, context.request.body || context.request.query)
         }
         await next()
     }

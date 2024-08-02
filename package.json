@@ -99,10 +99,5 @@
         "sinon": "^15.2.0",
         "supertest": "^6.2.2",
         "ts-node": "^10.5.0"
-    },
-    "config": {
-        "commitizen": {
-            "path": "cz-conventional-changelog"
-        }
     }
 }

@@ -2,7 +2,6 @@
  * 云开发API
  */
 import dayjs from 'dayjs'
-import chalk from 'chalk'
 import { v4 as uuid } from 'uuid'
 import { Database } from '@cloudbase/node-sdk'
 import OrderByDirection = Database.OrderByDirection
@@ -24,10 +23,11 @@ const _ = db.command
  * @param tableName
  * @param data
  */
-const add = function (tableName, data) {
-    console.log('database add --->')
-    console.log(chalk.blue('tableName:'), chalk.green(tableName))
-    console.log(data)
+const add = function (tableName: string, data: any) {
+    console.log('database add --->', {
+        tableName,
+        data
+    })
     return db.collection(`${DB_PREFIX}${tableName}`).add({
         ...data,
         _createTime: Date.now(),
@@ -52,9 +52,14 @@ const get = function (
     orderBy = '_createTime',
     order: OrderByDirection = 'desc' // 'desc' | 'asc'
 ) {
-    console.log('database get --->')
-    console.log(chalk.blue('tableName:'), chalk.green(tableName))
-    console.log(filters)
+    console.log('database get --->', {
+        tableName,
+        current,
+        size,
+        filters,
+        orderBy,
+        order
+    })
     const query = filters.length ? filters : [{}]
     return db
         .collection(`${DB_PREFIX}${tableName}`)
@@ -78,9 +83,12 @@ const all = function (
     orderBy = '_createTime',
     order: OrderByDirection = 'desc' // 'desc' | 'asc'
 ) {
-    console.log('database all --->')
-    console.log(chalk.blue('tableName:'), chalk.green(tableName))
-    console.log(filters)
+    console.log('database all --->', {
+        tableName,
+        filters,
+        orderBy,
+        order
+    })
     const query = filters.length ? filters : [{}]
     return db
         .collection(`${DB_PREFIX}${tableName}`)
@@ -96,9 +104,10 @@ const all = function (
  * @param filters
  */
 const getTotal = function (tableName: string, filters: object[] = []) {
-    console.log('database getTotal --->')
-    console.log(chalk.blue('tableName:'), chalk.green(tableName))
-    console.log(filters)
+    console.log('database getTotal --->', {
+        tableName,
+        filters
+    })
     const query = filters.length ? filters : [{}]
     return db.collection(`${DB_PREFIX}${tableName}`).where(_.or(query)).count()
 }
@@ -109,9 +118,10 @@ const getTotal = function (tableName: string, filters: object[] = []) {
  * @param filters
  */
 const getBy = function (tableName: string, filters: object[] = []) {
-    console.log('database getBy --->')
-    console.log(chalk.blue('tableName:'), chalk.green(tableName))
-    console.log(filters)
+    console.log('database getBy --->', {
+        tableName,
+        filters
+    })
     const query = filters.length ? filters : [{}]
     return db.collection(`${DB_PREFIX}${tableName}`).where(_.or(query)).get()
 }
@@ -122,9 +132,10 @@ const getBy = function (tableName: string, filters: object[] = []) {
  * @param id
  */
 const getOne = function (tableName: string, id: string | number) {
-    console.log('database getOne --->')
-    console.log(chalk.blue('tableName:'), chalk.green(tableName))
-    console.log(chalk.blue('id:'), chalk.green(id))
+    console.log('database getOne --->', {
+        tableName,
+        id
+    })
     return db.collection(`${DB_PREFIX}${tableName}`).doc(id).get()
 }
 
@@ -135,10 +146,11 @@ const getOne = function (tableName: string, id: string | number) {
  * @param id
  */
 const update = function (tableName: string, data: object, id: string) {
-    console.log('database update --->')
-    console.log(chalk.blue('tableName:'), chalk.green(tableName))
-    console.log(data)
-    console.log(chalk.blue('id:'), chalk.green(id))
+    console.log('database update --->', {
+        tableName,
+        data,
+        id
+    })
     return db
         .collection(`${DB_PREFIX}${tableName}`)
         .doc(id)
@@ -154,9 +166,10 @@ const update = function (tableName: string, data: object, id: string) {
  * @param id
  */
 const remove = function (tableName: string, id: string) {
-    console.log('database remove --->')
-    console.log(chalk.blue('tableName:'), chalk.green(tableName))
-    console.log(chalk.blue('id:'), chalk.green(id))
+    console.log('database remove --->', {
+        tableName,
+        id
+    })
     return db.collection(`${DB_PREFIX}${tableName}`).doc(id).remove()
 }
 
@@ -166,8 +179,9 @@ const remove = function (tableName: string, id: string) {
  * @param name
  */
 const upload = function (file: ReadStream, name: string) {
-    console.log('file upload --->')
-    console.log(name)
+    console.log('file upload --->', {
+        name
+    })
     const basePath = `cloud-app/${dayjs().format('YYYY')}/${dayjs().format('MM')}/`
     const fileId = uuid()
     const fileType = getFileExtension(name)
@@ -184,8 +198,9 @@ const upload = function (file: ReadStream, name: string) {
  * @param fileList
  */
 const getTempFileURL = function (fileList: string[]) {
-    console.log('getTempFileURL --->')
-    console.log(fileList)
+    console.log('getTempFileURL --->', {
+        fileList
+    })
     return cloudApp.getTempFileURL({
         fileList
     })

@@ -29,7 +29,7 @@ function main(): void {
 
     // Event listener for HTTP server "error" event.
     server.on('error', (error: ErrnoException) => {
-        console.dir(error)
+        console.error('serverError', error)
 
         if (error.syscall !== 'listen') {
             throw error
@@ -41,11 +41,9 @@ function main(): void {
             case 'EACCES':
                 console.error(bind + ' requires elevated privileges')
                 process.exit(1)
-                break
             case 'EADDRINUSE':
                 console.error(bind + ' is already in use')
                 process.exit(1)
-                break
             default:
                 throw error
         }
@@ -57,17 +55,15 @@ function main(): void {
         if (address === null) {
             return
         }
-        console.log(chalk.blueBright(_package.name))
-        console.log('➜ v', chalk.grey(_package.version))
-        console.log('➜ env', chalk.grey(config.env))
-        console.log('➜ time', chalk.grey(dayjs().format('YYYY-MM-DD HH:mm:ss')))
+        console.log(
+            `${_package.name} ${_package.version} ${process.env.NODE_ENV} ${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+        )
         if (isAddressInfo(address)) {
-            console.log('\t')
             const host = '127.0.0.1'
             console.log(chalk.cyan('➜  Local:   http://%s:%s/'), 'localhost', port)
             console.log(chalk.cyan('➜  Network: http://%s:%s/'), host, port)
             console.log(chalk.cyan('➜  ApiDocs: http://%s:%s%s'), host, port, '/api-docs')
-            console.log('\t')
+            console.log(chalk.cyan('➜  ApiLogs: http://%s:%s%s'), host, port, '/api-logs/')
         }
     })
 }

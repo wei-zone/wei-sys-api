@@ -15,7 +15,6 @@ export const swaggerDefinition = {
             name: pkg.author
         }
     },
-    host: env === 'development' ? `127.0.0.1:${config.PORT}` : `api-digital-map.zjqq.vip`,
     basePath: '/', // Base path (optional)
     // 定义全局model
     definitions: {

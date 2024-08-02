@@ -7,6 +7,7 @@
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, CreateAxiosDefaults } from 'axios'
 import { IResponse } from '@/types/response'
+import config from '@/config'
 
 class Request {
     // axios实例
@@ -59,7 +60,7 @@ class Request {
             if (res.status === 200) {
                 return Promise.resolve(res.data)
             }
-            console.error(res)
+            console.error('request error', res)
             return Promise.reject(res)
         })
     }
@@ -89,7 +90,7 @@ class Request {
 
 const instance = new Request({
     timeout: 15000,
-    baseURL: `/apis/`
+    baseURL: config.baseURL
 } as CreateAxiosDefaults)
 
 // 请求

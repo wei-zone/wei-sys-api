@@ -85,7 +85,6 @@ export const decryptData = (appId: string, session_key: string, encryptedData: s
     try {
         const pc = new WXBizDataCrypt(appId, session_key)
         const data = pc.decryptData(encryptedData, iv)
-        console.log(chalk.green('decryptData --->'), data)
         return Promise.resolve(data)
     } catch (e) {
         return Promise.reject(e)

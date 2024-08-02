@@ -1,94 +1,126 @@
 import * as log4js from 'log4js'
 
-import { log4Config } from '@/config'
+import { log4Config } from '../config'
+import dayjs from 'dayjs'
 
 // 加载配置文件
 log4js.configure(log4Config as any)
 
-const logUtil: any = {}
+export const error = log4js.getLogger('error')
+export const info = log4js.getLogger('info')
+export const debug = log4js.getLogger('debug')
+export const debugLogger = {
+    log: (message: any, data: any) => {
+        debug.log(message + '\n' + JSON.stringify(data) + '\n')
+    },
+    debug: (message: any, data: any) => {
+        debug.debug(message + '\n' + JSON.stringify(data) + '\n')
+    },
+    info: (message: any, data: any) => {
+        debug.info(message + '\n' + JSON.stringify(data) + '\n')
+    },
+    warn: (message: any, data: any) => {
+        debug.warn(message + '\n' + JSON.stringify(data) + '\n')
+    },
+    error: (message: any, data: any) => {
+        debug.error(message + '\n' + JSON.stringify(data) + '\n')
+    }
+}
 
-const errorLogger = log4js.getLogger('error')
-const successLogger = log4js.getLogger('info')
+// 保存原始的 console 对象
+const originalConsole = { ...console }
+
+// 重写这些方法
+const logFun = ['log', 'debug', 'info', 'warn', 'error']
+
+logFun.forEach((method: string) => {
+    console[method] = function (...args) {
+        originalConsole[method](...args)
+        if (args.length <= 2) {
+            if (args.length === 1) {
+                debugLogger[method](method, ...args)
+            } else {
+                debugLogger[method](...args)
+            }
+        }
+    }
+})
+
+// 测试新的 log 和 warn 方法
+// console.log('This is a log message')
+// console.debug('This is a debug message')
+// console.info('This is a info message')
+// console.warn('This is a warn message')
+// console.error('This is a error message')
 
 // 封装错误日志
-logUtil.logError = function (ctx: any, error: any, resTime: any) {
-    if (ctx && error) {
-        successLogger.level = 'error'
-        errorLogger.error(formatError(ctx, error, resTime))
+export const errorLogger = function (ctx: any, data: any) {
+    if (ctx && data) {
+        error.level = 'error'
+        debug.info(formatError(ctx, data))
+        error.error(formatError(ctx, data))
     }
 }
 
 // 封装响应日志
-logUtil.logSuccess = function (ctx: any, data: any, resTime: any) {
+export const successLogger = function (ctx: any, data: any) {
     if (ctx) {
-        successLogger.level = 'info'
-        successLogger.info(formatRes(ctx, data, resTime))
+        info.level = 'info'
+        debug.info(formatRes(ctx, data))
+        info.info(formatRes(ctx, data))
     }
 }
 
-//格式化请求日志
-const formatReqLog = function (req: any, resTime: any) {
+// 格式化请求日志
+const formatReqLog = function (req: any, requestTime: any) {
     let logText = String()
 
     const method = req.method
+    //请求原始地址
+    logText += 'request    url: ' + req.originalUrl + '\n'
+
     //访问方法
     logText += 'request method: ' + method + '\n'
 
-    //请求原始地址
-    logText += 'request originalUrl:  ' + req.originalUrl + '\n'
-
     //客户端ip
-    logText += 'request client ip:  ' + req.ip + '\n'
+    logText += 'request client: ' + req.ip + '\n'
 
-    //开始时间
+    // 请求时间
+    logText += 'request   time: ' + dayjs(requestTime).format('YYYY-MM-DD HH:mm:ss') + '\n'
+
+    // 请求时间
+    logText += 'response  time: ' + dayjs().format('YYYY-MM-DD HH:mm:ss') + '\n'
+
     // 请求参数
     if (method === 'GET') {
-        logText += 'request query:  ' + JSON.stringify(req.query) + '\n'
-        // startTime = req.query.requestStartTime;
+        logText += 'request  query: ' + JSON.stringify(req.query) + '\n'
     } else {
-        logText += 'request body: ' + '\n' + JSON.stringify(req.body) + '\n'
-        // startTime = req.body.requestStartTime;
+        logText += 'request   body: ' + '\n' + JSON.stringify(req.body) + '\n'
     }
-    // 服务器响应时间
-    logText += 'response time: ' + resTime + '\n'
     return logText
 }
 // 格式化响应日志
-const formatRes = function (ctx: any, data: any, resTime: any) {
-    let logText = String()
-
-    //响应日志开始
-    logText += '\n' + '*************** response log start ***************' + '\n'
+const formatRes = function (ctx: any, data: any) {
+    let logText = String(ctx.request.originalUrl + '\n')
 
     //添加请求日志
-    logText += formatReqLog(ctx.request, resTime)
+    logText += formatReqLog(ctx.request, ctx.requestTime)
 
     //响应内容
-    logText += 'response data: ' + '\n' + JSON.stringify(data) + '\n'
-
-    //响应日志结束
-    logText += '*************** response log end ***************' + '\n'
+    logText += 'response data : ' + '\n' + JSON.stringify(data) + '\n'
 
     return logText
 }
 
 //格式化错误日志
-const formatError = function (ctx: any, err: any, resTime: any) {
-    let logText = String()
-
-    //错误信息开始
-    logText += '\n' + '*************** error log start ***************' + '\n'
+const formatError = function (ctx: any, err: any) {
+    let logText = String(ctx.request.originalUrl + '\n')
 
     //添加请求日志
-    logText += formatReqLog(ctx.request, resTime)
+    logText += formatReqLog(ctx.request, ctx.requestTime)
 
     //错误信息
-    logText += 'err data: ' + '\n' + JSON.stringify(err) + '\n'
-
-    //错误信息结束
-    logText += '*************** error log end ***************' + '\n'
+    logText += 'response error : ' + '\n' + JSON.stringify(err) + '\n'
 
     return logText
 }
-
-export default logUtil

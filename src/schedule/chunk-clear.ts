@@ -19,7 +19,7 @@ function remove(file, stats) {
     }
 }
 
-async function scan(dir, callback?: (fileDir, stats) => void) {
+async function scan(dir: string, callback?: (fileDir, stats) => void) {
     const files = fs.readdirSync(dir)
     files.forEach(filename => {
         const fileDir = path.resolve(dir, filename)
@@ -50,7 +50,7 @@ async function scan(dir, callback?: (fileDir, stats) => void) {
 // └───────────────────────── second (0 - 59, OPTIONAL)
 export const startChunkClear = function () {
     // 每5秒
-    schedule.scheduleJob('*/5 * * * * *', async () => {
+    schedule.scheduleJob('*/* * * * 1 *', async () => {
         console.log('---> 定时清理chunks开始', UPLOAD_DIR)
         await scan(UPLOAD_DIR)
         console.log('<--- 定时清理chunks结束')

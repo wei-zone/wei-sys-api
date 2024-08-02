@@ -16,8 +16,7 @@ const configs: any = {
 const common = {
     TIME_FORMAT: 'YYYY-MM-DD HH:mm:ss',
     DAY_FORMAT: 'YYYY-MM-DD',
-    env,
-    host: 'cloud-app.com.cn'
+    baseURL: 'https://cloud-app.com.cn'
 }
 
 const config = {
