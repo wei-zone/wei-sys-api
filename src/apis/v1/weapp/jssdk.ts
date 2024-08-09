@@ -9,7 +9,7 @@ const route = new Router({
 /**
  * @swagger
  * tags:
- *   - name: Weapp
+ *   - name: weapp
  *     description: 微信
  * definitions:
  *     JSSDK:
@@ -42,7 +42,7 @@ const route = new Router({
  *   get:
  *     description: 微信jssdk配置
  *     summary: 微信jssdk配置
- *     tags: [Weapp]
+ *     tags: [weapp]
  *     parameters:
  *       - name: url
  *         description: encodeURIComponent(location.href.split('#')[0])

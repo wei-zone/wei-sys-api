@@ -35,3 +35,6 @@ export * from './swagger.config'
  * swagger 接口文档配置
  */
 export * from './log4js.config'
+
+import '@/config/sequelize'
+import '@/libs/log4'

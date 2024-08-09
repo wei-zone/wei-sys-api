@@ -9,12 +9,12 @@ import { successLogger, errorLogger } from '@/libs'
 // 处理请求成功方法
 const render = (context: Context) => {
     // 返回一个 function
-    return ({ code = 200, message = 'success', data }: IResponse) => {
+    return ({ code = 200, message = 'success', data, success = true }: IResponse) => {
         context.response.type = 'application/json'
         const response: IResponse = {
             code,
             message,
-            success: code.toString().startsWith('2'),
+            success,
             serverTime: Date.now()
         }
         if (data) {
@@ -32,7 +32,8 @@ const renderFail = (context: Context) => {
         context.success({
             code,
             message,
-            data
+            data,
+            success: false
         })
     }
 }

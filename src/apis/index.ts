@@ -39,9 +39,9 @@ route.get('/api-logs/:splat*', async (ctx: any) => {
                     const filePath = path.join(relativePath, file).replace(/\\/g, '/')
                     const fileStat = fs.statSync(path.join(dirPath, file))
                     if (fileStat.isDirectory()) {
-                        return `<li><a href="/api-logs${filePath}/" target="_blank">${file}/</a></li>`
+                        return `<li><a href="/api-logs/${filePath}" target="">${file}/</a></li>`
                     } else {
-                        return `<li><a href="/logs${filePath}" target="_blank">${file}</a></li>`
+                        return `<li><a href="/logs/${filePath}" target="">${file}</a></li>`
                     }
                 })
                 .join('')}

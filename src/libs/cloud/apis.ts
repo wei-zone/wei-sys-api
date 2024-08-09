@@ -182,7 +182,7 @@ const upload = function (file: ReadStream, name: string) {
     console.log('file upload --->', {
         name
     })
-    const basePath = `cloud-app/${dayjs().format('YYYY')}/${dayjs().format('MM')}/`
+    const basePath = `cloud-app/${dayjs().format('YYYYMM')}/`
     const fileId = uuid()
     const fileType = getFileExtension(name)
     const fileName = getFileName(name, fileType)

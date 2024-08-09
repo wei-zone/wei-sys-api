@@ -12,7 +12,7 @@ import App from '@/app'
 import SocketServer from '@/scoket/server'
 import ErrnoException = NodeJS.ErrnoException
 import dayjs from 'dayjs'
-
+import '@/config/sequelize'
 // Check if the address is an AddressInfo
 function isAddressInfo(address: string | AddressInfo | null): address is AddressInfo {
     const addr = address as AddressInfo
@@ -63,7 +63,7 @@ function main(): void {
             console.log(chalk.cyan('➜  Local:   http://%s:%s/'), 'localhost', port)
             console.log(chalk.cyan('➜  Network: http://%s:%s/'), host, port)
             console.log(chalk.cyan('➜  ApiDocs: http://%s:%s%s'), host, port, '/api-docs')
-            console.log(chalk.cyan('➜  ApiLogs: http://%s:%s%s'), host, port, '/api-logs/')
+            console.log(chalk.cyan('➜  ApiLogs: http://%s:%s%s'), host, port, '/api-logs')
         }
     })
 }

@@ -14,7 +14,7 @@ const route = new Router({
 /**
  * @swagger
  * tags:
- *   - name: Common
+ *   - name: common
  *     description: 通用
  */
 
@@ -24,7 +24,7 @@ const route = new Router({
  *   post:
  *     description: 文件上传
  *     summary: 文件上传
- *     tags: [Common]
+ *     tags: [common]
  *     parameters:
  *       - name: file
  *         description: The file to upload.
@@ -36,7 +36,7 @@ const route = new Router({
  *         description: 文件上传
  *         schema:
  *           type: object
- *           $ref: '#/definitions/ApiResponse'
+ *           $ref: '#/components/schemas/ApiResponse'
  *         examples:
  *           application/json:
  *            {
@@ -60,7 +60,7 @@ route.post('/', async (context: Context) => {
  *   post:
  *     description: cos文件上传 toDo
  *     summary: cos文件上传 toDo
- *     tags: [Common]
+ *     tags: [common]
  *     parameters:
  *       - name: file
  *         description: The file to upload.
@@ -72,7 +72,7 @@ route.post('/', async (context: Context) => {
  *         description: cos文件上传
  *         schema:
  *           type: object
- *           $ref: '#/definitions/ApiResponse'
+ *           $ref: '#/components/schemas/ApiResponse'
  */
 route.post('/cos', async (context: Context) => {
     await controller.uploadCos(context)
@@ -84,7 +84,7 @@ route.post('/cos', async (context: Context) => {
  *   post:
  *     description: 云开发文件上传 toDo
  *     summary: 云开发文件上传 toDo
- *     tags: [Common]
+ *     tags: [common]
  *     parameters:
  *       - name: file
  *         description: The file to upload.
@@ -96,7 +96,7 @@ route.post('/cos', async (context: Context) => {
  *         description: 云开发文件上传
  *         schema:
  *           type: object
- *           $ref: '#/definitions/ApiResponse'
+ *           $ref: '#/components/schemas/ApiResponse'
  */
 route.post('/cloud', async (context: Context) => {
     await controller.uploadCloud(context)
@@ -108,7 +108,7 @@ route.post('/cloud', async (context: Context) => {
  *   post:
  *     description: 文件是否存在
  *     summary: 文件是否存在
- *     tags: [Common]
+ *     tags: [common]
  *     parameters:
  *       - name: fileName
  *         description: fileName
@@ -125,7 +125,7 @@ route.post('/cloud', async (context: Context) => {
  *         description: 文件是否存在
  *         schema:
  *           type: object
- *           $ref: '#/definitions/ApiResponse'
+ *           $ref: '#/components/schemas/ApiResponse'
  */
 route.post('/verify', async (context: Context) => {
     await controller.verify(context)
@@ -137,7 +137,7 @@ route.post('/verify', async (context: Context) => {
  *   post:
  *     description: 文件切片上传
  *     summary: 文件切片上传
- *     tags: [Common]
+ *     tags: [common]
  *     parameters:
  *       - name: file
  *         description: The file to upload.
@@ -149,7 +149,7 @@ route.post('/verify', async (context: Context) => {
  *         description: 文件切片上传
  *         schema:
  *           type: object
- *           $ref: '#/definitions/ApiResponse'
+ *           $ref: '#/components/schemas/ApiResponse'
  */
 route.post('/chunk', async (context: Context) => {
     await controller.uploadChunk(context)
@@ -161,7 +161,7 @@ route.post('/chunk', async (context: Context) => {
  *   post:
  *     description: 文件切片合并
  *     summary: 文件切片合并
- *     tags: [Common]
+ *     tags: [common]
  *     parameters:
  *       - name: file
  *         description: The file to upload.
@@ -171,7 +171,7 @@ route.post('/chunk', async (context: Context) => {
  *         description: 文件切片合并
  *         schema:
  *           type: object
- *           $ref: '#/definitions/ApiResponse'
+ *           $ref: '#/components/schemas/ApiResponse'
  */
 route.post('/merge', async (context: Context) => {
     await controller.mergeChunks(context)

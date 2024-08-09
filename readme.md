@@ -8,9 +8,8 @@
 
 [api-docs](http://127.0.0.1:3003/api-docs)
 
-[https://forguo.cn/api/](https://forguo.cn/api/)
+[api-logs](http://127.0.0.1:3003/api-logs)
 
-[https://forguo.cn/api/api-docs](https://forguo.cn/api/api-docs)
 
 ```bash
 # install dependencies
@@ -25,21 +24,18 @@ pnpm run build
 
 ## Features
 
-- [x] koa2
-- [x] typescript
+- [x] husky
 - [x] eslint
 - [x] prettier
-- [x] husky
 - [x] lint-staged
+- [x] typescript
+- [x] rest
 - [x] release-it
 - [x] commitizen
 - [x] socket.io
-
-## 接口
-
-默认接口：微信jssdk
-
-[http://127.0.0.1:3000/v1/weapp/jssdk?url=1](http://127.0.0.1:3000/v1/weapp/jssdk?url=1)
+- [x] mysql
+- [x] sequelize
+- [x] sequelize-automate
 
 ## 接口文档
 
@@ -47,108 +43,16 @@ pnpm run build
 
 [https://editor.swagger.io/](https://editor.swagger.io/)
 
-用法
+## 部署
 
-```js
-定义model
-/**
- * @swagger
- * definitions:
- *   Pet:
- *     properties:
- *       name:
- *         type: string
- *       age:
- *         type: integer
- *       sex:
- *         type: string
- */
+### 数据库
 
-/**
- * @swagger
- * /api/petAdd:
- *   post:
- *     tags:
- *       - pet
- *     description: Creates a new pet
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: pet
- *         description: pet object
- *         in: body
- *         required: true
- *         schema:
- *           // 引用model
- *           $ref: '#/definitions/Pet'
- *     responses:
- *       200:
- *         description: Successfully created
- */
-router.post('/api/petAdd', (req, res, next) => {
-  const { query } = req
-  res.send({
-    status: 200,
-    data: true,
-    msg: '请求成功',
-  })
-})
+MySQL 8.0
 
-/**
- * @swagger
- * /api/puppies/{id}:
- *   put:
- *     tags:
- *      - pet
- *     description: Updates a single pet
- *     produces:
- *      - application/json
- *     parameters:
- *      - name: pet
- *        description: Fields for the pet resource
- *        in: body
- *        schema:
- *         type: array
- *         $ref: '#/definitions/Pet'
- *     responses:
- *       200:
- *         description: Successfully updated
- */
+[Ubuntu - 安装 MySQL 8](https://blog.csdn.net/qq_43116031/article/details/133823687)
 
-router.put('/api/petEdit', (req, res, next) => {
-  const { query } = req
-  res.send({
-    status: 200,
-    data: true,
-    msg: '请求成功',
-  })
-})
+[ubuntu22.04安装mysql8并配置远程连接](https://blog.csdn.net/qq_39187538/article/details/135222105)
 
-/**
- * @swagger
- * /api/petDelete:
- *   delete:
- *     tags:
- *       - pet
- *     description: Deletes a single pet
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: id
- *         description: pet's id
- *         in: path
- *         required: true
- *         type: integer
- *     responses:
- *       200:
- *         description: Successfully deleted
- */
-router.put('/api/petDelete', (req, res, next) => {
-  const { query } = req
-  res.send({
-    status: 200,
-    data: true,
-    msg: '请求成功',
-  })
-})
-```
+## 数据库同步
+
+[sequelize-automate](https://github.com/nodejh/sequelize-automate)

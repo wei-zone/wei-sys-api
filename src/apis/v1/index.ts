@@ -1,9 +1,6 @@
 import Router from '@koa/router'
 import common from './common/index'
-import weapp from './weapp/index'
-import minapp from './minapp/index'
-import { Context } from 'koa'
-import { randomUUID } from 'node:crypto'
+import admin from './admin/index'
 
 const route = new Router({
     // Current folder
@@ -14,27 +11,7 @@ const route = new Router({
 
 route.use(common.routes())
 route.use(common.allowedMethods())
-route.use(weapp.routes())
-route.use(weapp.allowedMethods())
-route.use(minapp.routes())
-route.use(minapp.allowedMethods())
-
-route.get('/login', async (context: Context) => {
-    context.success({
-        data: {
-            ...context.request.query,
-            token: randomUUID()
-        }
-    })
-})
-
-route.post('/login', async (context: Context) => {
-    context.success({
-        data: {
-            ...context.request.body,
-            token: randomUUID()
-        }
-    })
-})
+route.use(admin.routes())
+route.use(admin.allowedMethods())
 
 export default route

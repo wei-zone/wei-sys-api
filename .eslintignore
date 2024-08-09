@@ -22,3 +22,4 @@ components.d.ts
 auto-imports.d.ts
 .eslintrc.js
 .prettierrc.js
+src/**/*.d.ts

@@ -11,19 +11,29 @@ export const info = log4js.getLogger('info')
 export const debug = log4js.getLogger('debug')
 export const debugLogger = {
     log: (message: any, data: any) => {
-        debug.log(message + '\n' + JSON.stringify(data) + '\n')
+        try {
+            debug.log(message + '\n' + JSON.stringify(data) + '\n')
+        } catch (e) {}
     },
     debug: (message: any, data: any) => {
-        debug.debug(message + '\n' + JSON.stringify(data) + '\n')
+        try {
+            debug.debug(message + '\n' + JSON.stringify(data) + '\n')
+        } catch (e) {}
     },
     info: (message: any, data: any) => {
-        debug.info(message + '\n' + JSON.stringify(data) + '\n')
+        try {
+            debug.info(message + '\n' + JSON.stringify(data) + '\n')
+        } catch (e) {}
     },
     warn: (message: any, data: any) => {
-        debug.warn(message + '\n' + JSON.stringify(data) + '\n')
+        try {
+            debug.warn(message + '\n' + JSON.stringify(data) + '\n')
+        } catch (e) {}
     },
     error: (message: any, data: any) => {
-        debug.error(message + '\n' + JSON.stringify(data) + '\n')
+        try {
+            debug.error(message + '\n' + JSON.stringify(data) + '\n')
+        } catch (e) {}
     }
 }
 
@@ -32,7 +42,6 @@ const originalConsole = { ...console }
 
 // 重写这些方法
 const logFun = ['log', 'debug', 'info', 'warn', 'error']
-
 logFun.forEach((method: string) => {
     console[method] = function (...args) {
         originalConsole[method](...args)
@@ -107,7 +116,7 @@ const formatRes = function (ctx: any, data: any) {
     logText += formatReqLog(ctx.request, ctx.requestTime)
 
     //响应内容
-    logText += 'response data : ' + '\n' + JSON.stringify(data) + '\n'
+    logText += 'response  data: ' + '\n' + JSON.stringify(data) + '\n'
 
     return logText
 }
