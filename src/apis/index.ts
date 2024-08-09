@@ -41,7 +41,7 @@ route.get('/api-logs/:splat*', async (ctx: any) => {
                     if (fileStat.isDirectory()) {
                         return `<li><a href="/api-logs/${filePath}" target="">${file}/</a></li>`
                     } else {
-                        return `<li><a href="/logs/${filePath}" target="">${file}</a></li>`
+                        return `<li><a href="/logs${filePath}" target="">${file}</a></li>`
                     }
                 })
                 .join('')}
