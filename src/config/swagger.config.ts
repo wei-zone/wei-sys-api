@@ -14,7 +14,7 @@ export const swaggerDefinition = {
             name: pkg.author
         }
     },
-    basePath: '/', // Base path (optional)
+    basePath: process.env.NODE_ENV !== 'development' ? '/api' : '/', // Base path (optional)
     // 定义全局model
     components: {
         schemas: {

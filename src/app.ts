@@ -14,7 +14,7 @@ class App extends Koa {
         this.on('error', error => {
             console.log('server error', error)
         })
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV !== 'development') {
             this.use(koaCompress())
         }
         // Finally, mount the top-level API router
