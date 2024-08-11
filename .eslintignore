@@ -23,3 +23,4 @@ auto-imports.d.ts
 .eslintrc.js
 .prettierrc.js
 src/**/*.d.ts
+automate.config.js

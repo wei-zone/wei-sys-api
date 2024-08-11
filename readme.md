@@ -10,7 +10,6 @@
 
 [api-logs](http://127.0.0.1:3003/api-logs)
 
-
 ```bash
 # install dependencies
 pnpm install
@@ -24,18 +23,18 @@ pnpm run build
 
 ## Features
 
-- [x] husky
-- [x] eslint
-- [x] prettier
-- [x] lint-staged
-- [x] typescript
-- [x] rest
-- [x] release-it
-- [x] commitizen
-- [x] socket.io
-- [x] mysql
-- [x] sequelize
-- [x] sequelize-automate
+-   [x] husky
+-   [x] eslint
+-   [x] prettier
+-   [x] lint-staged
+-   [x] typescript
+-   [x] rest
+-   [x] release-it
+-   [x] commitizen
+-   [x] socket.io
+-   [x] mysql
+-   [x] sequelize
+-   [x] sequelize-automate
 
 ## 接口文档
 

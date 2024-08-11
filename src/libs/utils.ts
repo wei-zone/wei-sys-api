@@ -60,3 +60,20 @@ export function generateUniqueChar(prefix: string, length: number) {
     }
     return `${prefix}${char}`
 }
+
+/**
+ * 转为大驼峰写法
+ * @param target
+ */
+export const toCamelCase = (target: string, Delimiter = '-'): string => {
+    return target
+        .replace(/^\//, '') // 去除首字母的斜杠
+        .split(Delimiter) // 按照 '-' 分割字符串
+        .map((word, index) => {
+            if (index === 0) {
+                return word.toLowerCase() // 第一个单词全小写
+            }
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() // 首字母大写，后续字母小写
+        })
+        .join('') // 将数组拼接成字符串
+}

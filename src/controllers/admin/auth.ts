@@ -4,19 +4,18 @@ import sysUser from '@/models/sysUser'
 import sysUserRole from '@/models/sysUserRole'
 import sysRole from '@/models/sysRole'
 import sysRoleMenu from '@/models/sysRoleMenu'
+import sysDept from '@/models/sysDept'
 import { v4 as uuid } from 'uuid'
 import dayjs from 'dayjs'
 import sysMenu from '@/models/sysMenu'
+import { toCamelCase } from '@/libs'
 
 const User = sysUser(sequelize)
 const UserRole = sysUserRole(sequelize)
 const Role = sysRole(sequelize)
 const RoleMenu = sysRoleMenu(sequelize)
 const Menu = sysMenu(sequelize)
-
-// 定义关联关系
-User.belongsToMany(Role, { through: UserRole, foreignKey: 'userId' })
-Role.belongsToMany(User, { through: UserRole, foreignKey: 'roleId' })
+const Dept = sysDept(sequelize)
 
 /**
  * 菜单类型(1-菜单 2-目录 3-外链 4-按钮)
@@ -90,22 +89,6 @@ export const logout = async (ctx: Context) => {
 }
 
 /**
- * 转为大驼峰写法
- * @param target
- */
-export const toCamelCase = (target: string, Delimiter = '-'): string => {
-    return target
-        .replace(/^\//, '') // 去除首字母的斜杠
-        .split(Delimiter) // 按照 '-' 分割字符串
-        .map((word, index) => {
-            if (index === 0) {
-                return word.toLowerCase() // 第一个单词全小写
-            }
-            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() // 首字母大写，后续字母小写
-        })
-        .join('') // 将数组拼接成字符串
-}
-/**
  * @desc 列表转树结构
  * @param list
  * @param parentUuid
@@ -144,7 +127,7 @@ const listTransferTree = (list: any[], parentUuid: string | number, bookPath: st
 /**
  * 生成路由树
  */
-const transferRouteTree = (list: any[], lastParentId = 0) => {
+export const transferRouteTree = (list: any[], lastParentId = 0) => {
     const length = list.length
     const routes: any[] = []
     for (let i = 0; i < length; i++) {
@@ -260,15 +243,6 @@ export const me = async (ctx: Context) => {
 
         const routes = transferRouteTree(menus, 0)
 
-        // 查询用户及其角色
-        const users = await User.findAll({
-            include: {
-                model: Role,
-                through: { attributes: [] }, // 不需要返回中间表的数据
-                attributes: ['name'] // 只选择角色名称
-            }
-        })
-
         const data = {
             userId,
             nickname: user.nickname,
@@ -279,8 +253,7 @@ export const me = async (ctx: Context) => {
             // 按钮权限标识
             perms: menus.filter((item: any) => item.type === MenuTypeEnum.BUTTON).map((item: any) => item.perm),
             // 路由权限
-            routes,
-            users
+            routes
         }
 
         ctx.success({

@@ -1,6 +1,7 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import model from '@/models/sysUser'
+import { QueryTypes } from 'sequelize'
 
 const Model = model(sequelize)
 
@@ -102,6 +103,34 @@ export const detail = async (ctx: Context) => {
  */
 export const list = async (ctx: Context) => {
     try {
+        /**
+         * 原始 sql 查询
+         */
+        // const sql = `
+        // SELECT
+        //     u.id,
+        //     u.username,
+        //     u.nickname,
+        //     u.mobile,
+        //     u.gender,
+        //     u.avatar,
+        //     u.status,
+        //     d.name AS deptName,
+        //     GROUP_CONCAT(r.name) AS roleNames
+        //         FROM
+        //     sys_user u
+        // LEFT JOIN sys_dept d ON u.deptId = d.id
+        // LEFT JOIN sys_user_role sur ON u.id = sur.userId
+        // LEFT JOIN sys_role r ON sur.roleId = r.id
+        // GROUP BY
+        //     u.id;
+        // `
+        // const list = await sequelize.query(sql, {
+        //     type: QueryTypes.SELECT,
+        //     raw: true, // 是否使用数组组装的方式展示结果
+        //     logging: true // 是否将 SQL 语句打印到控制台
+        // })
+
         const { pageSize, pageCurrent, fields, filter, order = [['createdAt', 'DESC']] } = ctx.request.body
         const { count, rows } = await Model.findAndCountAll({
             limit: pageSize,
@@ -116,9 +145,7 @@ export const list = async (ctx: Context) => {
              */
             attributes: fields,
             // 条件筛选
-            where: filter,
-            // 是否过滤软删除的数据
-            paranoid: true
+            where: filter
         })
 
         ctx.success({
@@ -126,8 +153,7 @@ export const list = async (ctx: Context) => {
                 pageSize,
                 pageCurrent,
                 list: rows,
-                count,
-                attr: Model.getAttributes()
+                count
             }
         })
     } catch (error) {
