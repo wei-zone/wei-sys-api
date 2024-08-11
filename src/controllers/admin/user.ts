@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
-import model from '@/models/examUser'
+import model from '@/models/sysUser'
 
 const Model = model(sequelize)
 
@@ -87,7 +87,9 @@ export const detail = async (ctx: Context) => {
     try {
         const { id } = ctx.request.body
         // 使用提供的主键从表中仅获得一个条目.
-        const res = await Model.findByPk(id)
+        const res = await Model.findByPk(id, {
+            attributes: { exclude: ['password'] } // 不需要某些字段
+        })
         ctx.success({
             data: res
         })

@@ -1,8 +1,8 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
-import model from '@/models/sysUser'
+import sysMenu from '@/models/sysMenu'
 
-const Model = model(sequelize)
+const Menu = sysMenu(sequelize)
 
 /**
  * 创建
@@ -11,7 +11,7 @@ const Model = model(sequelize)
 export const create = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Model.create(data)
+        const res = await Menu.create(data)
         ctx.success({
             data: res
         })
@@ -27,7 +27,7 @@ export const create = async (ctx: Context) => {
 export const createBatch = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Model.bulkCreate(data)
+        const res = await Menu.bulkCreate(data)
         ctx.success({
             data: res
         })
@@ -44,7 +44,7 @@ export const createBatch = async (ctx: Context) => {
 export const destroy = async (ctx: Context) => {
     try {
         const { id } = ctx.request.body
-        const list = await Model.destroy({
+        const list = await Menu.destroy({
             // 条件筛选
             where: {
                 id
@@ -65,7 +65,7 @@ export const destroy = async (ctx: Context) => {
 export const update = async (ctx: Context) => {
     try {
         const { id, ...data } = ctx.request.body
-        const res = await Model.update(data, {
+        const res = await Menu.update(data, {
             // 条件筛选
             where: {
                 id
@@ -87,7 +87,9 @@ export const detail = async (ctx: Context) => {
     try {
         const { id } = ctx.request.body
         // 使用提供的主键从表中仅获得一个条目.
-        const res = await Model.findByPk(id)
+        const res = await Menu.findByPk(id, {
+            attributes: { exclude: ['password'] } // 不需要某些字段
+        })
         ctx.success({
             data: res
         })
@@ -103,7 +105,7 @@ export const detail = async (ctx: Context) => {
 export const list = async (ctx: Context) => {
     try {
         const { pageSize, pageCurrent, fields, filter, order = [['createdAt', 'DESC']] } = ctx.request.body
-        const { count, rows } = await Model.findAndCountAll({
+        const { count, rows } = await Menu.findAndCountAll({
             limit: pageSize,
             offset: (pageCurrent - 1) * pageSize,
             // 排序
@@ -127,7 +129,7 @@ export const list = async (ctx: Context) => {
                 pageCurrent,
                 list: rows,
                 count,
-                attr: Model.getAttributes()
+                attr: Menu.getAttributes()
             }
         })
     } catch (error) {

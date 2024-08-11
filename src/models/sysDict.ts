@@ -8,61 +8,62 @@ export default function (sequelize: Sequelize) {
             defaultValue: null,
             primaryKey: true,
             autoIncrement: true,
-            comment: null,
+            comment: '主键 ',
             field: 'id'
         },
-        username: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-            defaultValue: null,
+        name: {
+            type: DataTypes.STRING(50),
+            allowNull: true,
+            defaultValue: '',
             primaryKey: false,
             autoIncrement: false,
-            comment: '用户名',
-            field: 'username'
+            comment: '类型名称',
+            field: 'name'
         },
-        nickname: {
+        code: {
+            type: DataTypes.STRING(50),
+            allowNull: true,
+            defaultValue: '',
+            primaryKey: false,
+            autoIncrement: false,
+            comment: '类型编码',
+            field: 'code',
+            unique: 'uk_code'
+        },
+        status: {
+            type: DataTypes.INTEGER(1),
+            allowNull: true,
+            defaultValue: '0',
+            primaryKey: false,
+            autoIncrement: false,
+            comment: '状态(0:正常;1:禁用)',
+            field: 'status'
+        },
+        remark: {
             type: DataTypes.STRING(255),
             allowNull: true,
             defaultValue: null,
             primaryKey: false,
             autoIncrement: false,
-            comment: null,
-            field: 'nickname'
-        },
-        password: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-            defaultValue: null,
-            primaryKey: false,
-            autoIncrement: false,
-            comment: null,
-            field: 'password'
-        },
-        lastLoginAt: {
-            type: DataTypes.DATE,
-            allowNull: true,
-            defaultValue: null,
-            primaryKey: false,
-            autoIncrement: false,
-            comment: null,
-            field: 'lastLoginAt'
+            comment: '备注',
+            field: 'remark'
         },
         createdAt: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
             defaultValue: null,
             primaryKey: false,
             autoIncrement: false,
-            comment: null,
+            comment: '创建时间',
             field: 'createdAt'
         },
         updatedAt: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
             defaultValue: null,
             primaryKey: false,
             autoIncrement: false,
-            comment: null,
+            comment: '更新时间',
             field: 'updatedAt'
         },
         deletedAt: {
@@ -71,15 +72,15 @@ export default function (sequelize: Sequelize) {
             defaultValue: null,
             primaryKey: false,
             autoIncrement: false,
-            comment: null,
+            comment: '删除时间，为空未删除',
             field: 'deletedAt'
         }
     }
     const options = {
-        tableName: 'exam_user',
+        tableName: 'sys_dict',
         comment: '',
         indexes: []
     }
-    const ExamUserModel = sequelize.define('examUserModel', attributes, options)
-    return ExamUserModel
+    const SysDictModel = sequelize.define('sysDictModel', attributes, options)
+    return SysDictModel
 }
