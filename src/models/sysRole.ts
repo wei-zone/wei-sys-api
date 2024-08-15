@@ -41,7 +41,7 @@ export default function (sequelize: Sequelize) {
             field: 'sort'
         },
         status: {
-            type: DataTypes.INTEGER(1),
+            type: DataTypes.INTEGER,
             allowNull: true,
             defaultValue: '1',
             primaryKey: false,

@@ -172,10 +172,8 @@ export const list = async (ctx: Context) => {
                     through: { attributes: [] }, // 不需要返回中间表的数据
                     attributes: ['code', 'name'] // 不单独返回角色的其他字段
                 }
-            ],
-            nest: true,
-            group: ['sysUserModel.id'], // 根据用户ID进行分组
-            raw: true // 返回平坦的结果集
+            ]
+            // raw: true // 返回平坦的结果集【此时无分组】
         })
 
         ctx.success({

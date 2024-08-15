@@ -102,7 +102,7 @@ export default function (sequelize: Sequelize) {
             field: 'keepAlive'
         },
         visible: {
-            type: DataTypes.INTEGER(1),
+            type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: '1',
             primaryKey: false,
