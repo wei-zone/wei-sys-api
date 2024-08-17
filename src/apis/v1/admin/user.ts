@@ -3,12 +3,12 @@ import { Context } from 'koa'
 import * as controller from '@/controllers/admin/user'
 
 const route = new Router({
-    prefix: '/user' // 路由前缀
+    prefix: '/users' // 路由前缀
 })
 
 /**
  * @swagger
- * /v1/admin/user/create:
+ * /v1/admin/users/create:
  *   post:
  *     summary: 用户创建
  *     tags: [admin]
@@ -17,7 +17,7 @@ const route = new Router({
  *         in: body
  *         type: object
  *         required: true
- *         description: 入参
+ *         description: data
  *         schema:
  *             type: object
  *             required: true
@@ -37,9 +37,9 @@ route.post('/create', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/user/createBatch:
+ * /v1/admin/users/batch:
  *   post:
- *     summary: 用户创建
+ *     summary: 用户批量创建
  *     tags: [admin]
  *     parameters:
  *       - name: request
@@ -62,51 +62,57 @@ route.post('/create', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/createBatch', async (context: Context) => {
+route.post('/batch', async (context: Context) => {
     await controller.createBatch(context)
 })
 
 /**
  * @swagger
- * /v1/admin/user/delete:
- *   post:
+ * /v1/admin/users/{id}:
+ *   delete:
  *     summary: 用户删除
  *     tags: [admin]
  *     parameters:
- *       - name: request
- *         in: body
+ *       - name: id
+ *         in: path
  *         type: object
  *         required: true
- *         description: 入参
+ *         description: id
  *         schema:
- *             type: object
+ *             type: integer
  *             required: true
- *             properties:
- *                id:
- *                    type: number
- *                    example: 1
+ *             example: 1
  *     responses:
  *       200:
  *         schema:
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/delete', async (context: Context) => {
+route.delete('/:id', async (context: Context) => {
     await controller.destroy(context)
 })
 
 /**
  * @swagger
- * /v1/admin/user/update:
+ * /v1/admin/users/{id}:
  *   post:
  *     summary: 用户更新
  *     tags: [admin]
  *     parameters:
- *       - name: request
+ *       - name: id
+ *         in: path
+ *         type: object
+ *         required: true
+ *         description: id
+ *         schema:
+ *             type: integer
+ *             required: true
+ *             example: 1
+ *       - name: data
  *         in: body
  *         type: object
  *         required: true
- *         description: 入参
+ *         description: data
  *         schema:
  *             type: object
  *             required: true
@@ -123,42 +129,39 @@ route.post('/delete', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/update', async (context: Context) => {
+route.post('/:id', async (context: Context) => {
     await controller.update(context)
 })
 
 /**
  * @swagger
- * /v1/admin/user/detail:
- *   post:
+ * /v1/admin/users/{id}:
+ *   get:
  *     summary: 用户详情
  *     tags: [admin]
  *     parameters:
- *       - name: request
- *         in: body
+ *       - name: id
+ *         in: path
  *         type: object
  *         required: true
- *         description: 入参
+ *         description: id
  *         schema:
- *             type: object
+ *             type: integer
  *             required: true
- *             properties:
- *                id:
- *                    type: number
- *                    example: 1
+ *             example: 1
  *     responses:
  *       200:
  *         schema:
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/detail', async (context: Context) => {
+route.get('/:id', async (context: Context) => {
     await controller.detail(context)
 })
 
 /**
  * @swagger
- * /v1/admin/user:
+ * /v1/admin/users:
  *   post:
  *     summary: 用户列表
  *     tags: [admin]
@@ -167,7 +170,7 @@ route.post('/detail', async (context: Context) => {
  *         in: body
  *         type: object
  *         required: true
- *         description: 入参
+ *         description: data
  *         schema:
  *           allOf:
  *              - $ref: '#/components/schemas/Pagination'

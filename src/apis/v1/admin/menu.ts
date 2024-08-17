@@ -3,12 +3,12 @@ import { Context } from 'koa'
 import * as controller from '@/controllers/admin/menu'
 
 const route = new Router({
-    prefix: '/menu' // 路由前缀
+    prefix: '/menus' // 路由前缀
 })
 
 /**
  * @swagger
- * /v1/admin/menu/create:
+ * /v1/admin/menus/create:
  *   post:
  *     summary: 菜单创建
  *     tags: [admin]
@@ -17,12 +17,12 @@ const route = new Router({
  *         in: body
  *         type: object
  *         required: true
- *         description: 入参
+ *         description: data
  *         schema:
  *             type: object
  *             required: true
  *             properties:
- *                menuname:
+ *                username:
  *                    type: string
  *                    example: zhangsan
  *     responses:
@@ -37,9 +37,9 @@ route.post('/create', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/menu/createBatch:
+ * /v1/admin/menus/batch:
  *   post:
- *     summary: 菜单创建
+ *     summary: 菜单批量创建
  *     tags: [admin]
  *     parameters:
  *       - name: request
@@ -62,51 +62,57 @@ route.post('/create', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/createBatch', async (context: Context) => {
+route.post('/batch', async (context: Context) => {
     await controller.createBatch(context)
 })
 
 /**
  * @swagger
- * /v1/admin/menu/delete:
- *   post:
+ * /v1/admin/menus/{id}:
+ *   delete:
  *     summary: 菜单删除
  *     tags: [admin]
  *     parameters:
- *       - name: request
- *         in: body
+ *       - name: id
+ *         in: path
  *         type: object
  *         required: true
- *         description: 入参
+ *         description: id
  *         schema:
- *             type: object
+ *             type: integer
  *             required: true
- *             properties:
- *                id:
- *                    type: number
- *                    example: 1
+ *             example: 1
  *     responses:
  *       200:
  *         schema:
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/delete', async (context: Context) => {
+route.delete('/:id', async (context: Context) => {
     await controller.destroy(context)
 })
 
 /**
  * @swagger
- * /v1/admin/menu/update:
+ * /v1/admin/menus/{id}:
  *   post:
  *     summary: 菜单更新
  *     tags: [admin]
  *     parameters:
- *       - name: request
+ *       - name: id
+ *         in: path
+ *         type: object
+ *         required: true
+ *         description: id
+ *         schema:
+ *             type: integer
+ *             required: true
+ *             example: 1
+ *       - name: data
  *         in: body
  *         type: object
  *         required: true
- *         description: 入参
+ *         description: data
  *         schema:
  *             type: object
  *             required: true
@@ -114,7 +120,7 @@ route.post('/delete', async (context: Context) => {
  *                id:
  *                    type: number
  *                    example: 1
- *                menuname:
+ *                username:
  *                    type: string
  *                    example: newName
  *     responses:
@@ -123,42 +129,39 @@ route.post('/delete', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/update', async (context: Context) => {
+route.post('/:id', async (context: Context) => {
     await controller.update(context)
 })
 
 /**
  * @swagger
- * /v1/admin/menu/detail:
- *   post:
+ * /v1/admin/menus/{id}:
+ *   get:
  *     summary: 菜单详情
  *     tags: [admin]
  *     parameters:
- *       - name: request
- *         in: body
+ *       - name: id
+ *         in: path
  *         type: object
  *         required: true
- *         description: 入参
+ *         description: id
  *         schema:
- *             type: object
+ *             type: integer
  *             required: true
- *             properties:
- *                id:
- *                    type: number
- *                    example: 1
+ *             example: 1
  *     responses:
  *       200:
  *         schema:
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/detail', async (context: Context) => {
+route.get('/:id', async (context: Context) => {
     await controller.detail(context)
 })
 
 /**
  * @swagger
- * /v1/admin/menu:
+ * /v1/admin/menus:
  *   post:
  *     summary: 菜单列表
  *     tags: [admin]
@@ -167,7 +170,7 @@ route.post('/detail', async (context: Context) => {
  *         in: body
  *         type: object
  *         required: true
- *         description: 入参
+ *         description: data
  *         schema:
  *           allOf:
  *              - $ref: '#/components/schemas/Pagination'

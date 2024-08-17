@@ -1,7 +1,8 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
+import { Op } from 'sequelize'
 import sysMenu from '@/models/sysMenu'
-
+import { EnableStatus } from '@/types/enums'
 const Menu = sysMenu(sequelize)
 
 /**
@@ -43,7 +44,7 @@ export const createBatch = async (ctx: Context) => {
  */
 export const destroy = async (ctx: Context) => {
     try {
-        const { id } = ctx.request.body
+        const { id } = ctx.params
         const list = await Menu.destroy({
             // 条件筛选
             where: {
@@ -64,7 +65,8 @@ export const destroy = async (ctx: Context) => {
  */
 export const update = async (ctx: Context) => {
     try {
-        const { id, ...data } = ctx.request.body
+        const { id } = ctx.params
+        const data = ctx.request.body
         const res = await Menu.update(data, {
             // 条件筛选
             where: {
@@ -85,7 +87,8 @@ export const update = async (ctx: Context) => {
  */
 export const detail = async (ctx: Context) => {
     try {
-        const { id } = ctx.request.body
+        console.log('ctx.params', ctx.params)
+        const { id } = ctx.params
         // 使用提供的主键从表中仅获得一个条目.
         const res = await Menu.findByPk(id, {
             attributes: { exclude: ['password'] } // 不需要某些字段
@@ -104,7 +107,21 @@ export const detail = async (ctx: Context) => {
  */
 export const list = async (ctx: Context) => {
     try {
-        const { pageSize, pageCurrent, fields, filter, order = [['createdAt', 'DESC']] } = ctx.request.body
+        const {
+            pageSize,
+            pageCurrent,
+            // status = EnableStatus.enable,
+            keywords = '',
+            order = [['createdAt', 'DESC']]
+        } = ctx.request.body
+
+        const filter = {
+            /**
+             * 模糊查询
+             */
+            // status
+        }
+
         const { count, rows } = await Menu.findAndCountAll({
             limit: pageSize,
             offset: (pageCurrent - 1) * pageSize,
@@ -116,11 +133,10 @@ export const list = async (ctx: Context) => {
              * attributes: { exclude: ['id'] }, // 不需要某些字段
              * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
              */
-            attributes: fields,
-            // 条件筛选
-            where: filter,
-            // 是否过滤软删除的数据
-            paranoid: true
+            attributes: { exclude: ['password'] }, // 不需要某些字段
+            // 筛选
+            where: filter
+            // raw: true // 返回平坦的结果集【此时无分组】
         })
 
         ctx.success({
@@ -128,8 +144,7 @@ export const list = async (ctx: Context) => {
                 pageSize,
                 pageCurrent,
                 list: rows,
-                count,
-                attr: Menu.getAttributes()
+                count
             }
         })
     } catch (error) {

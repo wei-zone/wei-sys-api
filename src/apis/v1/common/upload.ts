@@ -58,8 +58,8 @@ route.post('/', async (context: Context) => {
  * @swagger
  * /v1/common/upload/cos:
  *   post:
- *     description: cos文件上传 toDo
- *     summary: cos文件上传 toDo
+ *     description: cos文件上传
+ *     summary: cos文件上传
  *     tags: [common]
  *     parameters:
  *       - name: file
@@ -80,11 +80,12 @@ route.post('/cos', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/common/upload/cos:
+ * /v1/common/upload/cloud:
  *   post:
- *     description: 云开发文件上传 toDo
- *     summary: 云开发文件上传 toDo
+ *     description: 云开发文件上传
+ *     summary: 云开发文件上传
  *     tags: [common]
+ *     deprecated: true
  *     parameters:
  *       - name: file
  *         description: The file to upload.

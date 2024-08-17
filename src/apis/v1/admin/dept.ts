@@ -1,16 +1,16 @@
 import Router from '@koa/router'
 import { Context } from 'koa'
-import * as controller from '@/controllers/admin/user'
+import * as controller from '@/controllers/admin/dept'
 
 const route = new Router({
-    prefix: '/users' // 路由前缀
+    prefix: '/depts' // 路由前缀
 })
 
 /**
  * @swagger
- * /v1/admin/users/create:
+ * /v1/admin/depts/create:
  *   post:
- *     summary: 用户创建
+ *     summary: 部门创建
  *     tags: [admin]
  *     parameters:
  *       - name: request
@@ -37,9 +37,9 @@ route.post('/create', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/users/batch:
+ * /v1/admin/depts/batch:
  *   post:
- *     summary: 用户批量创建
+ *     summary: 部门批量创建
  *     tags: [admin]
  *     parameters:
  *       - name: request
@@ -68,9 +68,9 @@ route.post('/batch', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/users/{id}:
+ * /v1/admin/depts/{id}:
  *   delete:
- *     summary: 用户删除
+ *     summary: 部门删除
  *     tags: [admin]
  *     parameters:
  *       - name: id
@@ -94,9 +94,9 @@ route.delete('/:id', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/users/{id}:
+ * /v1/admin/depts/{id}:
  *   post:
- *     summary: 用户更新
+ *     summary: 部门更新
  *     tags: [admin]
  *     parameters:
  *       - name: id
@@ -135,9 +135,9 @@ route.post('/:id', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/users/{id}:
+ * /v1/admin/depts/{id}:
  *   get:
- *     summary: 用户详情
+ *     summary: 部门详情
  *     tags: [admin]
  *     parameters:
  *       - name: id
@@ -161,9 +161,9 @@ route.get('/:id', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/users:
+ * /v1/admin/depts:
  *   post:
- *     summary: 用户列表
+ *     summary: 部门列表
  *     tags: [admin]
  *     parameters:
  *       - name: request

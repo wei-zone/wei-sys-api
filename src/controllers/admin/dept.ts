@@ -1,33 +1,9 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
-import sysUser from '@/models/sysUser'
-import sysUserRole from '@/models/sysUserRole'
-import sysRole from '@/models/sysRole'
 import sysDept from '@/models/sysDept'
 import { EnableStatus } from '@/types/enums'
-const User = sysUser(sequelize)
-const UserRole = sysUserRole(sequelize)
-const Role = sysRole(sequelize)
 const Dept = sysDept(sequelize)
-
-// 定义关联关系
-User.belongsTo(Dept, {
-    foreignKey: 'deptId',
-    as: 'dept' // 给关联定义一个别名
-})
-User.belongsToMany(Role, {
-    through: UserRole,
-    foreignKey: 'userId',
-    // otherKey: 'roleId',
-    as: 'roles' // 给关联定义一个别名
-})
-Role.belongsToMany(User, {
-    through: UserRole,
-    foreignKey: 'roleId',
-    // otherKey: 'userId',
-    as: 'user' // 给关联定义一个别名
-})
 
 /**
  * 创建
@@ -36,7 +12,7 @@ Role.belongsToMany(User, {
 export const create = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await User.create(data)
+        const res = await Dept.create(data)
         ctx.success({
             data: res
         })
@@ -52,7 +28,7 @@ export const create = async (ctx: Context) => {
 export const createBatch = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await User.bulkCreate(data)
+        const res = await Dept.bulkCreate(data)
         ctx.success({
             data: res
         })
@@ -69,7 +45,7 @@ export const createBatch = async (ctx: Context) => {
 export const destroy = async (ctx: Context) => {
     try {
         const { id } = ctx.params
-        const list = await User.destroy({
+        const list = await Dept.destroy({
             // 条件筛选
             where: {
                 id
@@ -91,7 +67,7 @@ export const update = async (ctx: Context) => {
     try {
         const { id } = ctx.params
         const data = ctx.request.body
-        const res = await User.update(data, {
+        const res = await Dept.update(data, {
             // 条件筛选
             where: {
                 id
@@ -114,7 +90,7 @@ export const detail = async (ctx: Context) => {
         console.log('ctx.params', ctx.params)
         const { id } = ctx.params
         // 使用提供的主键从表中仅获得一个条目.
-        const res = await User.findByPk(id, {
+        const res = await Dept.findByPk(id, {
             attributes: { exclude: ['password'] } // 不需要某些字段
         })
         ctx.success({
@@ -131,34 +107,6 @@ export const detail = async (ctx: Context) => {
  */
 export const list = async (ctx: Context) => {
     try {
-        /**
-         * 联表查询，原始 sql
-         */
-        // const sql = `
-        // SELECT
-        //     u.id,
-        //     u.username,
-        //     u.nickname,
-        //     u.mobile,
-        //     u.gender,
-        //     u.avatar,
-        //     u.status,
-        //     d.name AS deptName,
-        //     GROUP_CONCAT(r.name) AS roleNames
-        //         FROM
-        //     sys_user u
-        // LEFT JOIN sys_dept d ON u.deptId = d.id
-        // LEFT JOIN sys_user_role sur ON u.id = sur.userId
-        // LEFT JOIN sys_role r ON sur.roleId = r.id
-        // GROUP BY
-        //     u.id;
-        // `
-        // const list = await sequelize.query(sql, {
-        //     type: QueryTypes.SELECT,
-        //     raw: true, // 是否使用数组组装的方式展示结果
-        //     logging: true // 是否将 SQL 语句打印到控制台
-        // })
-
         const {
             pageSize,
             pageCurrent,
@@ -171,15 +119,10 @@ export const list = async (ctx: Context) => {
             /**
              * 模糊查询
              */
-            [Op.or]: [
-                { username: { [Op.like]: `%${keywords}%` } },
-                { nickname: { [Op.like]: `%${keywords}%` } },
-                { mobile: { [Op.like]: `%${keywords}%` } }
-            ],
             status
         }
 
-        const { count, rows } = await User.findAndCountAll({
+        const { count, rows } = await Dept.findAndCountAll({
             limit: pageSize,
             offset: (pageCurrent - 1) * pageSize,
             // 排序
@@ -192,21 +135,7 @@ export const list = async (ctx: Context) => {
              */
             attributes: { exclude: ['password'] }, // 不需要某些字段
             // 筛选
-            where: filter,
-            // 关联表查询
-            include: [
-                {
-                    model: Dept,
-                    as: 'dept', // 给关联定义一个别名
-                    attributes: ['code', 'name'] // 不单独返回角色的其他字段
-                },
-                {
-                    model: Role,
-                    as: 'roles', // 给关联定义一个别名
-                    through: { attributes: [] }, // 不需要返回中间表的数据
-                    attributes: ['code', 'name'] // 不单独返回角色的其他字段
-                }
-            ]
+            where: filter
             // raw: true // 返回平坦的结果集【此时无分组】
         })
 

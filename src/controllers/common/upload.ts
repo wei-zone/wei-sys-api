@@ -49,7 +49,7 @@ const cosUpload = async (file: any) => {
                  * 必须
                  * 请求的对象键，最前面不带 /，例如 images/1.jpg
                  */
-                Key: `apps/koa2/${dayjs().format('YYYY/MM/DD')}/${fileName}`,
+                Key: `apps/wei/${dayjs().format('YYYY/MM/DD')}/${fileName}`,
                 StorageClass: 'STANDARD',
                 // 格式1. 传入文件内容
                 // Body: fs.readFileSync(filepath),
