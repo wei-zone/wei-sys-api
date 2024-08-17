@@ -53,7 +53,7 @@ export default function (sequelize: Sequelize) {
         comment: '',
         indexes: [
             {
-                name: 'uk_userid_roleid',
+                name: 'ukUserIdRoleId',
                 unique: true,
                 type: 'BTREE',
                 fields: ['userId', 'roleId']

@@ -19,7 +19,7 @@ export default function (sequelize: Sequelize) {
             autoIncrement: false,
             comment: '用户名',
             field: 'username',
-            unique: 'login_name'
+            unique: 'loginName'
         },
         nickname: {
             type: DataTypes.STRING(64),

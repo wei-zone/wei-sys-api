@@ -107,24 +107,17 @@ export const detail = async (ctx: Context) => {
  */
 export const list = async (ctx: Context) => {
     try {
-        const {
-            pageSize,
-            pageCurrent,
-            status = EnableStatus.enable,
-            keywords = '',
-            order = [['createdAt', 'DESC']]
-        } = ctx.request.body
+        const { status = EnableStatus.enable, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
 
         const filter = {
             /**
              * 模糊查询
              */
+            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }],
             status
         }
 
         const { count, rows } = await Dept.findAndCountAll({
-            limit: pageSize,
-            offset: (pageCurrent - 1) * pageSize,
             // 排序
             order,
             /**
@@ -141,11 +134,51 @@ export const list = async (ctx: Context) => {
 
         ctx.success({
             data: {
-                pageSize,
-                pageCurrent,
                 list: rows,
                 count
             }
+        })
+    } catch (error) {
+        throw error
+    }
+}
+
+/**
+ * 全量列表
+ * @param ctx
+ */
+export const options = async (ctx: Context) => {
+    try {
+        const { status = EnableStatus.enable, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+
+        const filter = {
+            /**
+             * 模糊查询
+             */
+            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }],
+            status
+        }
+
+        const data = await Dept.findAll({
+            // 排序
+            order,
+            /**
+             * 字段过滤
+             * attribute: ['name', 'id’], // 只查出某些字段
+             * attributes: { exclude: ['id'] }, // 不需要某些字段
+             * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
+             */
+            attributes: { exclude: ['password'] }, // 不需要某些字段
+            // 筛选
+            where: filter
+            // raw: true // 返回平坦的结果集【此时无分组】
+        })
+
+        ctx.success({
+            data: data.map((item: any) => ({
+                label: item.name,
+                value: item.id
+            }))
         })
     } catch (error) {
         throw error

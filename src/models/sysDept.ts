@@ -28,7 +28,7 @@ export default function (sequelize: Sequelize) {
             autoIncrement: false,
             comment: '部门编号',
             field: 'code',
-            unique: 'uk_code'
+            unique: 'ukCode'
         },
         parentId: {
             type: DataTypes.INTEGER,

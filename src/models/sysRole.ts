@@ -19,7 +19,7 @@ export default function (sequelize: Sequelize) {
             autoIncrement: false,
             comment: '角色名称',
             field: 'name',
-            unique: 'uk_name'
+            unique: 'ukName'
         },
         code: {
             type: DataTypes.STRING(32),
@@ -29,7 +29,7 @@ export default function (sequelize: Sequelize) {
             autoIncrement: false,
             comment: '角色编码',
             field: 'code',
-            unique: 'uk_code'
+            unique: 'ukCode'
         },
         sort: {
             type: DataTypes.INTEGER,

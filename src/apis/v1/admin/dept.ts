@@ -172,22 +172,15 @@ route.get('/:id', async (context: Context) => {
  *         required: true
  *         description: data
  *         schema:
- *           allOf:
- *              - $ref: '#/components/schemas/Pagination'
- *              - type: object
- *              - required: true
- *                properties:
- *                  fields:
- *                      type: object
- *                      description: 字段过滤，默认所有字段
- *                      example: {}
- *                  filter:
- *                      type: object
- *                      description: 条件筛选，默认所有数据
- *                      example: {}
- *                  order:
- *                      type: array
- *                      description: 排序，默认 [['createdAt', 'DESC']]
+ *             type: object
+ *             required: true
+ *             properties:
+ *                keywords:
+ *                    type: string
+ *                    example: 前端开发
+ *                status:
+ *                    type: number
+ *                    example: 1
  *     responses:
  *       200:
  *         schema:
@@ -196,6 +189,22 @@ route.get('/:id', async (context: Context) => {
  */
 route.post('/', async (context: Context) => {
     await controller.list(context)
+})
+
+/**
+ * @swagger
+ * /v1/admin/depts:
+ *   get:
+ *     summary: 全量部门列表
+ *     tags: [admin]
+ *     responses:
+ *       200:
+ *         schema:
+ *           type: object
+ *           $ref: '#/components/schemas/ApiResponse'
+ */
+route.get('/', async (context: Context) => {
+    await controller.options(context)
 })
 
 export default route

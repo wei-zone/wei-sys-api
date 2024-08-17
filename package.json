@@ -21,7 +21,7 @@
         "start:dist": "cross-env NODE_ENV=production nodemon src/main.js",
         "pm2": "cross-env NODE_ENV=production pm2 start ./src/main.js --watch",
         "build": "cross-env NODE_ENV=production tsc --build",
-        "automate": "sequelize-automate -c automate.config.json",
+        "automate": "sequelize-automate -c automate.config.json && npm run format",
         "coverage": "nyc --reporter lcov npm run test",
         "lint": "npm run lint-json && npm run lint-ts",
         "lint-json": "eslint --cache --fix --no-eslintrc -c .eslintrc-json.json --ext .json .",

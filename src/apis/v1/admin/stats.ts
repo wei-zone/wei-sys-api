@@ -8,34 +8,33 @@ const route = new Router({
 
 /**
  * @swagger
- * /v1/admin/visit-stats:
+ * /v1/admin/stats/visit:
  *   get:
  *     summary: 访问统计
  *     tags: [admin]
- *     parameters:
- *       - name: request
- *         in: body
- *         type: object
- *         required: true
- *         description: 入参
- *         schema:
- *             type: object
- *             required: true
- *             properties:
- *                username:
- *                    type: string
- *                    example: zhangsan
  *     responses:
  *       200:
  *         schema:
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.get('/visit-stats', async (context: Context) => {
+route.get('/visit', async (context: Context) => {
     await controller.visit(context)
 })
 
-route.get('/visit-trend', async (context: Context) => {
+/**
+ * @swagger
+ * /v1/admin/stats/trend:
+ *   get:
+ *     summary: 访问趋势
+ *     tags: [admin]
+ *     responses:
+ *       200:
+ *         schema:
+ *           type: object
+ *           $ref: '#/components/schemas/ApiResponse'
+ */
+route.get('/trend', async (context: Context) => {
     await controller.trend(context)
 })
 
