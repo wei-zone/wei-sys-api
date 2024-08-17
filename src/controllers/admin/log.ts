@@ -3,8 +3,50 @@ import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
 import sysModel from '@/models/sysLog'
 import { EnableStatus } from '@/types/enums'
+import { parseUserAgent } from '@/libs'
 const Model = sysModel(sequelize)
 
+/**
+ * 数据库日志记录
+ * @param ctx
+ * @param data
+ */
+export const apiLog = async (ctx: Context, data: any, from = 'api') => {
+    try {
+        // 数据库日志记录
+        const originalUrl = ctx.request.originalUrl
+        const group = (ctx.request.originalUrl?.match(/(\/v1\/admin\/)([\w]+)/)?.[2] || 'others').toUpperCase()
+        let module = group.slice(0, group.length - 1)
+
+        const moduleEnum = ['LOGIN', 'USER', 'ROLE', 'DEPT', 'MENU', 'DICT', 'OTHER']
+        if (!moduleEnum.includes(module)) {
+            module = 'OTHER'
+        }
+        const userAgent = ctx.request.header['user-agent']
+        const { browserName, browserVersion, osName, osVersion } = parseUserAgent(userAgent)
+
+        const executionTime = Date.now() - (ctx.requestTime || 0)
+        const logData: any = {
+            from,
+            module,
+            content: JSON.stringify(ctx.request.body || ctx.request.query)?.slice(0, 1000),
+            requestUri: originalUrl,
+            ip: ctx.request.ip,
+            executionTime,
+            userAgent,
+            browser: browserName,
+            browserVersion,
+            os: osName,
+            osVersion,
+            method: ctx.request.method,
+            message: data?.message?.slice(0, 1000),
+            status: data?.code
+        }
+        await Model.create(logData)
+    } catch (error) {
+        throw error
+    }
+}
 /**
  * 创建
  * @param ctx
@@ -12,7 +54,7 @@ const Model = sysModel(sequelize)
 export const create = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Model.create(data)
+        const res = await apiLog(ctx, data, 'web-admin')
         ctx.success({
             data: res
         })

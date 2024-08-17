@@ -8,9 +8,15 @@ export interface ISysLogAttributes {
     province?: string
     city?: string
     executionTime?: number
+    userAgent?: string
     browser?: string
     browserVersion?: string
     os?: string
+    osVersion?: string
+    from?: string
+    method?: string
+    status?: string
+    message?: string
     createdBy?: number
     createdAt?: Date
     updatedAt?: Date

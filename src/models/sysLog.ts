@@ -74,6 +74,15 @@ export default function (sequelize: Sequelize) {
             comment: '执行时间(ms)',
             field: 'executionTime'
         },
+        userAgent: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false,
+            autoIncrement: false,
+            comment: '浏览器',
+            field: 'userAgent'
+        },
         browser: {
             type: DataTypes.STRING(100),
             allowNull: true,
@@ -100,6 +109,51 @@ export default function (sequelize: Sequelize) {
             autoIncrement: false,
             comment: '终端系统',
             field: 'os'
+        },
+        osVersion: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false,
+            autoIncrement: false,
+            comment: '终端系统版本',
+            field: 'osVersion'
+        },
+        from: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false,
+            autoIncrement: false,
+            comment: '日志来源',
+            field: 'from'
+        },
+        method: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false,
+            autoIncrement: false,
+            comment: '请求类型',
+            field: 'method'
+        },
+        status: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false,
+            autoIncrement: false,
+            comment: '状态码',
+            field: 'status'
+        },
+        message: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false,
+            autoIncrement: false,
+            comment: '返回消息',
+            field: 'message'
         },
         createdBy: {
             type: DataTypes.INTEGER,

@@ -1,7 +1,9 @@
+import { parseUserAgent, request } from '@/libs'
 import * as log4js from 'log4js'
 
 import { log4Config } from '../config'
 import dayjs from 'dayjs'
+import { apiLog } from './../controllers/admin/log'
 
 // 加载配置文件
 log4js.configure(log4Config as any)
@@ -66,8 +68,12 @@ logFun.forEach((method: string) => {
 export const errorLogger = function (ctx: any, data: any) {
     if (ctx && data) {
         error.level = 'error'
+        // 同时记录 debug 和 error
         debug.info(formatError(ctx, data))
         error.error(formatError(ctx, data))
+
+        // 数据库日志记录
+        apiLog(ctx, data)
     }
 }
 
@@ -75,8 +81,12 @@ export const errorLogger = function (ctx: any, data: any) {
 export const successLogger = function (ctx: any, data: any) {
     if (ctx) {
         info.level = 'info'
+        // 同时记录 debug 和 info
         debug.info(formatRes(ctx, data))
         info.info(formatRes(ctx, data))
+
+        // 数据库日志记录
+        apiLog(ctx, data)
     }
 }
 

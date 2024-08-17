@@ -20,8 +20,12 @@ const render = (context: Context) => {
         if (data) {
             response.data = data
         }
-        code === 200 ? successLogger(context, response) : errorLogger(context, response)
         context.body = response
+        if (code === 200) {
+            successLogger(context, response)
+        } else {
+            errorLogger(context, response)
+        }
     }
 }
 

@@ -77,3 +77,80 @@ export const toCamelCase = (target: string, Delimiter = '-'): string => {
         })
         .join('') // 将数组拼接成字符串
 }
+
+/**
+ * @description 解析用户代理字符串
+ * @param agent
+ * @returns
+ */
+export const parseUserAgent = (agent?: string) => {
+    if (!agent) {
+        return {
+            browserName: undefined,
+            browserVersion: undefined,
+            osName: undefined,
+            osVersion: undefined
+        }
+    }
+    // 浏览器正则表达式
+    const browsers = [
+        { name: 'Edge', regex: /Edge\/(\d+)/ },
+        { name: 'Chrome', regex: /Chrome\/(\d+)/ },
+        { name: 'Firefox', regex: /Firefox\/(\d+)/ },
+        { name: 'Safari', regex: /Safari\/(\d+)/ },
+        { name: 'Opera', regex: /Opera\/(\d+)/ },
+        { name: 'IE', regex: /MSIE (\d+)/ },
+        { name: 'IE', regex: /Trident\/.*rv:(\d+)/ } // IE11 特殊处理
+    ]
+
+    // 操作系统正则表达式
+    const os = [
+        { name: 'Windows', regex: /Windows NT (\d+\.\d+)/ },
+        { name: 'macOS', regex: /Mac OS X (\d+)/ },
+        { name: 'iOS', regex: /iPhone OS (\d+)/ },
+        { name: 'Android', regex: /Android (\d+)/ },
+        { name: 'Linux', regex: /Linux/ }
+    ]
+
+    let browserName = 'Unknown'
+    let browserVersion = 'Unknown'
+    let osName = 'Unknown'
+    let osVersion = 'Unknown'
+
+    // 检测浏览器
+    for (let i = 0; i < browsers.length; i++) {
+        const match = agent.match(browsers[i].regex)
+        if (match) {
+            browserName = browsers[i].name
+            browserVersion = match[1]
+            break
+        }
+    }
+
+    // 检测操作系统
+    for (let i = 0; i < os.length; i++) {
+        const match = agent.match(os[i].regex)
+        if (match) {
+            osName = os[i].name
+            osVersion = match[1] || 'Unknown'
+            break
+        }
+    }
+
+    return {
+        browserName,
+        browserVersion,
+        osName,
+        osVersion
+    }
+}
+
+// // 示例 User-Agent 字符串
+// const userAgentString =
+//     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+
+// // 解析 User-Agent
+// const parsedAgent = parseUserAgent(userAgentString)
+
+// console.log(`浏览器: ${parsedAgent.browserName}, 版本: ${parsedAgent.browserVersion}`)
+// console.log(`操作系统: ${parsedAgent.osName}, 版本: ${parsedAgent.osVersion}`)

@@ -5,6 +5,7 @@ export default function (sequelize: Sequelize) {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            defaultValue: null,
             primaryKey: true,
             autoIncrement: true,
             comment: '主键',
