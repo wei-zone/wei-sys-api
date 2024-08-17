@@ -37,7 +37,7 @@ route.post('/create', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/users/batch:
+ * /v1/admin/users/createBatch:
  *   post:
  *     summary: 用户批量创建
  *     tags: [admin]
@@ -62,7 +62,7 @@ route.post('/create', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/batch', async (context: Context) => {
+route.post('/createBatch', async (context: Context) => {
     await controller.createBatch(context)
 })
 
@@ -196,6 +196,22 @@ route.get('/:id', async (context: Context) => {
  */
 route.post('/', async (context: Context) => {
     await controller.list(context)
+})
+
+/**
+ * @swagger
+ * /v1/admin/users:
+ *   get:
+ *     summary: 全量用户列表
+ *     tags: [admin]
+ *     responses:
+ *       200:
+ *         schema:
+ *           type: object
+ *           $ref: '#/components/schemas/ApiResponse'
+ */
+route.get('/', async (context: Context) => {
+    await controller.options(context)
 })
 
 export default route

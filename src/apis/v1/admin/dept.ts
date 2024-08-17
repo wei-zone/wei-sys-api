@@ -37,7 +37,7 @@ route.post('/create', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/depts/batch:
+ * /v1/admin/depts/createBatch:
  *   post:
  *     summary: 部门批量创建
  *     tags: [admin]
@@ -62,7 +62,7 @@ route.post('/create', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/batch', async (context: Context) => {
+route.post('/createBatch', async (context: Context) => {
     await controller.createBatch(context)
 })
 

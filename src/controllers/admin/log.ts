@@ -1,7 +1,7 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
-import sysModel from '@/models/sysMenu'
+import sysModel from '@/models/sysLog'
 import { EnableStatus } from '@/types/enums'
 const Model = sysModel(sequelize)
 
@@ -107,16 +107,18 @@ export const detail = async (ctx: Context) => {
  */
 export const list = async (ctx: Context) => {
     try {
-        const { keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+        const { pageSize = 10, pageCurrent = 1, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
 
         const filter = {
             /**
              * 模糊查询
              */
-            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }]
+            [Op.or]: [{ content: { [Op.like]: `%${keywords}%` } }]
         }
 
-        const data = await Model.findAll({
+        const { count: total, rows } = await Model.findAndCountAll({
+            limit: pageSize,
+            offset: (pageCurrent - 1) * pageSize,
             // 排序
             order,
             /**
@@ -132,10 +134,10 @@ export const list = async (ctx: Context) => {
         })
 
         ctx.success({
-            data: data.map((item: any) => ({
-                label: item.name,
-                value: item.id
-            }))
+            data: {
+                list: rows,
+                total
+            }
         })
     } catch (error) {
         throw error
@@ -154,7 +156,7 @@ export const options = async (ctx: Context) => {
             /**
              * 模糊查询
              */
-            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }],
+            [Op.or]: [{ content: { [Op.like]: `%${keywords}%` } }],
             status
         }
 

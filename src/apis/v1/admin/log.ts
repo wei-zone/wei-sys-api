@@ -1,16 +1,16 @@
 import Router from '@koa/router'
 import { Context } from 'koa'
-import * as controller from '@/controllers/admin/dept'
+import * as controller from '@/controllers/admin/log'
 
 const route = new Router({
-    prefix: '/depts' // 路由前缀
+    prefix: '/logs' // 路由前缀
 })
 
 /**
  * @swagger
- * /v1/admin/depts/create:
+ * /v1/admin/logs/create:
  *   post:
- *     summary: 部门创建
+ *     summary: 日志创建
  *     tags: [admin]
  *     parameters:
  *       - name: request
@@ -37,9 +37,9 @@ route.post('/create', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/depts/createBatch:
+ * /v1/admin/logs/createBatch:
  *   post:
- *     summary: 部门批量创建
+ *     summary: 日志批量创建
  *     tags: [admin]
  *     parameters:
  *       - name: request
@@ -68,9 +68,9 @@ route.post('/createBatch', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/depts/{id}:
+ * /v1/admin/logs/{id}:
  *   delete:
- *     summary: 部门删除
+ *     summary: 日志删除
  *     tags: [admin]
  *     parameters:
  *       - name: id
@@ -94,9 +94,9 @@ route.delete('/:id', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/depts/{id}:
+ * /v1/admin/logs/{id}:
  *   post:
- *     summary: 部门更新
+ *     summary: 日志更新
  *     tags: [admin]
  *     parameters:
  *       - name: id
@@ -135,9 +135,9 @@ route.post('/:id', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/depts/{id}:
+ * /v1/admin/logs/{id}:
  *   get:
- *     summary: 部门详情
+ *     summary: 日志详情
  *     tags: [admin]
  *     parameters:
  *       - name: id
@@ -161,9 +161,9 @@ route.get('/:id', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/depts:
+ * /v1/admin/logs:
  *   post:
- *     summary: 部门列表
+ *     summary: 日志列表
  *     tags: [admin]
  *     parameters:
  *       - name: request
@@ -172,15 +172,22 @@ route.get('/:id', async (context: Context) => {
  *         required: true
  *         description: data
  *         schema:
- *             type: object
- *             required: true
- *             properties:
- *                keywords:
- *                    type: string
- *                    example: 前端开发
- *                status:
- *                    type: number
- *                    example: 1
+ *           allOf:
+ *              - $ref: '#/components/schemas/Pagination'
+ *              - type: object
+ *              - required: true
+ *                properties:
+ *                  fields:
+ *                      type: object
+ *                      description: 字段过滤，默认所有字段
+ *                      example: {}
+ *                  filter:
+ *                      type: object
+ *                      description: 条件筛选，默认所有数据
+ *                      example: {}
+ *                  order:
+ *                      type: array
+ *                      description: 排序，默认 [['createdAt', 'DESC']]
  *     responses:
  *       200:
  *         schema:
@@ -193,9 +200,9 @@ route.post('/', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/depts:
+ * /v1/admin/logs:
  *   get:
- *     summary: 全量部门列表
+ *     summary: 全量日志列表
  *     tags: [admin]
  *     responses:
  *       200:

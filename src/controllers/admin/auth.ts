@@ -36,7 +36,7 @@ export const login = async (ctx: Context) => {
         const data = ctx.request.body
         const { username, password } = data
         const res: any = await User.findOne({
-            attributes: { exclude: ['password'] }, // 不需要某些字段
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
             where: {
                 username,
                 password
@@ -202,7 +202,7 @@ export const me = async (ctx: Context) => {
         const { id: userId = 2 } = ctx.request.body
         // mock
         const user: any = await User.findByPk(userId, {
-            attributes: { exclude: ['password'] } // 不需要某些字段
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] } // 不需要某些字段
         })
 
         if (!user) {

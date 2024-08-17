@@ -1,9 +1,9 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
-import sysDept from '@/models/sysDept'
+import sysModel from '@/models/sysDept'
 import { EnableStatus } from '@/types/enums'
-const Dept = sysDept(sequelize)
+const Model = sysModel(sequelize)
 
 /**
  * 创建
@@ -12,7 +12,7 @@ const Dept = sysDept(sequelize)
 export const create = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Dept.create(data)
+        const res = await Model.create(data)
         ctx.success({
             data: res
         })
@@ -28,7 +28,7 @@ export const create = async (ctx: Context) => {
 export const createBatch = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Dept.bulkCreate(data)
+        const res = await Model.bulkCreate(data)
         ctx.success({
             data: res
         })
@@ -45,7 +45,7 @@ export const createBatch = async (ctx: Context) => {
 export const destroy = async (ctx: Context) => {
     try {
         const { id } = ctx.params
-        const list = await Dept.destroy({
+        const list = await Model.destroy({
             // 条件筛选
             where: {
                 id
@@ -67,7 +67,7 @@ export const update = async (ctx: Context) => {
     try {
         const { id } = ctx.params
         const data = ctx.request.body
-        const res = await Dept.update(data, {
+        const res = await Model.update(data, {
             // 条件筛选
             where: {
                 id
@@ -90,8 +90,8 @@ export const detail = async (ctx: Context) => {
         console.log('ctx.params', ctx.params)
         const { id } = ctx.params
         // 使用提供的主键从表中仅获得一个条目.
-        const res = await Dept.findByPk(id, {
-            attributes: { exclude: ['password'] } // 不需要某些字段
+        const res = await Model.findByPk(id, {
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] } // 不需要某些字段
         })
         ctx.success({
             data: res
@@ -107,17 +107,16 @@ export const detail = async (ctx: Context) => {
  */
 export const list = async (ctx: Context) => {
     try {
-        const { status = EnableStatus.enable, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+        const { keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
 
         const filter = {
             /**
              * 模糊查询
              */
-            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }],
-            status
+            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }]
         }
 
-        const { count, rows } = await Dept.findAndCountAll({
+        const { count: total, rows } = await Model.findAndCountAll({
             // 排序
             order,
             /**
@@ -126,7 +125,7 @@ export const list = async (ctx: Context) => {
              * attributes: { exclude: ['id'] }, // 不需要某些字段
              * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
              */
-            attributes: { exclude: ['password'] }, // 不需要某些字段
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
             // 筛选
             where: filter
             // raw: true // 返回平坦的结果集【此时无分组】
@@ -135,7 +134,7 @@ export const list = async (ctx: Context) => {
         ctx.success({
             data: {
                 list: rows,
-                count
+                total
             }
         })
     } catch (error) {
@@ -159,7 +158,7 @@ export const options = async (ctx: Context) => {
             status
         }
 
-        const data = await Dept.findAll({
+        const data = await Model.findAll({
             // 排序
             order,
             /**
@@ -168,7 +167,7 @@ export const options = async (ctx: Context) => {
              * attributes: { exclude: ['id'] }, // 不需要某些字段
              * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
              */
-            attributes: { exclude: ['password'] }, // 不需要某些字段
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
             // 筛选
             where: filter
             // raw: true // 返回平坦的结果集【此时无分组】

@@ -13,6 +13,7 @@ export interface ISysLogAttributes {
     os?: string
     createdBy?: number
     createdAt?: Date
+    updatedAt?: Date
     deletedAt?: Date
 }
 export interface ISysLogModel extends ISysLogAttributes, Model {}

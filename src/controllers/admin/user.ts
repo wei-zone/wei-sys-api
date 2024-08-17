@@ -115,7 +115,7 @@ export const detail = async (ctx: Context) => {
         const { id } = ctx.params
         // 使用提供的主键从表中仅获得一个条目.
         const res = await User.findByPk(id, {
-            attributes: { exclude: ['password'] } // 不需要某些字段
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] } // 不需要某些字段
         })
         ctx.success({
             data: res
@@ -159,13 +159,7 @@ export const list = async (ctx: Context) => {
         //     logging: true // 是否将 SQL 语句打印到控制台
         // })
 
-        const {
-            pageSize,
-            pageCurrent,
-            status = EnableStatus.enable,
-            keywords = '',
-            order = [['createdAt', 'DESC']]
-        } = ctx.request.body
+        const { pageSize = 10, pageCurrent = 1, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
 
         const filter = {
             /**
@@ -175,11 +169,10 @@ export const list = async (ctx: Context) => {
                 { username: { [Op.like]: `%${keywords}%` } },
                 { nickname: { [Op.like]: `%${keywords}%` } },
                 { mobile: { [Op.like]: `%${keywords}%` } }
-            ],
-            status
+            ]
         }
 
-        const { count, rows } = await User.findAndCountAll({
+        const { count: total, rows } = await User.findAndCountAll({
             limit: pageSize,
             offset: (pageCurrent - 1) * pageSize,
             // 排序
@@ -190,7 +183,7 @@ export const list = async (ctx: Context) => {
              * attributes: { exclude: ['id'] }, // 不需要某些字段
              * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
              */
-            attributes: { exclude: ['password'] }, // 不需要某些字段
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
             // 筛选
             where: filter,
             // 关联表查询
@@ -215,8 +208,50 @@ export const list = async (ctx: Context) => {
                 pageSize,
                 pageCurrent,
                 list: rows,
-                count
+                total
             }
+        })
+    } catch (error) {
+        throw error
+    }
+}
+
+/**
+ * 全量列表
+ * @param ctx
+ */
+export const options = async (ctx: Context) => {
+    try {
+        const { status = EnableStatus.enable, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+
+        const filter = {
+            /**
+             * 模糊查询
+             */
+            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }],
+            status
+        }
+
+        const data = await User.findAll({
+            // 排序
+            order,
+            /**
+             * 字段过滤
+             * attribute: ['name', 'id’], // 只查出某些字段
+             * attributes: { exclude: ['id'] }, // 不需要某些字段
+             * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
+             */
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
+            // 筛选
+            where: filter
+            // raw: true // 返回平坦的结果集【此时无分组】
+        })
+
+        ctx.success({
+            data: data.map((item: any) => ({
+                label: item.name,
+                value: item.id
+            }))
         })
     } catch (error) {
         throw error

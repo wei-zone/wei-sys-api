@@ -119,6 +119,15 @@ export default function (sequelize: Sequelize) {
             comment: '创建时间',
             field: 'createdAt'
         },
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: true,
+            defaultValue: null,
+            primaryKey: false,
+            autoIncrement: false,
+            comment: '更新时间',
+            field: 'updatedAt'
+        },
         deletedAt: {
             type: DataTypes.DATE,
             allowNull: true,
