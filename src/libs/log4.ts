@@ -65,32 +65,32 @@ logFun.forEach((method: string) => {
 // console.error('This is a error message')
 
 // 封装错误日志
-export const errorLogger = function (ctx: any, data: any) {
-    if (ctx && data) {
+export const errorLogger = function (ctx: any, res: any) {
+    if (ctx && res) {
         error.level = 'error'
         // 同时记录 debug 和 error
         if (process.env.NODE_ENV !== 'development') {
-            debug.info(formatError(ctx, data))
-            error.error(formatError(ctx, data))
+            debug.info(formatError(ctx, res))
+            error.error(formatError(ctx, res))
         }
 
         // 数据库日志记录
-        apiLog(ctx, data)
+        apiLog(ctx, res)
     }
 }
 
 // 封装响应日志
-export const successLogger = function (ctx: any, data: any) {
+export const successLogger = function (ctx: any, res: any) {
     if (ctx) {
         info.level = 'info'
         // 同时记录 debug 和 info
         if (process.env.NODE_ENV !== 'development') {
-            debug.info(formatRes(ctx, data))
-            info.info(formatRes(ctx, data))
+            debug.info(formatRes(ctx, res))
+            info.info(formatRes(ctx, res))
         }
 
         // 数据库日志记录
-        apiLog(ctx, data)
+        apiLog(ctx, res)
     }
 }
 

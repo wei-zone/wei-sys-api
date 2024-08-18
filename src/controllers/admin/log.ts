@@ -14,9 +14,9 @@ Model.belongsTo(User, { foreignKey: 'createdBy', as: 'operator' }) // 假设外�
 /**
  * 数据库日志记录
  * @param ctx
- * @param data
+ * @param res
  */
-export const apiLog = async (ctx: Context, data: any, from = 'api') => {
+export const apiLog = async (ctx: Context, res: any, from = 'api') => {
     try {
         // 数据库日志记录
         const originalUrl = ctx.request.originalUrl
@@ -33,10 +33,10 @@ export const apiLog = async (ctx: Context, data: any, from = 'api') => {
 
         const executionTime = Date.now() - (ctx.requestTime || 0)
 
-        const user = authorization ? getJwtInfo(ctx) : data?.user || {}
-
+        const user = authorization ? getJwtInfo(ctx) : res?.data?.user || {}
+        const createdBy = user?.id || 0
         const logData: any = {
-            createdBy: user?.id || 0,
+            createdBy,
             from,
             module,
             content: JSON.stringify(ctx.request.body || ctx.request.query)?.slice(0, 1000),
@@ -49,8 +49,8 @@ export const apiLog = async (ctx: Context, data: any, from = 'api') => {
             os: osName,
             osVersion,
             method: ctx.request.method,
-            message: data?.message?.slice(0, 1000),
-            status: data?.code
+            message: res?.message?.slice(0, 1000),
+            status: res?.code
         }
         await Model.create(logData)
     } catch (error) {

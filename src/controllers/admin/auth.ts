@@ -9,7 +9,7 @@ import sysRoleMenu from '@/models/sysRoleMenu'
 import sysDept from '@/models/sysDept'
 import dayjs from 'dayjs'
 import sysMenu from '@/models/sysMenu'
-import { toCamelCase } from '@/libs'
+import { getJwtInfo, toCamelCase } from '@/libs'
 import { MenuTypeEnum } from '@/types/enums'
 
 const User = sysUser(sequelize)
@@ -116,7 +116,8 @@ export const transferRouteTree = (list: any[], lastParentId = 0) => {
             visible,
             icon,
             redirect,
-            params
+            params,
+            sort
         } = menu
         if (parentId === lastParentId && type !== MenuTypeEnum.BUTTON) {
             const meta: any = {
@@ -140,6 +141,7 @@ export const transferRouteTree = (list: any[], lastParentId = 0) => {
             const children: any = transferRouteTree(list, id)
 
             const route = {
+                sort,
                 // 根据path路由跳转 this.$router.push({path:xxx})
                 path: routePath,
                 component,
@@ -156,7 +158,7 @@ export const transferRouteTree = (list: any[], lastParentId = 0) => {
             routes.push(route)
         }
     }
-    return routes
+    return routes.sort((a, b) => a.sort - b.sort)
 }
 
 /**
@@ -165,8 +167,7 @@ export const transferRouteTree = (list: any[], lastParentId = 0) => {
  */
 export const me = async (ctx: Context) => {
     try {
-        const { id: userId = 2 } = ctx.request.body
-        // mock
+        const { id: userId } = getJwtInfo(ctx)
         const user: any = await User.findByPk(userId, {
             attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] } // 不需要某些字段
         })

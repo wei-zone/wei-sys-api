@@ -1,9 +1,8 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
-import { and, Op } from 'sequelize'
+import { Op } from 'sequelize'
 import sysModel from '@/models/sysMenu'
 import { EnableStatus, MenuTypeEnum } from '@/types/enums'
-import { toCamelCase } from '@/libs'
 const Model = sysModel(sequelize)
 
 /**
@@ -107,7 +106,7 @@ export const detail = async (ctx: Context) => {
  */
 const transferMenuTree = (list: any[], lastParentId = 0) => {
     const length = list.length
-    const routes: any[] = []
+    const menus: any[] = []
     for (let i = 0; i < length; i++) {
         const menu = list[i]
         const { id, parentId, name, type, routeName, routePath, component, sort, visible, icon, redirect, perm } = menu
@@ -131,10 +130,10 @@ const transferMenuTree = (list: any[], lastParentId = 0) => {
             if (children.length) {
                 menu.children = children
             }
-            routes.push(menu)
+            menus.push(menu)
         }
     }
-    return routes.sort((a, b) => a.sort - b.sort)
+    return menus.sort((a, b) => a.sort - b.sort)
 }
 
 /**
@@ -142,7 +141,7 @@ const transferMenuTree = (list: any[], lastParentId = 0) => {
  */
 const transferMenuTreeOptions = (list: any[], lastParentId = 0) => {
     const length = list.length
-    const routes: any[] = []
+    const menus: any[] = []
     for (let i = 0; i < length; i++) {
         const menu = list[i]
         const { id, parentId, name, sort } = menu
@@ -157,10 +156,10 @@ const transferMenuTreeOptions = (list: any[], lastParentId = 0) => {
             if (children.length) {
                 menu.children = children
             }
-            routes.push(menu)
+            menus.push(menu)
         }
     }
-    return routes.sort((a, b) => a.sort - b.sort)
+    return menus.sort((a, b) => a.sort - b.sort)
 }
 
 /**

@@ -36,6 +36,6 @@ export const getJwtInfo = (
 } => {
     const token: any = context.request.headers?.authorization?.split(' ')?.[1]
     const user: any = jsonwebtoken.verify(token, ADMIN_APP.JWT_SECRET)
-    console.log('user', user)
+    console.log('jwt info', user)
     return user || {}
 }
