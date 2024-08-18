@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid'
 import dayjs from 'dayjs'
 import sysMenu from '@/models/sysMenu'
 import { toCamelCase } from '@/libs'
+import { MenuTypeEnum } from '@/types/enums'
 
 const User = sysUser(sequelize)
 const UserRole = sysUserRole(sequelize)
@@ -16,16 +17,6 @@ const Role = sysRole(sequelize)
 const RoleMenu = sysRoleMenu(sequelize)
 const Menu = sysMenu(sequelize)
 const Dept = sysDept(sequelize)
-
-/**
- * 菜单类型(1-菜单 2-目录 3-外链 4-按钮)
- */
-export enum MenuTypeEnum {
-    'MENU' = 1,
-    'CATALOG' = 2,
-    'EXTLINK' = 3,
-    'BUTTON' = 4
-}
 
 /**
  * 登录
@@ -86,42 +77,6 @@ export const logout = async (ctx: Context) => {
     } catch (error) {
         throw error
     }
-}
-
-/**
- * @desc 列表转树结构
- * @param list
- * @param parentUuid
- * @param bookPath vitepress sidebar link
- * @param link
- **/
-const listTransferTree = (list: any[], parentUuid: string | number, bookPath: string, link?: string) => {
-    const res: any[] = []
-    for (const item of list) {
-        if (item.parent_uuid === parentUuid) {
-            const children: any = listTransferTree(list, item?.uuid || '', bookPath, `${link || ''}/${item.title}`)
-            if (children.length) {
-                item.items = children
-                item.collapsed = false
-            } else {
-                item.link = `${bookPath}${link || ''}/${item.title}`
-                if (!parentUuid) {
-                    item.items = []
-                }
-            }
-            res.push({
-                id: item.id,
-                type: item.type,
-                title: item.title,
-                text: item.title,
-                url: item.url || item.uuid,
-                link: item.link,
-                collapsed: item.collapsed,
-                items: item.items
-            })
-        }
-    }
-    return res
 }
 
 /**
@@ -187,11 +142,6 @@ export const transferRouteTree = (list: any[], lastParentId = 0) => {
     }
     return routes
 }
-
-/**
- * 生成菜单树
- */
-const transferMenuTree = () => {}
 
 /**
  *  用户信息

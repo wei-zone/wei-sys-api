@@ -95,7 +95,7 @@ route.delete('/:id', async (context: Context) => {
 /**
  * @swagger
  * /v1/admin/dicts/{id}:
- *   post:
+ *   put:
  *     summary: 字典更新
  *     tags: [admin]
  *     parameters:
@@ -129,13 +129,13 @@ route.delete('/:id', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/:id', async (context: Context) => {
+route.put('/:id', async (context: Context) => {
     await controller.update(context)
 })
 
 /**
  * @swagger
- * /v1/admin/dicts/{id}:
+ * /v1/admin/dicts/{id}/form:
  *   get:
  *     summary: 字典详情
  *     tags: [admin]
@@ -155,13 +155,13 @@ route.post('/:id', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.get('/:id', async (context: Context) => {
+route.get('/:id/form', async (context: Context) => {
     await controller.detail(context)
 })
 
 /**
  * @swagger
- * /v1/admin/dicts:
+ * /v1/admin/dicts/pages:
  *   post:
  *     summary: 字典列表
  *     tags: [admin]
@@ -194,13 +194,13 @@ route.get('/:id', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/', async (context: Context) => {
+route.post('/pages', async (context: Context) => {
     await controller.list(context)
 })
 
 /**
  * @swagger
- * /v1/admin/dicts:
+ * /v1/admin/dicts/options:
  *   get:
  *     summary: 全量字典列表
  *     tags: [admin]
@@ -210,7 +210,7 @@ route.post('/', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.get('/', async (context: Context) => {
+route.get('/options', async (context: Context) => {
     await controller.options(context)
 })
 

@@ -21,7 +21,7 @@ export default function (sequelize: Sequelize) {
             field: 'module'
         },
         content: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.STRING(1000),
             allowNull: false,
             defaultValue: null,
             primaryKey: false,
@@ -75,12 +75,12 @@ export default function (sequelize: Sequelize) {
             field: 'executionTime'
         },
         userAgent: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING(255),
             allowNull: true,
             defaultValue: null,
             primaryKey: false,
             autoIncrement: false,
-            comment: '浏览器',
+            comment: 'userAgent',
             field: 'userAgent'
         },
         browser: {
@@ -147,7 +147,7 @@ export default function (sequelize: Sequelize) {
             field: 'status'
         },
         message: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING(1000),
             allowNull: true,
             defaultValue: null,
             primaryKey: false,

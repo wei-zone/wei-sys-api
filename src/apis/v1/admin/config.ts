@@ -95,7 +95,7 @@ route.delete('/:id', async (context: Context) => {
 /**
  * @swagger
  * /v1/admin/configs/{id}:
- *   post:
+ *   put:
  *     summary: 配置更新
  *     tags: [admin]
  *     parameters:
@@ -129,13 +129,13 @@ route.delete('/:id', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/:id', async (context: Context) => {
+route.put('/:id', async (context: Context) => {
     await controller.update(context)
 })
 
 /**
  * @swagger
- * /v1/admin/configs/{id}:
+ * /v1/admin/configs/{id}/form:
  *   get:
  *     summary: 配置详情
  *     tags: [admin]
@@ -155,13 +155,13 @@ route.post('/:id', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.get('/:id', async (context: Context) => {
+route.get('/:id/form', async (context: Context) => {
     await controller.detail(context)
 })
 
 /**
  * @swagger
- * /v1/admin/configs:
+ * /v1/admin/configs/pages:
  *   post:
  *     summary: 配置列表
  *     tags: [admin]
@@ -194,13 +194,13 @@ route.get('/:id', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.post('/', async (context: Context) => {
+route.post('/pages', async (context: Context) => {
     await controller.list(context)
 })
 
 /**
  * @swagger
- * /v1/admin/configs:
+ * /v1/admin/configs/options:
  *   get:
  *     summary: 全量配置列表
  *     tags: [admin]
@@ -210,7 +210,7 @@ route.post('/', async (context: Context) => {
  *           type: object
  *           $ref: '#/components/schemas/ApiResponse'
  */
-route.get('/', async (context: Context) => {
+route.get('/options', async (context: Context) => {
     await controller.options(context)
 })
 

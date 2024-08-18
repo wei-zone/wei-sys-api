@@ -1,7 +1,7 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
-import sysModel from '@/models/sysDept'
+import sysModel from '@/models/sysConfig'
 import { EnableStatus } from '@/types/enums'
 const Model = sysModel(sequelize)
 
@@ -113,7 +113,7 @@ export const list = async (ctx: Context) => {
             /**
              * 模糊查询
              */
-            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }]
+            [Op.or]: [{ configName: { [Op.like]: `%${keywords}%` } }, { configKey: { [Op.like]: `%${keywords}%` } }]
         }
 
         const { count: total, rows } = await Model.findAndCountAll({
@@ -150,29 +150,12 @@ export const list = async (ctx: Context) => {
  */
 export const options = async (ctx: Context) => {
     try {
-        const { status = EnableStatus.enable, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
-
-        const filter = {
-            /**
-             * 模糊查询
-             */
-            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }],
-            status
-        }
+        const { order = [['createdAt', 'DESC']] } = ctx.request.body
 
         const data = await Model.findAll({
             // 排序
             order,
-            /**
-             * 字段过滤
-             * attribute: ['name', 'id’], // 只查出某些字段
-             * attributes: { exclude: ['id'] }, // 不需要某些字段
-             * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
-             */
-            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
-            // 筛选
-            where: filter
-            // raw: true // 返回平坦的结果集【此时无分组】
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] } // 不需要某些字段
         })
 
         ctx.success({
