@@ -22,6 +22,7 @@ const jwt = JWT({
         /^favicon.ico/,
         /^\/favicon.ico/,
         /^\/api-docs/,
+        /^\/api-logs/,
         /^\/api-docs.json/,
         /^\/v1\/common/,
         /^\/v1\/weapp\/jssdk/

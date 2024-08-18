@@ -54,7 +54,6 @@ route.get('/api-logs/:splat*', async (ctx: any) => {
 })
 
 // Mount sub-routes here
-route.use(v1.routes())
-route.use(v1.allowedMethods())
+route.use(v1.routes()).use(v1.allowedMethods())
 
 export default route

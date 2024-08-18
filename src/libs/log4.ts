@@ -69,8 +69,10 @@ export const errorLogger = function (ctx: any, data: any) {
     if (ctx && data) {
         error.level = 'error'
         // 同时记录 debug 和 error
-        debug.info(formatError(ctx, data))
-        error.error(formatError(ctx, data))
+        if (process.env.NODE_ENV !== 'development') {
+            debug.info(formatError(ctx, data))
+            error.error(formatError(ctx, data))
+        }
 
         // 数据库日志记录
         apiLog(ctx, data)
@@ -82,8 +84,10 @@ export const successLogger = function (ctx: any, data: any) {
     if (ctx) {
         info.level = 'info'
         // 同时记录 debug 和 info
-        debug.info(formatRes(ctx, data))
-        info.info(formatRes(ctx, data))
+        if (process.env.NODE_ENV !== 'development') {
+            debug.info(formatRes(ctx, data))
+            info.info(formatRes(ctx, data))
+        }
 
         // 数据库日志记录
         apiLog(ctx, data)

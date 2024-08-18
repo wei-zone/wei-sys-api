@@ -2,9 +2,14 @@ import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
 import sysModel from '@/models/sysLog'
-import { EnableStatus } from '@/types/enums'
-import { parseUserAgent } from '@/libs'
+import sysUser from '@/models/sysUser'
+import { getJwtInfo, parseUserAgent } from '@/libs'
 const Model = sysModel(sequelize)
+const User = sysUser(sequelize)
+
+// 设置关联
+Model.belongsTo(User, { foreignKey: 'createdBy', as: 'operator' }) // 假设外键字段名为 createBy
+// User.hasMany(Model, { foreignKey: 'createdBy' }) // 这个关联是可选的，取决于你的查询需求
 
 /**
  * 数据库日志记录
@@ -23,10 +28,15 @@ export const apiLog = async (ctx: Context, data: any, from = 'api') => {
             module = 'OTHER'
         }
         const userAgent = ctx.request.header['user-agent']
+        const authorization = ctx.request.header.authorization
         const { browserName, browserVersion, osName, osVersion } = parseUserAgent(userAgent)
 
         const executionTime = Date.now() - (ctx.requestTime || 0)
+
+        const user = authorization ? getJwtInfo(ctx) : data?.user || {}
+
         const logData: any = {
+            createdBy: user?.id || 0,
             from,
             module,
             content: JSON.stringify(ctx.request.body || ctx.request.query)?.slice(0, 1000),
@@ -171,7 +181,12 @@ export const list = async (ctx: Context) => {
              */
             attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
             // 筛选
-            where: filter
+            where: filter,
+            include: {
+                model: User,
+                as: 'operator',
+                attributes: ['username', 'nickname']
+            }
             // raw: true // 返回平坦的结果集【此时无分组】
         })
 
@@ -192,29 +207,25 @@ export const list = async (ctx: Context) => {
  */
 export const options = async (ctx: Context) => {
     try {
-        const { status = EnableStatus.enable, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+        const { keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
 
         const filter = {
             /**
              * 模糊查询
              */
-            [Op.or]: [{ content: { [Op.like]: `%${keywords}%` } }],
-            status
+            [Op.or]: [{ content: { [Op.like]: `%${keywords}%` } }]
         }
 
         const data = await Model.findAll({
-            // 排序
             order,
-            /**
-             * 字段过滤
-             * attribute: ['name', 'id’], // 只查出某些字段
-             * attributes: { exclude: ['id'] }, // 不需要某些字段
-             * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
-             */
             attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
             // 筛选
-            where: filter
-            // raw: true // 返回平坦的结果集【此时无分组】
+            where: filter,
+            include: {
+                model: User,
+                as: 'operator',
+                attributes: ['username', 'nickname']
+            }
         })
 
         ctx.success({

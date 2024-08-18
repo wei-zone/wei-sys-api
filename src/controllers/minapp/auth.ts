@@ -101,14 +101,13 @@ class Controller {
     /**
      * @description 获取用户信息
      * @param ctx
-     * @return {Promise<void>}
      */
-    async getUserInfo(ctx) {
+    async getUserInfo(ctx: Context) {
         try {
             // 获取请求头token
             const token = (ctx.header.authorization || '').split(' ')[1]
             // 校验并解密token携带数据
-            const userData = await jsonWebToken.verify(token, JWT_SECRET)
+            const userData: any = jsonWebToken.verify(token, JWT_SECRET)
 
             // 获取openId
             const { userId, session_key } = userData
@@ -120,7 +119,7 @@ class Controller {
             ctx.success({
                 data: user
             })
-        } catch (e) {
+        } catch (e: any) {
             ctx.throw(e)
         }
     }
@@ -130,12 +129,12 @@ class Controller {
      * @param ctx
      * @return {Promise<void>}
      */
-    async getUserMobile(ctx) {
+    async getUserMobile(ctx: Context) {
         try {
             // 获取请求头token
             const token = (ctx.header.authorization || '').split(' ')[1]
             // 校验并解密token携带数据
-            const userData = await jsonWebToken.verify(token, JWT_SECRET)
+            const userData: any = jsonWebToken.verify(token, JWT_SECRET)
 
             // 获取openId
             const { userId, session_key } = userData
@@ -149,7 +148,7 @@ class Controller {
                     userId
                 }
             })
-        } catch (e) {
+        } catch (e: any) {
             ctx.throw(e)
         }
     }

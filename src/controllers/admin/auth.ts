@@ -1,11 +1,12 @@
 import { Context } from 'koa'
+import jwt from 'jsonwebtoken'
+import config from '@/config'
 import sequelize from '@/config/sequelize'
 import sysUser from '@/models/sysUser'
 import sysUserRole from '@/models/sysUserRole'
 import sysRole from '@/models/sysRole'
 import sysRoleMenu from '@/models/sysRoleMenu'
 import sysDept from '@/models/sysDept'
-import { v4 as uuid } from 'uuid'
 import dayjs from 'dayjs'
 import sysMenu from '@/models/sysMenu'
 import { toCamelCase } from '@/libs'
@@ -18,6 +19,7 @@ const RoleMenu = sysRoleMenu(sequelize)
 const Menu = sysMenu(sequelize)
 const Dept = sysDept(sequelize)
 
+const { ADMIN_APP } = config
 /**
  * 登录
  * @param ctx
@@ -26,15 +28,15 @@ export const login = async (ctx: Context) => {
     try {
         const data = ctx.request.body
         const { username, password } = data
-        const res: any = await User.findOne({
+        const user: any = await User.findOne({
             attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
             where: {
                 username,
                 password
             }
         })
-        console.log('user', res)
-        if (!res) {
+
+        if (!user) {
             ctx.fail({
                 message: '用户名或密码错误'
             })
@@ -51,13 +53,27 @@ export const login = async (ctx: Context) => {
                 }
             }
         )
+
+        console.log('user', user)
+
+        const token = jwt.sign(
+            {
+                id: user.id,
+                username: user.username
+            },
+            ADMIN_APP.JWT_SECRET,
+            {
+                expiresIn: ADMIN_APP.JWT_EXPIRES_IN
+            }
+        )
+
+        const expires = Date.now() + ADMIN_APP.JWT_EXPIRES_IN * 1000
         ctx.success({
             data: {
-                user: res,
-                accessToken: uuid(),
-                tokenType: 'Bearer',
-                refreshToken: null,
-                expires: null
+                user,
+                accessToken: token,
+                tokenType: ADMIN_APP.tokenType,
+                expires
             }
         })
     } catch (error) {

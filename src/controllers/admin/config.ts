@@ -3,6 +3,7 @@ import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
 import sysModel from '@/models/sysConfig'
 import { EnableStatus } from '@/types/enums'
+import { getJwtInfo } from '@/libs'
 const Model = sysModel(sequelize)
 
 /**
@@ -12,7 +13,11 @@ const Model = sysModel(sequelize)
 export const create = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Model.create(data)
+        const user = getJwtInfo(ctx)
+        const res = await Model.create({
+            ...data,
+            createBy: user.id
+        })
         ctx.success({
             data: res
         })
@@ -51,6 +56,20 @@ export const destroy = async (ctx: Context) => {
                 id
             }
         })
+
+        const user = getJwtInfo(ctx)
+        await Model.update(
+            {
+                updateBy: user.id
+            },
+            {
+                // 条件筛选
+                where: {
+                    id
+                }
+            }
+        )
+
         ctx.success({
             data: list
         })
@@ -67,12 +86,20 @@ export const update = async (ctx: Context) => {
     try {
         const { id } = ctx.params
         const data = ctx.request.body
-        const res = await Model.update(data, {
-            // 条件筛选
-            where: {
-                id
+
+        const user = getJwtInfo(ctx)
+        const res = await Model.update(
+            {
+                ...data,
+                updateBy: user.id
+            },
+            {
+                // 条件筛选
+                where: {
+                    id
+                }
             }
-        })
+        )
         ctx.success({
             data: res
         })

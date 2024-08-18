@@ -10,13 +10,9 @@ const route = new Router({
 })
 
 // Mount sub-routes here
-route.use(admin.routes())
-route.use(admin.allowedMethods())
-route.use(common.routes())
-route.use(common.allowedMethods())
-route.use(minapp.routes())
-route.use(minapp.allowedMethods())
-route.use(weapp.routes())
-route.use(weapp.allowedMethods())
+route.use(admin.routes()).use(admin.allowedMethods())
+route.use(common.routes()).use(common.allowedMethods())
+route.use(minapp.routes()).use(minapp.allowedMethods())
+route.use(weapp.routes()).use(weapp.allowedMethods())
 
 export default route
