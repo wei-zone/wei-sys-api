@@ -15,7 +15,7 @@ export const swaggerDefinition = {
         }
     },
     // production 使用 nginx 代理
-    basePath: process.env.NODE_ENV !== 'development' ? '/api' : '/', // Base path (optional)
+    basePath: process.env.NODE_ENV !== 'development' ? '/' : '/', // Base path (optional)
     // 定义全局model
     components: {
         schemas: {
