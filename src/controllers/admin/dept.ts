@@ -102,6 +102,59 @@ export const detail = async (ctx: Context) => {
 }
 
 /**
+ * 生成树
+ */
+const transferListToTree = (list: any[], lastParentId = 0) => {
+    const length = list.length
+    const menus: any[] = []
+    for (let i = 0; i < length; i++) {
+        const menu = list[i]
+        const { id, parentId, name, sort } = menu
+        if (parentId === lastParentId) {
+            const children: any = transferListToTree(list, id)
+            const menu = {
+                id,
+                parentId,
+                name,
+                sort,
+                children: []
+            }
+            if (children.length) {
+                menu.children = children
+            }
+            menus.push(menu)
+        }
+    }
+    return menus.sort((a, b) => a.sort - b.sort)
+}
+
+/**
+ * 生成选项
+ */
+const transferListToTreeOptions = (list: any[], lastParentId = 0) => {
+    const length = list.length
+    const menus: any[] = []
+    for (let i = 0; i < length; i++) {
+        const menu = list[i]
+        const { id, parentId, name, sort } = menu
+        if (parentId === lastParentId) {
+            const children: any = transferListToTreeOptions(list, id)
+            const menu = {
+                sort,
+                value: id,
+                label: name,
+                children: []
+            }
+            if (children.length) {
+                menu.children = children
+            }
+            menus.push(menu)
+        }
+    }
+    return menus.sort((a, b) => a.sort - b.sort)
+}
+
+/**
  * 查询列表
  * @param ctx
  */
@@ -114,48 +167,6 @@ export const list = async (ctx: Context) => {
              * 模糊查询
              */
             [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }]
-        }
-
-        const { count: total, rows } = await Model.findAndCountAll({
-            // 排序
-            order,
-            /**
-             * 字段过滤
-             * attribute: ['name', 'id’], // 只查出某些字段
-             * attributes: { exclude: ['id'] }, // 不需要某些字段
-             * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
-             */
-            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
-            // 筛选
-            where: filter
-            // raw: true // 返回平坦的结果集【此时无分组】
-        })
-
-        ctx.success({
-            data: {
-                list: rows,
-                total
-            }
-        })
-    } catch (error) {
-        throw error
-    }
-}
-
-/**
- * 全量列表
- * @param ctx
- */
-export const options = async (ctx: Context) => {
-    try {
-        const { status = EnableStatus.enable, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
-
-        const filter = {
-            /**
-             * 模糊查询
-             */
-            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }],
-            status
         }
 
         const data = await Model.findAll({
@@ -174,10 +185,35 @@ export const options = async (ctx: Context) => {
         })
 
         ctx.success({
-            data: data.map((item: any) => ({
-                label: item.name,
-                value: item.id
-            }))
+            data: transferListToTree(data, 0)
+        })
+    } catch (error) {
+        throw error
+    }
+}
+
+/**
+ * 全量列表
+ * @param ctx
+ */
+export const options = async (ctx: Context) => {
+    try {
+        const { status = EnableStatus.enable, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+
+        const data = await Model.findAll({
+            // 排序
+            order,
+            /**
+             * 字段过滤
+             * attribute: ['name', 'id’], // 只查出某些字段
+             * attributes: { exclude: ['id'] }, // 不需要某些字段
+             * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
+             */
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] } // 不需要某些字段
+        })
+
+        ctx.success({
+            data: transferListToTreeOptions(data, 0)
         })
     } catch (error) {
         throw error

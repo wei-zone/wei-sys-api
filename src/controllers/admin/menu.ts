@@ -102,16 +102,16 @@ export const detail = async (ctx: Context) => {
 }
 
 /**
- * 生成菜单树
+ * 生成树
  */
-const transferMenuTree = (list: any[], lastParentId = 0) => {
+const transferListToTree = (list: any[], lastParentId = 0) => {
     const length = list.length
     const menus: any[] = []
     for (let i = 0; i < length; i++) {
         const menu = list[i]
         const { id, parentId, name, type, routeName, routePath, component, sort, visible, icon, redirect, perm } = menu
         if (parentId === lastParentId) {
-            const children: any = transferMenuTree(list, id)
+            const children: any = transferListToTree(list, id)
             const menu = {
                 id,
                 parentId,
@@ -137,16 +137,16 @@ const transferMenuTree = (list: any[], lastParentId = 0) => {
 }
 
 /**
- * 生成选择树
+ * 生成选项
  */
-const transferMenuTreeOptions = (list: any[], lastParentId = 0) => {
+const transferListToTreeOptions = (list: any[], lastParentId = 0) => {
     const length = list.length
     const menus: any[] = []
     for (let i = 0; i < length; i++) {
         const menu = list[i]
         const { id, parentId, name, sort } = menu
         if (parentId === lastParentId) {
-            const children: any = transferMenuTreeOptions(list, id)
+            const children: any = transferListToTreeOptions(list, id)
             const menu = {
                 sort,
                 value: id,
@@ -193,7 +193,7 @@ export const list = async (ctx: Context) => {
         })
 
         ctx.success({
-            data: transferMenuTree(data, 0)
+            data: transferListToTree(data, 0)
         })
     } catch (error) {
         throw error
@@ -221,7 +221,7 @@ export const options = async (ctx: Context) => {
         })
 
         ctx.success({
-            data: transferMenuTreeOptions(data, 0)
+            data: transferListToTreeOptions(data, 0)
         })
     } catch (error) {
         throw error
