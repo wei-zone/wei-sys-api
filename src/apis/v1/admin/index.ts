@@ -8,7 +8,7 @@ import dict from './dict'
 import log from './log'
 import config from './config'
 import stats from './stats'
-import { jwtVerify } from '@/libs'
+import { jwt } from '@/middleWares/jwtAdmin'
 
 const route = new Router({
     prefix: '/admin'
@@ -20,7 +20,7 @@ const route = new Router({
  *   - name: admin
  *     description: 管理端
  */
-route.use(jwtVerify)
+route.use(jwt())
 route.use(auth.routes()).use(auth.allowedMethods())
 route.use(user.routes()).use(user.allowedMethods())
 route.use(role.routes()).use(role.allowedMethods())

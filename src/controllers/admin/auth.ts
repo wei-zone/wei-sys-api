@@ -11,6 +11,9 @@ import dayjs from 'dayjs'
 import sysMenu from '@/models/sysMenu'
 import { getJwtInfo, toCamelCase } from '@/libs'
 import { MenuTypeEnum } from '@/types/enums'
+import * as svgCaptcha from 'svg-captcha'
+import { v1 as uuid } from 'uuid'
+import memoryCache from 'memory-cache'
 
 const User = sysUser(sequelize)
 const UserRole = sysUserRole(sequelize)
@@ -27,7 +30,14 @@ const { ADMIN_APP } = config
 export const login = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const { username, password } = data
+        const { username, password, captchaCode, captchaKey } = data
+
+        if (!captchaCheck(captchaKey, captchaCode)) {
+            ctx.fail({
+                message: '验证码错误'
+            })
+            return
+        }
         const user: any = await User.findOne({
             attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
             where: {
@@ -82,11 +92,65 @@ export const login = async (ctx: Context) => {
 }
 
 /**
+ * 检验图片验证码
+ * @param captchaKey 验证码ID
+ * @param value 验证码
+ */
+export const captchaCheck = (captchaKey: string, value: string) => {
+    console.log('captchaCheck', captchaKey, value)
+    const rv = memoryCache.get(`auth:captcha:${captchaKey}`)
+    if (!rv || !value || value.toLowerCase() !== rv) {
+        return false
+    } else {
+        memoryCache.del(`auth:captcha:${captchaKey}`)
+        return true
+    }
+}
+
+/**
+ * 验证码
+ * @param ctx
+ */
+export const captcha = async (ctx: Context) => {
+    try {
+        const { width = 148, height = 48, color = '#2c3142' } = ctx.request.query
+        const svg = svgCaptcha.create({
+            ignoreChars: 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM',
+            width: Number(width),
+            height: Number(height)
+        })
+        const result = {
+            captchaKey: uuid(),
+            data: svg.data.replace(/"/g, "'")
+        }
+        // 文字变白
+        const rpList = ['#111', '#222', '#333', '#444', '#555', '#666', '#777', '#888', '#999']
+        rpList.forEach(rp => {
+            result.data = result.data['replaceAll'](rp, color)
+        })
+        // 半小时过期
+        const expiresIn = 60 * 30 * 1000
+        const text = svg.text.toLowerCase()
+        console.log('captcha text', text)
+        memoryCache.put(`auth:captcha:${result.captchaKey}`, text, expiresIn)
+        ctx.success({
+            data: {
+                captchaKey: result.captchaKey,
+                captchaBase64: result.data
+            }
+        })
+    } catch (error) {
+        throw error
+    }
+}
+
+/**
  * 登出
  * @param ctx
  */
 export const logout = async (ctx: Context) => {
     try {
+        memoryCache.clear()
         ctx.success({
             data: {}
         })

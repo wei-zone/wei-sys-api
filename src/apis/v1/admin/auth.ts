@@ -28,6 +28,12 @@ const route = new Router({
  *                password:
  *                    type: string
  *                    example: 123456
+ *                captchaCode:
+ *                    type: string
+ *                    example: 1234
+ *                captchaKey:
+ *                    type: string
+ *                    example: 123456
  *     responses:
  *       200:
  *         schema:
@@ -36,6 +42,39 @@ const route = new Router({
  */
 route.post('/login', async (context: Context) => {
     await controller.login(context)
+})
+
+/**
+ * @swagger
+ * /v1/admin/auth/captcha:
+ *   get:
+ *     summary: 验证码
+ *     tags: [admin]
+ *     parameters:
+ *       - name: width
+ *         description: width
+ *         in: query
+ *         type: string
+ *         required: false
+ *       - name: height
+ *         description: height
+ *         in: query
+ *         type: string
+ *         required: false
+ *       - name: color
+ *         description: color
+ *         in: query
+ *         type: string
+ *         required: false
+ *         example: '#2c3142'
+ *     responses:
+ *       200:
+ *         schema:
+ *           type: object
+ *           $ref: '#/components/schemas/ApiResponse'
+ */
+route.get('/captcha', async (context: Context) => {
+    await controller.captcha(context)
 })
 
 /**

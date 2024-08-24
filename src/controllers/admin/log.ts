@@ -185,7 +185,7 @@ export const list = async (ctx: Context) => {
             include: {
                 model: User,
                 as: 'operator',
-                attributes: ['username', 'nickname']
+                attributes: ['id', 'username', 'nickname']
             }
             // raw: true // 返回平坦的结果集【此时无分组】
         })
