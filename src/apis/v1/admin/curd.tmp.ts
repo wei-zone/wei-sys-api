@@ -1,9 +1,9 @@
 import Router from '@koa/router'
 import { Context } from 'koa'
-import * as controller from '@/controllers/admin/dept'
+import * as controller from '@/controllers/admin/user'
 
 const route = new Router({
-    prefix: '/depts' // 路由前缀
+    prefix: '/users' // 路由前缀
 })
 
 /**

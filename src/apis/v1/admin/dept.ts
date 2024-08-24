@@ -37,37 +37,6 @@ route.post('/create', async (context: Context) => {
 
 /**
  * @swagger
- * /v1/admin/depts/createBatch:
- *   post:
- *     summary: 部门批量创建
- *     tags: [admin]
- *     parameters:
- *       - name: request
- *         in: body
- *         type: object
- *         required: true
- *         description: 入参
- *         schema:
- *             type: array
- *             items:
- *               type: object
- *               required: true
- *               properties:
- *                 id:
- *                    type: number
- *                    example: 1
- *     responses:
- *       200:
- *         schema:
- *           type: object
- *           $ref: '#/components/schemas/ApiResponse'
- */
-route.post('/createBatch', async (context: Context) => {
-    await controller.createBatch(context)
-})
-
-/**
- * @swagger
  * /v1/admin/depts/{id}:
  *   delete:
  *     summary: 部门删除
@@ -81,7 +50,7 @@ route.post('/createBatch', async (context: Context) => {
  *         schema:
  *             type: integer
  *             required: true
- *             example: 1
+ *             example: 1,2,3
  *     responses:
  *       200:
  *         schema:

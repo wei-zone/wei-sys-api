@@ -6,29 +6,61 @@ import { EnableStatus } from '@/types/enums'
 const Model = sysModel(sequelize)
 
 /**
- * 创建
- * @param ctx
+ * 根节点ID
  */
-export const create = async (ctx: Context) => {
+const ROOT_NODE_ID = 0
+
+/**
+ * 符号：逗号
+ */
+const COMMA = ','
+
+/**
+ * 部门路径生成
+ *
+ * @param parentId 父ID
+ * @return 父节点路径以英文逗号(, )分割，eg: 1,2,3
+ */
+export const generateDeptTreePath = async (parentId: number) => {
     try {
-        const data = ctx.request.body
-        const res = await Model.create(data)
-        ctx.success({
-            data: res
-        })
+        let treePath: string = ''
+        if (ROOT_NODE_ID === parentId) {
+            treePath = String(parentId)
+        } else {
+            const parent: any = await Model.findByPk(parentId)
+            if (parent != null) {
+                treePath = parent?.treePath + COMMA + parent?.id
+            }
+        }
+        return treePath
     } catch (error) {
         throw error
     }
 }
 
 /**
- * 批量创建
+ * 创建
  * @param ctx
  */
-export const createBatch = async (ctx: Context) => {
+export const create = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Model.bulkCreate(data)
+        const { parentId, code } = data
+        const find = await Model.findOne({
+            where: {
+                code
+            }
+        })
+        if (find) {
+            throw new Error('部门编码已存在')
+        }
+        // 生成部门路径(tree_path)，格式：父节点tree_path + , + 父节点ID，用于删除部门时级联删除子部门
+        const treePath = await generateDeptTreePath(parentId)
+
+        const res = await Model.create({
+            ...data,
+            treePath
+        })
         ctx.success({
             data: res
         })
@@ -44,15 +76,42 @@ export const createBatch = async (ctx: Context) => {
  */
 export const destroy = async (ctx: Context) => {
     try {
-        const { id } = ctx.params
-        const list = await Model.destroy({
-            // 条件筛选
+        const { id = '' } = ctx.params
+
+        const ids = id.split(COMMA)
+
+        if (!ids || !ids.length) throw new Error('请选择要删除的数据')
+
+        const query = {
             where: {
-                id
+                [Op.or]: [
+                    ...[
+                        // 直接匹配 id
+                        {
+                            id: {
+                                [Op.in]: ids
+                            }
+                        }
+                    ],
+                    ...ids.reduce((acc: any[], id: string) => {
+                        return [
+                            ...acc,
+                            ...[
+                                { treePath: { [Op.eq]: id } }, // 完全匹配，例如 '0'
+                                { treePath: { [Op.like]: `${id},%` } }, // 开头匹配，例如 '0,...'
+                                { treePath: { [Op.like]: `%,${id},%` } }, // 中间匹配，例如 '...,1,...'
+                                { treePath: { [Op.like]: `%,${id}` } } // 结尾匹配，例如 '...,10'
+                            ]
+                        ]
+                    }, [])
+                ]
             }
-        })
+        }
+
+        const data = await Model.destroy(query)
+
         ctx.success({
-            data: list
+            data
         })
     } catch (error) {
         throw error
@@ -67,12 +126,36 @@ export const update = async (ctx: Context) => {
     try {
         const { id } = ctx.params
         const data = ctx.request.body
-        const res = await Model.update(data, {
-            // 条件筛选
+
+        const { parentId, code } = data
+        const find = await Model.findOne({
             where: {
-                id
+                // 匹配是否存在其他已存在的部门编码
+                code,
+                id: {
+                    [Op.ne]: id
+                }
             }
         })
+        if (find) {
+            throw new Error('部门编码已存在')
+        }
+        // 生成部门路径(tree_path)，格式：父节点tree_path + , + 父节点ID，用于删除部门时级联删除子部门
+        const treePath = await generateDeptTreePath(parentId)
+
+        const res = await Model.update(
+            {
+                ...data,
+                treePath
+            },
+            {
+                // 条件筛选
+                where: {
+                    id
+                }
+            }
+        )
+
         ctx.success({
             data: res
         })
@@ -87,7 +170,6 @@ export const update = async (ctx: Context) => {
  */
 export const detail = async (ctx: Context) => {
     try {
-        console.log('ctx.params', ctx.params)
         const { id } = ctx.params
         // 使用提供的主键从表中仅获得一个条目.
         const res = await Model.findByPk(id, {
@@ -104,12 +186,12 @@ export const detail = async (ctx: Context) => {
 /**
  * 生成树
  */
-const transferListToTree = (list: any[], lastParentId = 0) => {
+const transferListToTree = (list: any[], lastParentId = ROOT_NODE_ID) => {
     const length = list.length
     const menus: any[] = []
     for (let i = 0; i < length; i++) {
         const menu = list[i]
-        const { id, parentId, name, sort } = menu
+        const { id, parentId, name, sort, status } = menu
         if (parentId === lastParentId) {
             const children: any = transferListToTree(list, id)
             const menu = {
@@ -117,6 +199,7 @@ const transferListToTree = (list: any[], lastParentId = 0) => {
                 parentId,
                 name,
                 sort,
+                status,
                 children: []
             }
             if (children.length) {
@@ -131,7 +214,7 @@ const transferListToTree = (list: any[], lastParentId = 0) => {
 /**
  * 生成选项
  */
-const transferListToTreeOptions = (list: any[], lastParentId = 0) => {
+const transferListToTreeOptions = (list: any[], lastParentId = ROOT_NODE_ID) => {
     const length = list.length
     const menus: any[] = []
     for (let i = 0; i < length; i++) {
@@ -185,7 +268,7 @@ export const list = async (ctx: Context) => {
         })
 
         ctx.success({
-            data: transferListToTree(data, 0)
+            data: transferListToTree(data, ROOT_NODE_ID)
         })
     } catch (error) {
         throw error
@@ -213,7 +296,7 @@ export const options = async (ctx: Context) => {
         })
 
         ctx.success({
-            data: transferListToTreeOptions(data, 0)
+            data: transferListToTreeOptions(data, ROOT_NODE_ID)
         })
     } catch (error) {
         throw error

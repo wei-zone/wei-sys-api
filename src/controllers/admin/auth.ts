@@ -33,10 +33,7 @@ export const login = async (ctx: Context) => {
         const { username, password, captchaCode, captchaKey } = data
 
         if (!captchaCheck(captchaKey, captchaCode)) {
-            ctx.fail({
-                message: '验证码错误'
-            })
-            return
+            throw new Error('验证码错误')
         }
         const user: any = await User.findOne({
             attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
