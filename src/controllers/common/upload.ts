@@ -16,6 +16,7 @@ const COS_CONFIG = config.COS_CONFIG
 const { CHUNK_DIR } = config.CHUNK_CONFIG
 // COS实例
 import COS from 'cos-nodejs-sdk-v5'
+import { RES_CODE } from '@/constant'
 
 const cos: any = new COS({
     // 必选参数
@@ -135,7 +136,6 @@ class Controller {
             const file = ctx.request?.files?.file // 获取上传文件
             if (!file) {
                 ctx.throw({
-                    code: -1,
                     message: '请选择上传文件'
                 })
                 return
@@ -194,7 +194,6 @@ class Controller {
         const file = ctx.request?.files?.file // 获取上传文件
         if (!file) {
             ctx.throw({
-                code: -1,
                 message: '请选择上传文件'
             })
             return
@@ -222,7 +221,6 @@ class Controller {
             const file = ctx.request?.files?.file // 获取上传文件
             if (!file) {
                 ctx.throw({
-                    code: -1,
                     message: '请选择上传文件'
                 })
                 return
@@ -239,7 +237,6 @@ class Controller {
                 })
             } else {
                 ctx.throw({
-                    code: -1,
                     message: '获取图片链接失败，请重试'
                 })
             }
@@ -255,7 +252,6 @@ class Controller {
         const { fileName, fileHash } = ctx.request.body
         if (!fileName || !fileHash) {
             ctx.throw({
-                code: -1,
                 message: '文件名或文件hash值不能为空'
             })
             return
@@ -302,7 +298,7 @@ class Controller {
             const { chunk } = ctx.request.files
             if (!chunk) {
                 ctx.throw({
-                    code: -1,
+                    code: RES_CODE.VALIDATEFAIL,
                     message: '请选择上传文件'
                 })
                 return

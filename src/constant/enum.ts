@@ -26,8 +26,12 @@ export enum RES_CODE {
     COMMFAIL = 1001,
     // 参数验证失败
     VALIDATEFAIL = 1002,
-    // 参数验证失败
-    COREFAIL = 1003
+    // 核心异常
+    COREFAIL = 1003,
+    // code不合法
+    INVALIDCODE = 1004,
+    // 验证码无效
+    INVALIDCAPTCHA = 1005
 }
 
 /**
@@ -37,11 +41,15 @@ export enum RES_MESSAGE {
     // 成功
     SUCCESS = 'success',
     // 失败
-    COMMFAIL = 'comm fail',
+    COMMFAIL = '服务异常，请重试!',
     // 参数验证失败
-    VALIDATEFAIL = 'validate fail',
+    VALIDATEFAIL = '参数验证失败',
     // 核心异常
-    COREFAIL = 'core fail'
+    COREFAIL = 'core fail',
+    // code不合法
+    INVALIDCODE = 'code错误',
+    // 验证码无效
+    INVALIDCAPTCHA = '验证码错误'
 }
 
 /**

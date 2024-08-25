@@ -10,7 +10,7 @@ import sysDept from '@/models/sysDept'
 import dayjs from 'dayjs'
 import sysMenu from '@/models/sysMenu'
 import { getJwtInfo, toCamelCase } from '@/libs'
-import { MENU_TYPE } from '@/constant'
+import { MENU_TYPE, RES_CODE, RES_MESSAGE } from '@/constant'
 import * as svgCaptcha from 'svg-captcha'
 import { v1 as uuid } from 'uuid'
 import memoryCache from 'memory-cache'
@@ -33,7 +33,11 @@ export const login = async (ctx: Context) => {
         const { username, password, captchaCode, captchaKey } = data
 
         if (!captchaCheck(captchaKey, captchaCode)) {
-            throw new Error('验证码错误')
+            ctx.fail({
+                code: RES_CODE.INVALIDCAPTCHA,
+                message: RES_MESSAGE.INVALIDCAPTCHA
+            })
+            return
         }
         const user: any = await User.findOne({
             attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段

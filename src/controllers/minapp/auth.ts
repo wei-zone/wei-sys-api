@@ -9,6 +9,7 @@ import { code2Session, decryptData } from '@/libs/minapp'
 import { cloud } from '@/libs'
 import config from '@/config'
 import { Context } from 'koa'
+import { RES_CODE, RES_MESSAGE } from '@/constant'
 
 const { MIN_APP } = config
 const { APP_ID, JWT_SECRET, JWT_EXPIRES_IN } = MIN_APP
@@ -18,7 +19,7 @@ class Controller {
      * 更新用户信息
      * @return {Promise<unknown>}
      */
-    updateUserInfo(ctx, userId, userInfo = {}) {
+    updateUserInfo(ctx: Context, userId: string, userInfo = {}) {
         return new Promise(async (resolve, reject) => {
             try {
                 const lastLoginIp = ctx.headers['x-forwarded-for'] // 客户端 IPv4 或IPv6 地址 【云托管容器内微信信息 https://developers.weixin.qq.com/miniprogram/dev/wxcloud/guide/container/wxinfo.html】
@@ -69,8 +70,8 @@ class Controller {
             const { code = '' } = ctx.request.query
             if (!code) {
                 ctx.throw({
-                    code: 457,
-                    message: 'code不合法'
+                    code: RES_CODE.INVALIDCODE,
+                    message: RES_MESSAGE.INVALIDCODE
                 })
             }
             const res: any = await code2Session(code)

@@ -4,7 +4,7 @@
  * @Description: errHandle.ts
  */
 import { Context } from 'koa'
-import { IResponse } from '@/constant'
+import { IResponse, RES_CODE, RES_MESSAGE } from '@/constant'
 
 export default () => {
     return (ctx: Context, next: () => any) => {
@@ -13,8 +13,8 @@ export default () => {
             console.log('err catch', err)
             const message = err?.response?.data?.error?.message || ''
             const res: IResponse = {
-                code: err?.errCode || err?.errcode || err?.code || err?.status || 500,
-                message: err.errmsg || err?.message || message || '服务器开小差了，请稍后再试~',
+                code: err?.errCode || err?.errcode || err?.code || err?.status || RES_CODE.COMMFAIL,
+                message: err.errmsg || err?.message || message || RES_MESSAGE.COMMFAIL,
                 data: err.data || err
             }
             ctx.fail(res)
