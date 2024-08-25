@@ -60,7 +60,18 @@ export const destroy = async (ctx: Context) => {
                                 [Op.in]: ids
                             }
                         }
-                    ]
+                    ],
+                    ...ids.reduce((acc: any[], id: string) => {
+                        return [
+                            ...acc,
+                            ...[
+                                { treePath: { [Op.eq]: id } }, // 完全匹配，例如 '0'
+                                { treePath: { [Op.like]: `${id},%` } }, // 开头匹配，例如 '0,...'
+                                { treePath: { [Op.like]: `%,${id},%` } }, // 中间匹配，例如 '...,1,...'
+                                { treePath: { [Op.like]: `%,${id}` } } // 结尾匹配，例如 '...,10'
+                            ]
+                        ]
+                    }, [])
                 ]
             }
         }
