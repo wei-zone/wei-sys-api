@@ -185,7 +185,13 @@ export const list = async (ctx: Context) => {
         //     logging: true // 是否将 SQL 语句打印到控制台
         // })
 
-        const { pageSize = 10, pageCurrent = 1, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+        const {
+            deptId = '',
+            pageSize = 10,
+            pageCurrent = 1,
+            keywords = '',
+            order = [['createdAt', 'DESC']]
+        } = ctx.request.body
 
         const filter = {
             /**
@@ -195,7 +201,8 @@ export const list = async (ctx: Context) => {
                 { username: { [Op.like]: `%${keywords}%` } },
                 { nickname: { [Op.like]: `%${keywords}%` } },
                 { mobile: { [Op.like]: `%${keywords}%` } }
-            ]
+            ],
+            deptId: { [Op.eq]: deptId }
         }
 
         const { count: total, rows } = await User.findAndCountAll({

@@ -191,10 +191,11 @@ const transferListToTree = (list: any[], lastParentId = ROOT_NODE_ID) => {
     const menus: any[] = []
     for (let i = 0; i < length; i++) {
         const menu = list[i]
-        const { id, parentId, name, sort, status } = menu
+        const { id, parentId, code, name, sort, status } = menu
         if (parentId === lastParentId) {
             const children: any = transferListToTree(list, id)
             const menu = {
+                code,
                 id,
                 parentId,
                 name,
@@ -219,10 +220,11 @@ const transferListToTreeOptions = (list: any[], lastParentId = ROOT_NODE_ID) => 
     const menus: any[] = []
     for (let i = 0; i < length; i++) {
         const menu = list[i]
-        const { id, parentId, name, sort } = menu
+        const { id, parentId, code, name, sort } = menu
         if (parentId === lastParentId) {
             const children: any = transferListToTreeOptions(list, id)
             const menu = {
+                code,
                 sort,
                 value: id,
                 label: name,
