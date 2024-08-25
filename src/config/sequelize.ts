@@ -11,7 +11,7 @@ console.log('init sequelize...')
 
 // 创建连接
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-    logging: process.env.NODE_ENV !== 'development' ? (...msg) => console.log(msg) : false, // 显示所有日志函数调用参数
+    logging: process.env.NODE_ENV === 'development' ? (...msg) => console.log(msg) : false, // 显示所有日志函数调用参数
     pool: {
         max: 5, // 连接池最大连接数量
         min: 0, // 最小连接数量

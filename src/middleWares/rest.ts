@@ -3,7 +3,7 @@
  * @description: rest
  */
 import { Context, Next } from 'koa'
-import { IResponse } from '@/types/response'
+import { IResponse } from '@/constant'
 import { successLogger, errorLogger } from '@/libs'
 
 // 处理请求成功方法

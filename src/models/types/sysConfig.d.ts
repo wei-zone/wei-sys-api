@@ -5,8 +5,8 @@ export interface ISysConfigAttributes {
     configKey: string
     configValue: string
     remark?: string
-    createBy: number
-    updateBy?: number
+    createdBy: number
+    updatedBy?: number
     createdAt?: Date
     updatedAt?: Date
     deletedAt?: Date

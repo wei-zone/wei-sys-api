@@ -47,23 +47,23 @@ export default function (sequelize: Sequelize) {
             comment: '描述、备注',
             field: 'remark'
         },
-        createBy: {
+        createdBy: {
             type: DataTypes.BIGINT,
             allowNull: false,
             defaultValue: null,
             primaryKey: false,
             autoIncrement: false,
             comment: '创建人ID',
-            field: 'createBy'
+            field: 'createdBy'
         },
-        updateBy: {
+        updatedBy: {
             type: DataTypes.BIGINT,
             allowNull: true,
             defaultValue: null,
             primaryKey: false,
             autoIncrement: false,
             comment: '更新人ID',
-            field: 'updateBy'
+            field: 'updatedBy'
         },
         createdAt: {
             type: DataTypes.DATE,

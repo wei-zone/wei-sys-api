@@ -1,7 +1,7 @@
 /**
  * 扩展 koa Context，ts 会自动融合类型
  */
-import { IResponse } from '@/types/response'
+import { IResponse } from '@/constant'
 
 export * from 'koa'
 declare module 'koa' {

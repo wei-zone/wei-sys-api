@@ -9,7 +9,7 @@ import chalk from 'chalk'
 import config from '@/config'
 import _package from '@/package'
 import App from '@/app'
-import SocketServer from '@/scoket/server'
+import SocketServer from '@/socket/server'
 import ErrnoException = NodeJS.ErrnoException
 import dayjs from 'dayjs'
 import '@/config/sequelize'

@@ -2,18 +2,9 @@ import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
 import sysModel from '@/models/sysDept'
-import { EnableStatus } from '@/types/enums'
+import { COMMA, ENABLES_TATUS, ROOT_NODE_ID } from '@/constant'
+import { getJwtInfo } from '@/libs'
 const Model = sysModel(sequelize)
-
-/**
- * 根节点ID
- */
-const ROOT_NODE_ID = 0
-
-/**
- * 符号：逗号
- */
-const COMMA = ','
 
 /**
  * 部门路径生成
@@ -107,6 +98,15 @@ export const destroy = async (ctx: Context) => {
                 ]
             }
         }
+
+        // 记录删除的人
+        const user = getJwtInfo(ctx)
+        await Model.update(
+            {
+                updatedBy: user.id
+            },
+            query
+        )
 
         const data = await Model.destroy(query)
 
@@ -281,7 +281,7 @@ export const list = async (ctx: Context) => {
  */
 export const options = async (ctx: Context) => {
     try {
-        const { status = EnableStatus.enable, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+        const { status = ENABLES_TATUS.ENABLE, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
 
         const data = await Model.findAll({
             // 排序

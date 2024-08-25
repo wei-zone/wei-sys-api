@@ -46,7 +46,7 @@ route.post('/create', async (context: Context) => {
  *         in: path
  *         type: object
  *         required: true
- *         description: id
+ *         description: id 多个使用,分割
  *         schema:
  *             type: integer
  *             required: true

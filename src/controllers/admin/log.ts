@@ -4,11 +4,12 @@ import { Op } from 'sequelize'
 import sysModel from '@/models/sysLog'
 import sysUser from '@/models/sysUser'
 import { getJwtInfo, parseUserAgent } from '@/libs'
+import { COMMA } from '@/constant'
 const Model = sysModel(sequelize)
 const User = sysUser(sequelize)
 
 // 设置关联
-Model.belongsTo(User, { foreignKey: 'createdBy', as: 'operator' }) // 假设外键字段名为 createBy
+Model.belongsTo(User, { foreignKey: 'createdBy', as: 'operator' }) // 假设外键字段名为 createdBy
 // User.hasMany(Model, { foreignKey: 'createdBy' }) // 这个关联是可选的，取决于你的查询需求
 
 /**
@@ -96,15 +97,31 @@ export const createBatch = async (ctx: Context) => {
  */
 export const destroy = async (ctx: Context) => {
     try {
-        const { id } = ctx.params
-        const list = await Model.destroy({
-            // 条件筛选
+        const { id = '' } = ctx.params
+
+        const ids = id.split(COMMA)
+
+        if (!ids || !ids.length) throw new Error('请选择要删除的数据')
+
+        const query = {
             where: {
-                id
+                [Op.or]: [
+                    ...[
+                        // 直接匹配 id
+                        {
+                            id: {
+                                [Op.in]: ids
+                            }
+                        }
+                    ]
+                ]
             }
-        })
+        }
+
+        const data = await Model.destroy(query)
+
         ctx.success({
-            data: list
+            data
         })
     } catch (error) {
         throw error

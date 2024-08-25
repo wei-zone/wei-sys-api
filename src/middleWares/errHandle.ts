@@ -4,7 +4,7 @@
  * @Description: errHandle.ts
  */
 import { Context } from 'koa'
-import { IResponse } from '@/types/response'
+import { IResponse } from '@/constant'
 
 export default () => {
     return (ctx: Context, next: () => any) => {

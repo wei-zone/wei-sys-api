@@ -10,7 +10,7 @@ import sysDept from '@/models/sysDept'
 import dayjs from 'dayjs'
 import sysMenu from '@/models/sysMenu'
 import { getJwtInfo, toCamelCase } from '@/libs'
-import { MenuTypeEnum } from '@/types/enums'
+import { MENU_TYPE } from '@/constant'
 import * as svgCaptcha from 'svg-captcha'
 import { v1 as uuid } from 'uuid'
 import memoryCache from 'memory-cache'
@@ -180,7 +180,7 @@ export const transferRouteTree = (list: any[], lastParentId = 0) => {
             params,
             sort
         } = menu
-        if (parentId === lastParentId && type !== MenuTypeEnum.BUTTON) {
+        if (parentId === lastParentId && type !== MENU_TYPE.BUTTON) {
             const meta: any = {
                 title: name,
                 icon,
@@ -191,7 +191,7 @@ export const transferRouteTree = (list: any[], lastParentId = 0) => {
             }
 
             // 是否开启页面缓存
-            if (MenuTypeEnum.MENU === type && !!keepAlive) {
+            if (MENU_TYPE.MENU === type && !!keepAlive) {
                 meta.keepAlive = true
             }
 
@@ -279,7 +279,7 @@ export const me = async (ctx: Context) => {
             // 角色 ['ADMIN']
             roles: roles.map((item: any) => item.code),
             // 按钮权限标识
-            perms: menus.filter((item: any) => item.type === MenuTypeEnum.BUTTON).map((item: any) => item.perm),
+            perms: menus.filter((item: any) => item.type === MENU_TYPE.BUTTON).map((item: any) => item.perm),
             // 路由权限
             routes
         }

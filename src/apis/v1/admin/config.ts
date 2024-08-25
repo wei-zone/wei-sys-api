@@ -77,11 +77,11 @@ route.post('/createBatch', async (context: Context) => {
  *         in: path
  *         type: object
  *         required: true
- *         description: id
+ *         description: id 多个使用,分割
  *         schema:
  *             type: integer
  *             required: true
- *             example: 1
+ *             example: 1,2,3
  *     responses:
  *       200:
  *         schema:

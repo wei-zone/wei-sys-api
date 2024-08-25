@@ -1,7 +1,7 @@
 import { Server } from 'socket.io'
 import chalk from 'chalk'
 import dayjs from 'dayjs'
-import { consoleEmit, playerOn } from '@/types/scoket'
+import { consoleEmit, playerOn } from '@/constant'
 // import { instrument } from '@socket.io/admin-ui'
 
 const logger = (type: any, data: any) => {

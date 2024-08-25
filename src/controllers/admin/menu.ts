@@ -2,7 +2,7 @@ import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
 import sysModel from '@/models/sysMenu'
-import { EnableStatus, MenuTypeEnum } from '@/types/enums'
+import { COMMA, ENABLES_TATUS, MENU_TYPE } from '@/constant'
 const Model = sysModel(sequelize)
 
 /**
@@ -44,15 +44,31 @@ export const createBatch = async (ctx: Context) => {
  */
 export const destroy = async (ctx: Context) => {
     try {
-        const { id } = ctx.params
-        const list = await Model.destroy({
-            // 条件筛选
+        const { id = '' } = ctx.params
+
+        const ids = id.split(COMMA)
+
+        if (!ids || !ids.length) throw new Error('请选择要删除的数据')
+
+        const query = {
             where: {
-                id
+                [Op.or]: [
+                    ...[
+                        // 直接匹配 id
+                        {
+                            id: {
+                                [Op.in]: ids
+                            }
+                        }
+                    ]
+                ]
             }
-        })
+        }
+
+        const data = await Model.destroy(query)
+
         ctx.success({
-            data: list
+            data
         })
     } catch (error) {
         throw error
@@ -116,7 +132,7 @@ const transferListToTree = (list: any[], lastParentId = 0) => {
                 id,
                 parentId,
                 name,
-                type: MenuTypeEnum[type],
+                type: MENU_TYPE[type],
                 routeName,
                 routePath,
                 component,
@@ -206,7 +222,7 @@ export const list = async (ctx: Context) => {
  */
 export const options = async (ctx: Context) => {
     try {
-        const { status = EnableStatus.enable, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+        const { status = ENABLES_TATUS.ENABLE, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
 
         const data = await Model.findAll({
             // 排序

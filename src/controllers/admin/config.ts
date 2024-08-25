@@ -2,7 +2,7 @@ import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
 import sysModel from '@/models/sysConfig'
-import { EnableStatus } from '@/types/enums'
+import { COMMA, ENABLES_TATUS } from '@/constant'
 import { getJwtInfo } from '@/libs'
 const Model = sysModel(sequelize)
 
@@ -16,7 +16,7 @@ export const create = async (ctx: Context) => {
         const user = getJwtInfo(ctx)
         const res = await Model.create({
             ...data,
-            createBy: user.id
+            createdBy: user.id
         })
         ctx.success({
             data: res
@@ -49,29 +49,40 @@ export const createBatch = async (ctx: Context) => {
  */
 export const destroy = async (ctx: Context) => {
     try {
-        const { id } = ctx.params
-        const list = await Model.destroy({
-            // 条件筛选
-            where: {
-                id
-            }
-        })
+        const { id = '' } = ctx.params
 
+        const ids = id.split(COMMA)
+
+        if (!ids || !ids.length) throw new Error('请选择要删除的数据')
+
+        const query = {
+            where: {
+                [Op.or]: [
+                    ...[
+                        // 直接匹配 id
+                        {
+                            id: {
+                                [Op.in]: ids
+                            }
+                        }
+                    ]
+                ]
+            }
+        }
+
+        // 记录删除的人
         const user = getJwtInfo(ctx)
         await Model.update(
             {
-                updateBy: user.id
+                updatedBy: user.id
             },
-            {
-                // 条件筛选
-                where: {
-                    id
-                }
-            }
+            query
         )
 
+        const data = await Model.destroy(query)
+
         ctx.success({
-            data: list
+            data
         })
     } catch (error) {
         throw error
@@ -91,7 +102,7 @@ export const update = async (ctx: Context) => {
         const res = await Model.update(
             {
                 ...data,
-                updateBy: user.id
+                updatedBy: user.id
             },
             {
                 // 条件筛选

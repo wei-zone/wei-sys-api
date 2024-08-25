@@ -40,7 +40,7 @@ const add = function (tableName: string, data: any) {
  * @param tableName
  * @param current 从1开始
  * @param size
- * @param filters 可多条件查询 [{ enabled: true }]
+ * @param filters 可多条件查询 [{ ENABLEd: true }]
  * @param orderBy
  * @param order 默认降序desc，asc升序
  */
@@ -73,7 +73,7 @@ const get = function (
 /**
  * @desc 查询数据
  * @param tableName
- * @param filters 可多条件查询 [{ enabled: true }]
+ * @param filters 可多条件查询 [{ ENABLEd: true }]
  * @param orderBy
  * @param order 默认降序desc，asc升序
  */
