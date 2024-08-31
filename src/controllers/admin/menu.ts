@@ -233,7 +233,7 @@ export const list = async (ctx: Context) => {
  */
 export const options = async (ctx: Context) => {
     try {
-        const { status = ENABLES_TATUS.ENABLE, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+        const { order = [['createdAt', 'DESC']] } = ctx.request.body
 
         const data = await Model.findAll({
             // 排序

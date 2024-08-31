@@ -2,9 +2,10 @@ import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
 import sysModel from '@/models/sysDict'
+import sysDictItem from '@/models/sysDictItem'
 import { COMMA, ENABLES_TATUS } from '@/constant'
-import { getJwtInfo } from '@/libs'
 const Model = sysModel(sequelize)
+const DictItem = sysDictItem(sequelize)
 
 /**
  * 创建
@@ -194,9 +195,105 @@ export const options = async (ctx: Context) => {
         ctx.success({
             data: data.map((item: any) => ({
                 label: item.name,
-                value: item.id
+                value: item.value
             }))
         })
+    } catch (error) {
+        throw error
+    }
+}
+
+/**
+ * 全量列表
+ * @param ctx
+ */
+export const optionsByCode = async (ctx: Context) => {
+    try {
+        const { code = '' } = ctx.params
+
+        if (!code) {
+            throw new Error('code 不能为空')
+        }
+
+        const find: any = await Model.findOne({
+            where: {
+                code,
+                status: ENABLES_TATUS.ENABLE
+            }
+        })
+        if (!find) {
+            throw new Error('字典不存在')
+        }
+
+        const { status = ENABLES_TATUS.ENABLE, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+
+        const filter = {
+            /**
+             * 模糊查询
+             */
+            [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }],
+            status,
+            dictId: find.id
+        }
+
+        const data = await DictItem.findAll({
+            // 排序
+            order,
+            /**
+             * 字段过滤
+             * attribute: ['name', 'id’], // 只查出某些字段
+             * attributes: { exclude: ['id'] }, // 不需要某些字段
+             * attributes: ['id', ['name', 'label_name']], // 重写字段名称，name 改成 label_name
+             */
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
+            // 筛选
+            where: filter
+            // raw: true // 返回平坦的结果集【此时无分组】
+        })
+
+        ctx.success({
+            data: data.map((item: any) => ({
+                label: item.name,
+                value: item.value
+            }))
+        })
+    } catch (error) {
+        throw error
+    }
+}
+
+/**
+ * 单个字典值
+ * @param ctx
+ */
+export const optionByCode = async ({ code, value }: any) => {
+    try {
+        if (!code || value == null) {
+            throw new Error('code 和 value 不能为空')
+        }
+
+        const find: any = await Model.findOne({
+            where: {
+                status: ENABLES_TATUS.ENABLE,
+                code
+            }
+        })
+        if (!find) {
+            throw new Error('字典不存在')
+        }
+
+        const filter = {
+            dictId: find.id,
+            status: ENABLES_TATUS.ENABLE,
+            value
+        }
+
+        const data = await DictItem.findOne({
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
+            where: filter
+        })
+
+        return data
     } catch (error) {
         throw error
     }

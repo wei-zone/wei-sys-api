@@ -214,4 +214,20 @@ route.get('/options', async (context: Context) => {
     await controller.options(context)
 })
 
+/**
+ * @swagger
+ * /v1/admin/dicts/{code}/options:
+ *   get:
+ *     summary: 字典数据项列表
+ *     tags: [admin]
+ *     responses:
+ *       200:
+ *         schema:
+ *           type: object
+ *           $ref: '#/components/schemas/ApiResponse'
+ */
+route.get('/:code/options', async (context: Context) => {
+    await controller.optionsByCode(context)
+})
+
 export default route

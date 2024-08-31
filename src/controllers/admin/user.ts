@@ -7,6 +7,7 @@ import sysRole from '@/models/sysRole'
 import sysDept from '@/models/sysDept'
 import { COMMA, ENABLES_TATUS } from '@/constant'
 import { getJwtInfo } from '@/libs'
+import { optionByCode } from './dict'
 const User = sysUser(sequelize)
 const UserRole = sysUserRole(sequelize)
 const Role = sysRole(sequelize)
@@ -17,6 +18,8 @@ User.belongsTo(Dept, {
     foreignKey: 'deptId',
     as: 'dept' // 给关联定义一个别名
 })
+
+// 多对多
 User.belongsToMany(Role, {
     through: UserRole,
     foreignKey: 'userId',
@@ -137,14 +140,30 @@ export const update = async (ctx: Context) => {
  */
 export const detail = async (ctx: Context) => {
     try {
-        console.log('ctx.params', ctx.params)
         const { id } = ctx.params
         // 使用提供的主键从表中仅获得一个条目.
-        const res = await User.findByPk(id, {
-            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] } // 不需要某些字段
+        const res: any = await User.findByPk(id, {
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
+            // 关联表查询
+            include: [
+                {
+                    model: Dept,
+                    as: 'dept', // 给关联定义一个别名
+                    attributes: ['code', 'name', 'id'] // 不单独返回角色的其他字段
+                },
+                {
+                    model: Role,
+                    as: 'roles', // 给关联定义一个别名
+                    through: { attributes: [] }, // 不需要返回中间表的数据
+                    attributes: ['code', 'name', 'id'] // 不单独返回角色的其他字段
+                }
+            ]
         })
         ctx.success({
-            data: res
+            data: {
+                ...res.toJSON(),
+                roleIds: res.roles ? res.roles.map((item: any) => item.toJSON().id) : []
+            }
         })
     } catch (error) {
         throw error
@@ -193,7 +212,7 @@ export const list = async (ctx: Context) => {
             order = [['createdAt', 'DESC']]
         } = ctx.request.body
 
-        const filter = {
+        const filter: any = {
             /**
              * 模糊查询
              */
@@ -201,10 +220,12 @@ export const list = async (ctx: Context) => {
                 { username: { [Op.like]: `%${keywords}%` } },
                 { nickname: { [Op.like]: `%${keywords}%` } },
                 { mobile: { [Op.like]: `%${keywords}%` } }
-            ],
-            deptId: { [Op.eq]: deptId }
+            ]
         }
 
+        if (deptId) {
+            filter.deptId = { [Op.eq]: deptId }
+        }
         const { count: total, rows } = await User.findAndCountAll({
             limit: pageSize,
             offset: (pageCurrent - 1) * pageSize,
@@ -224,23 +245,36 @@ export const list = async (ctx: Context) => {
                 {
                     model: Dept,
                     as: 'dept', // 给关联定义一个别名
-                    attributes: ['code', 'name'] // 不单独返回角色的其他字段
+                    attributes: ['code', 'name', 'id'] // 不单独返回角色的其他字段
                 },
                 {
                     model: Role,
                     as: 'roles', // 给关联定义一个别名
                     through: { attributes: [] }, // 不需要返回中间表的数据
-                    attributes: ['code', 'name'] // 不单独返回角色的其他字段
+                    attributes: ['code', 'name', 'id'] // 不单独返回角色的其他字段
                 }
             ]
             // raw: true // 返回平坦的结果集【此时无分组】
         })
 
+        const list: any[] = []
+        for (let index = 0; index < rows.length; index++) {
+            const item: any = rows[index]
+            const gender: any = await optionByCode({
+                code: 'gender',
+                value: item?.gender
+            })
+            list.push({
+                ...item.toJSON(),
+                genderLabel: gender?.name
+            })
+        }
+
         ctx.success({
             data: {
                 pageSize,
                 pageCurrent,
-                list: rows,
+                list: list,
                 total
             }
         })
