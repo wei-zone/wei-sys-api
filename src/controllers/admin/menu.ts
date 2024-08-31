@@ -12,7 +12,10 @@ const Model = sysModel(sequelize)
 export const create = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Model.create(data)
+        const res = await Model.create({
+            ...data,
+            type: MENU_TYPE[data.type]
+        })
         ctx.success({
             data: res
         })
@@ -28,7 +31,10 @@ export const create = async (ctx: Context) => {
 export const createBatch = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Model.bulkCreate(data)
+        const res = await Model.bulkCreate({
+            ...data,
+            type: MENU_TYPE[data.type]
+        })
         ctx.success({
             data: res
         })
@@ -94,12 +100,18 @@ export const update = async (ctx: Context) => {
     try {
         const { id } = ctx.params
         const data = ctx.request.body
-        const res = await Model.update(data, {
-            // 条件筛选
-            where: {
-                id
+        const res = await Model.update(
+            {
+                ...data,
+                type: MENU_TYPE[data.type]
+            },
+            {
+                // 条件筛选
+                where: {
+                    id
+                }
             }
-        })
+        )
         ctx.success({
             data: res
         })
@@ -117,11 +129,14 @@ export const detail = async (ctx: Context) => {
         console.log('ctx.params', ctx.params)
         const { id } = ctx.params
         // 使用提供的主键从表中仅获得一个条目.
-        const res = await Model.findByPk(id, {
+        const res: any = await Model.findByPk(id, {
             attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] } // 不需要某些字段
         })
         ctx.success({
-            data: res
+            data: {
+                ...res?.toJSON(),
+                type: MENU_TYPE[res.type]
+            }
         })
     } catch (error) {
         throw error

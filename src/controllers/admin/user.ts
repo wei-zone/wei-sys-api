@@ -30,7 +30,7 @@ Role.belongsToMany(User, {
     through: UserRole,
     foreignKey: 'roleId',
     // otherKey: 'userId',
-    as: 'user' // 给关联定义一个别名
+    as: 'users' // 给关联定义一个别名
 })
 
 /**
@@ -126,6 +126,23 @@ export const update = async (ctx: Context) => {
                 id
             }
         })
+
+        // 删除已有角色关系
+        await UserRole.destroy({
+            where: {
+                userId: id
+            }
+        })
+
+        await UserRole.bulkCreate([
+            ...data.roleIds.map((roleId: number) => {
+                return {
+                    userId: id,
+                    roleId
+                }
+            })
+        ])
+
         ctx.success({
             data: res
         })
@@ -159,6 +176,7 @@ export const detail = async (ctx: Context) => {
                 }
             ]
         })
+
         ctx.success({
             data: {
                 ...res.toJSON(),

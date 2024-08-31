@@ -214,4 +214,20 @@ route.get('/options', async (context: Context) => {
     await controller.options(context)
 })
 
+/**
+ * @swagger
+ * /v1/admin/roles/{id}/menuIds:
+ *   get:
+ *     summary: 全量角色列表
+ *     tags: [admin]
+ *     responses:
+ *       200:
+ *         schema:
+ *           type: object
+ *           $ref: '#/components/schemas/ApiResponse'
+ */
+route.get('/:id/menuIds', async (context: Context) => {
+    await controller.menuIds(context)
+})
+
 export default route

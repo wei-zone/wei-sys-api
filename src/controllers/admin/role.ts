@@ -1,10 +1,12 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
-import sysModel from '@/models/sysRole'
 import { COMMA, ENABLES_TATUS } from '@/constant'
 import { getJwtInfo } from '@/libs'
-const Model = sysModel(sequelize)
+import sysModel from '@/models/sysRole'
+import sysRoleMenu from '@/models/sysRoleMenu'
+const Role = sysModel(sequelize)
+const RoleMenu = sysRoleMenu(sequelize)
 
 /**
  * 创建
@@ -13,7 +15,7 @@ const Model = sysModel(sequelize)
 export const create = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Model.create(data)
+        const res = await Role.create(data)
         ctx.success({
             data: res
         })
@@ -29,7 +31,7 @@ export const create = async (ctx: Context) => {
 export const createBatch = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await Model.bulkCreate(data)
+        const res = await Role.bulkCreate(data)
         ctx.success({
             data: res
         })
@@ -68,14 +70,14 @@ export const destroy = async (ctx: Context) => {
 
         // 记录删除的人
         const user = getJwtInfo(ctx)
-        await Model.update(
+        await Role.update(
             {
                 updatedBy: user.id
             },
             query
         )
 
-        const data = await Model.destroy(query)
+        const data = await Role.destroy(query)
 
         ctx.success({
             data
@@ -93,7 +95,7 @@ export const update = async (ctx: Context) => {
     try {
         const { id } = ctx.params
         const data = ctx.request.body
-        const res = await Model.update(data, {
+        const res = await Role.update(data, {
             // 条件筛选
             where: {
                 id
@@ -116,7 +118,7 @@ export const detail = async (ctx: Context) => {
         console.log('ctx.params', ctx.params)
         const { id } = ctx.params
         // 使用提供的主键从表中仅获得一个条目.
-        const res = await Model.findByPk(id, {
+        const res = await Role.findByPk(id, {
             attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] } // 不需要某些字段
         })
         ctx.success({
@@ -133,7 +135,7 @@ export const detail = async (ctx: Context) => {
  */
 export const list = async (ctx: Context) => {
     try {
-        const { pageSize = 10, pageCurrent = 1, keywords = '', order = [['createdAt', 'DESC']] } = ctx.request.body
+        const { pageSize = 10, pageCurrent = 1, keywords = '' } = ctx.request.body
 
         const filter = {
             /**
@@ -142,11 +144,11 @@ export const list = async (ctx: Context) => {
             [Op.or]: [{ name: { [Op.like]: `%${keywords}%` } }]
         }
 
-        const { count: total, rows } = await Model.findAndCountAll({
+        const { count: total, rows } = await Role.findAndCountAll({
             limit: pageSize,
             offset: (pageCurrent - 1) * pageSize,
             // 排序
-            order,
+            order: [['sort', 'ASC']],
             /**
              * 字段过滤
              * attribute: ['name', 'id’], // 只查出某些字段
@@ -185,7 +187,7 @@ export const options = async (ctx: Context) => {
             status
         }
 
-        const data = await Model.findAll({
+        const data = await Role.findAll({
             // 排序
             order,
             /**
@@ -205,6 +207,32 @@ export const options = async (ctx: Context) => {
                 label: item.name,
                 value: item.id
             }))
+        })
+    } catch (error) {
+        throw error
+    }
+}
+
+/**
+ * 角色菜单
+ * @param ctx
+ */
+export const menuIds = async (ctx: Context) => {
+    try {
+        const { id } = ctx.params
+        const filter = {
+            roleId: id
+        }
+
+        const data = await RoleMenu.findAll({
+            attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
+            // 筛选
+            where: filter
+            // raw: true // 返回平坦的结果集【此时无分组】
+        })
+
+        ctx.success({
+            data: data?.map((item: any) => item.menuId)
         })
     } catch (error) {
         throw error
