@@ -1,5 +1,6 @@
 import { Context } from 'koa'
 import jwt from 'jsonwebtoken'
+import md5 from 'md5'
 import config from '@/config'
 import sequelize from '@/config/sequelize'
 import sysUser from '@/models/sysUser'
@@ -43,7 +44,7 @@ export const login = async (ctx: Context) => {
             attributes: { exclude: ['password', 'updatedAt', 'deletedAt'] }, // 不需要某些字段
             where: {
                 username,
-                password
+                password: md5(password)
             }
         })
 
@@ -59,8 +60,7 @@ export const login = async (ctx: Context) => {
             { lastLoginAt: dayjs() },
             {
                 where: {
-                    username,
-                    password
+                    id: user.id
                 }
             }
         )

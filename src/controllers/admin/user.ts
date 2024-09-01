@@ -1,6 +1,7 @@
 import { Context } from 'koa'
 import sequelize from '@/config/sequelize'
 import { Op } from 'sequelize'
+import md5 from 'md5'
 import sysUser from '@/models/sysUser'
 import sysUserRole from '@/models/sysUserRole'
 import sysRole from '@/models/sysRole'
@@ -40,7 +41,10 @@ Role.belongsToMany(User, {
 export const create = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await User.create(data)
+        const res = await User.create({
+            data,
+            password: md5(data.password)
+        })
         ctx.success({
             data: res
         })
@@ -56,7 +60,14 @@ export const create = async (ctx: Context) => {
 export const createBatch = async (ctx: Context) => {
     try {
         const data = ctx.request.body
-        const res = await User.bulkCreate(data)
+        const res = await User.bulkCreate(
+            data.map((item: any) => {
+                return {
+                    ...item,
+                    password: md5(item.password)
+                }
+            })
+        )
         ctx.success({
             data: res
         })
@@ -120,12 +131,18 @@ export const update = async (ctx: Context) => {
     try {
         const { id } = ctx.params
         const data = ctx.request.body
-        const res = await User.update(data, {
-            // 条件筛选
-            where: {
-                id
+        const res = await User.update(
+            {
+                data,
+                password: md5(data.password)
+            },
+            {
+                // 条件筛选
+                where: {
+                    id
+                }
             }
-        })
+        )
 
         // 删除已有角色关系
         await UserRole.destroy({
