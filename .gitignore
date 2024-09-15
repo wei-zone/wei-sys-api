@@ -19,6 +19,8 @@ yarn-error.log*
 /src/public/logs/
 /.nyc_output/
 /coverage/
+/src/config/config.dev.ts
+/src/config/config.pro.ts
 
 # Editor directories and files
 .idea

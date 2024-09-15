@@ -1,16 +1,45 @@
-# koa2-quick-start
+# wei-sys-api
 
-> koa2-template, koa2-quick-start, koa2-ts-quick-start
+> 基于 Koa2、TypeScript、MySQL、Sequelize、JWT、Vue3、Element Plu 构建后台权限管理系统
+
+[在线预览](https://wei-sys-admin.vercel.app)
+[前端仓库](https://github.com/wei-zone/wei-sys-admin)
+
+## Features
+
+🚀 开发框架: 服务端 `Koa2` + `TypeScript`，前端 `Vue3` + `TypeScript` + `Element-Plus`。
+
+🛠️ 功能模块: 包括用户管理、角色管理、菜单管理、部门管理、字典管理等功能，REST 风格 api。
+
+📘 接口文档: [swagger-jsdoc](https://github.com/Surnet/swagger-jsdoc) 生成 `Swagger UI` 接口文档，支持在线调试。
+
+📔 日志记录: [log4js](https://github.com/log4js-node/log4js-node) 进行日志管理，支持在线预览。
+
+🗄 数据操作: `MySQL 8.0` + [Sequelize](https://github.com/sequelize/sequelize) ORM 工具，简化数据库操作。
+
+📐 代码规范: 使用 ESLint 和 Prettier 确保代码质量和风格一致性。
+
+🧪 单元测试: `mocha` 实现单元测试。
 
 ## Start
 
-[local](http://127.0.0.1:3000/)
+首先，需要去导出数据库，`src/models/wei_sys.sql`
 
-[api-docs](http://127.0.0.1:3003/api-docs)
+### 数据库
 
-[api-logs](http://127.0.0.1:3003/api-logs)
+MySQL 8.0
+
+[Ubuntu - 安装MySQL8](https://blog.csdn.net/qq_43116031/article/details/133823687)
+
+#### 数据库同步
+
+[sequelize-automate](https://github.com/nodejh/sequelize-automate)
+
+### 运行
 
 ```bash
+# npm config set registry https://registry.npmmirror.com
+
 # install dependencies
 pnpm install
 
@@ -21,44 +50,3 @@ pnpm run dev
 pnpm run build
 ```
 
-## Features
-
--   [x] husky
--   [x] eslint
--   [x] prettier
--   [x] lint-staged
--   [x] typescript
--   [x] rest
--   [x] release-it
--   [x] commitizen
--   [x] socket.io
--   [x] mysql
--   [x] sequelize
--   [x] sequelize-automate
-
-## 接口文档
-
-[https://github.com/Surnet/swagger-jsdoc](https://github.com/Surnet/swagger-jsdoc)
-
-[https://editor.swagger.io/](https://editor.swagger.io/)
-
-## 部署
-
-### 数据库
-
-MySQL 8.0
-
-[Ubuntu - 安装 MySQL 8](https://blog.csdn.net/qq_43116031/article/details/133823687)
-
-[ubuntu22.04安装mysql8并配置远程连接](https://blog.csdn.net/qq_39187538/article/details/135222105)
-
-## 数据库同步
-
-[sequelize-automate](https://github.com/nodejh/sequelize-automate)
-
-```sql
--- ----------------------------
--- 1. 创建数据库
--- ----------------------------
-CREATE DATABASE IF NOT EXISTS youlai_boot DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci;
-```

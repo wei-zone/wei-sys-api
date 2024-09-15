@@ -1,16 +1,8 @@
 {
-    "name": "koa2-quick-start",
+    "name": "koa2-admin-api",
     "version": "1.0.0",
-    "description": "koa2-quick-start",
-    "keywords": [
-        "koa2",
-        "koa2-ts",
-        "koa2-template",
-        "koa2-quick-start",
-        "koa2-ts-quick-start"
-    ],
+    "description": "koa2-admin-api",
     "author": "wforguo",
-    "homepage": "https://forguo.cn",
     "engines": {
         "node": ">=16.14.0"
     },
