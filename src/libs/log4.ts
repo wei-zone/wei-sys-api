@@ -14,27 +14,27 @@ export const debug = log4js.getLogger('debug')
 export const debugLogger = {
     log: (message: any, data: any) => {
         try {
-            debug.log(message + '\n' + JSON.stringify(data) + '\n')
+            debug.log(JSON.stringify(message) + '\n' + JSON.stringify(data) + '\n')
         } catch (e) {}
     },
     debug: (message: any, data: any) => {
         try {
-            debug.debug(message + '\n' + JSON.stringify(data) + '\n')
+            debug.debug(JSON.stringify(message) + '\n' + JSON.stringify(data) + '\n')
         } catch (e) {}
     },
     info: (message: any, data: any) => {
         try {
-            debug.info(message + '\n' + JSON.stringify(data) + '\n')
+            debug.info(JSON.stringify(message) + '\n' + JSON.stringify(data) + '\n')
         } catch (e) {}
     },
     warn: (message: any, data: any) => {
         try {
-            debug.warn(message + '\n' + JSON.stringify(data) + '\n')
+            debug.warn(JSON.stringify(message) + '\n' + JSON.stringify(data) + '\n')
         } catch (e) {}
     },
     error: (message: any, data: any) => {
         try {
-            debug.error(message + '\n' + JSON.stringify(data) + '\n')
+            debug.error(JSON.stringify(message) + '\n' + JSON.stringify(data) + '\n')
         } catch (e) {}
     }
 }
@@ -67,15 +67,19 @@ logFun.forEach((method: string) => {
 // 封装错误日志
 export const errorLogger = function (ctx: any, res: any) {
     if (ctx && res) {
-        error.level = 'error'
-        // 同时记录 debug 和 error
-        if (process.env.NODE_ENV !== 'development') {
-            debug.info(formatError(ctx, res))
-            error.error(formatError(ctx, res))
-        }
+        try {
+            error.level = 'error'
+            // 同时记录 debug 和 error
+            if (process.env.NODE_ENV !== 'development') {
+                debug.info(formatError(ctx, res))
+                error.error(formatError(ctx, res))
+            }
 
-        // 数据库日志记录
-        apiLog(ctx, res)
+            // 数据库日志记录
+            apiLog(ctx, res)
+        } catch (e) {
+            console.log('errorLogger', e)
+        }
     }
 }
 

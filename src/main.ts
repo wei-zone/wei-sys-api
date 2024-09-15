@@ -19,6 +19,11 @@ function isAddressInfo(address: string | AddressInfo | null): address is Address
     return addr.address !== undefined && addr.port !== undefined
 }
 
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+    // 这里可以添加日志或者警报系统，记录错误
+})
+
 // Launch the app as an HTTP server
 function main(): void {
     const app = new App()
@@ -29,7 +34,7 @@ function main(): void {
 
     // Event listener for HTTP server "error" event.
     server.on('error', (error: ErrnoException) => {
-        console.error('serverError', error)
+        console.error('serverError', JSON.stringify(error))
 
         if (error.syscall !== 'listen') {
             throw error
