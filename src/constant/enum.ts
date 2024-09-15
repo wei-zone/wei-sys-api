@@ -31,7 +31,11 @@ export enum RES_CODE {
     // code不合法
     INVALIDCODE = 1004,
     // 验证码无效
-    INVALIDCAPTCHA = 1005
+    INVALIDCAPTCHA = 1005,
+    /**
+     * 令牌无效或过期
+     */
+    TOKEN_INVALID = 401
 }
 
 /**
