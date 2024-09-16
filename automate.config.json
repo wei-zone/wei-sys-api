@@ -1,0 +1,20 @@
+{
+    "dbOptions": {
+        "database": "database",
+        "username": "username",
+        "password": "password",
+        "dialect": "mysql",
+        "host": "127.0.0.1",
+        "port": 3306,
+        "logging": true
+    },
+    "options": {
+        "type": "ts",
+        "dir": "src/models",
+        "typesDir": "src/models/types",
+        "camelCase": true,
+        "fileNameCamelCase": true,
+        "tsNoCheck": true,
+        "indentation": 4
+    }
+}
